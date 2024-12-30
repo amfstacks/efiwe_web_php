@@ -67,7 +67,7 @@ include __DIR__ . '/../templates/header.php';
 
 <script>
     $(document).ready(function() {
-        alert('a');
+        // alert('a');
         // Function to fetch and display subjects
         function loadSubjects() {
             // Show the loading indicator
