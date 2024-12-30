@@ -13,7 +13,7 @@ require_once __DIR__ . '/../config/config.php';
  *
  * @return array The API response.
  */
-function api_request($endpoint, $data = null, $method = 'GET', $accessToken = null) {
+function api_request($endpoint, $data = null, $method = 'POST', $accessToken = null) {
     $url = API_BASE_URL . $endpoint;
 
     $payload = http_build_query($data);
@@ -51,6 +51,86 @@ function api_request($endpoint, $data = null, $method = 'GET', $accessToken = nu
 // Decode and display the response
 //    var_dump($response);
 return json_decode($response, true);
+}
+function api_request_get($endpoint, $data = null, $method = 'GET', $accessToken = null,$refreshToken = null) {
+    // Construct the full URL with query parameters if provided
+    if ($accessToken == '' || $accessToken == null) {
+        return [
+            "success" => false,
+            "message" => "access token is missing",
+        ];
+    }
+    if ($refreshToken == '' || $refreshToken == null) {
+        return [
+            "success" => false,
+            "message" => "access token is missing",
+        ];
+    }
+    $url = API_BASE_URL . $endpoint;
+
+    if ($method === 'GET' && !empty($data)) {
+        $url .= '?' . http_build_query($data);
+    }
+
+    // Initialize cURL session
+    $ch = curl_init($url);
+
+    // Set headers
+    $headers = [
+        'Accept: application/json' // Optional but recommended
+    ];
+
+    // Add Authorization header if accessToken is provided
+    if ($accessToken) {
+        $headers[] = 'Authorization: Bearer ' . $accessToken;
+    }
+
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+    // Ensure the request method is GET
+    curl_setopt($ch, CURLOPT_HTTPGET, true);
+
+    // Return the response instead of printing
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+    // Execute the request
+    $response = curl_exec($ch);
+
+    // Check for cURL errors
+    if (curl_errno($ch)) {
+        $error_msg = curl_error($ch);
+        curl_close($ch);
+        return [
+            "success" => false,
+            "message" => " Error: {$error_msg}",
+        ];
+    }
+
+    // Close the cURL session
+    curl_close($ch);
+
+    // Decode and return the response as an associative array
+    $decoded = json_decode($response, true);
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        return [
+            "success" => false,
+            "message" => "Invalid JSON response.",
+        ];
+    }
+
+    if (isset($decoded['error'])) {
+        return [
+            "success" => false,
+            "message" => $decoded['error'],
+        ];
+    }
+
+    if (isset($decoded['isNewToken']) && $decoded['isNewToken'] === true && isset($decoded['token'])) {
+        // Update the session's idToken with the new token
+        $_SESSION['user']['idToken'] = $decoded['token'];
+    }
+
+    return $decoded;
 }
 function api_request_old($endpoint, $data = null, $method = 'GET', $accessToken = null) {
     $url = API_BASE_URL . $endpoint;
@@ -166,6 +246,6 @@ function fetch_all_subjects($examId, $refreshToken, $accessToken) {
         'refreshToken' => $refreshToken
     ];
 
-    return api_request('allsubjects', $data, 'GET', $accessToken);
+    return api_request_get('allsubjects', $data, 'GET', $accessToken,$refreshToken);
 }
 ?>

@@ -28,8 +28,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($errors)) {
         // Call the signin API
         $result = signin($email, $password);
-        var_dump($result);
-exit;
 
         if ($result['success']) {
             // Assuming the API returns user data including accessToken
