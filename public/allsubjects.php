@@ -1,86 +1,143 @@
 <?php
 // public/allsubjects.php
+
+// Enable error reporting for debugging (disable in production)
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
+
+// Include necessary functions
 require_once __DIR__ . '/../functions/auth.php';
 require_once __DIR__ . '/../functions/api.php';
 
+// Ensure the user is logged in
 require_login();
 
+// Retrieve user data from the session
 $user = isset($_SESSION['user']) ? $_SESSION['user'] : [];
 
-//var_dump($user);
-//exit;
-// Retrieve the access token from the user session
-$accessToken = isset($user['idToken']) ? 'Bearer ' . $user['idToken'] : '';
-$refreshToken = isset($user['refreshToken']) ? 'Bearer ' . $user['refreshToken'] : '';
+// Extract user email for display
+$user_email = isset($user['email']) ? $user['email'] : 'User';
 
-// Replace these with your actual examId and refreshToken
-$examId = "X2j9hFD6O7RGAER6bn3b";
-//$refreshToken = "AMf-vBxRqfDZ3mylSGKeOv4RIMaqem77Y9--EcOOUwOZkFAo8iVye6Kqgy9zgdJfSn7LmxKGvhgMer05Vp8GrNSmIMLxbs0MGcD3W292XCsRsGYyhWXKHfivtpiL1BgP3avYFtSS3cdjpyfv-YnZBekAZ4PbNoXHsjy9n7dTWgi6ehc9PvU6fo-IdubeRzcOt3AKWrLBkjrJL6WxfMe876UEf4_Ha7E29Q";
-
-// Fetch all subjects from the API
-$result = fetch_all_subjects($examId, $refreshToken, $accessToken);
-//var_dump($result);
-//exit;
 $page_title = 'All Subjects';
 include __DIR__ . '/../templates/header.php';
 ?>
 
 <div class="dashboard-container">
     <h2>All Subjects</h2>
-    <?php if ($result['success']): ?>
-        <?php
-        $subjects = isset($result['subjects']) ? $result['subjects'] : [];
-        $user_email = isset($user['email']) ? $user['email'] : 'User';
-        ?>
-        <p>Welcome, <?php echo htmlspecialchars($user_email); ?>!</p>
-        <table>
-            <thead>
-            <tr>
-                <th>Name</th>
-                <th>ID</th>
-                <th>Department</th>
-                <th>FID</th>
-                <th>Date Modified</th>
-                <th>Icon</th>
-                <th>Status</th>
-                <th>Color</th>
-            </tr>
-            </thead>
-            <tbody>
-            <?php foreach ($subjects as $subject): ?>
-                <tr>
-                    <td><?php echo htmlspecialchars(isset($subject['name']) ? $subject['name'] : 'N/A'); ?></td>
-                    <td><?php echo htmlspecialchars(isset($subject['id']) ? $subject['id'] : 'N/A'); ?></td>
-                    <td><?php echo htmlspecialchars(isset($subject['department']) ? $subject['department'] : 'N/A'); ?></td>
-                    <td><?php echo htmlspecialchars(isset($subject['fid']) ? $subject['fid'] : 'N/A'); ?></td>
-                    <td><?php echo htmlspecialchars(isset($subject['date_modified']) ? $subject['date_modified'] : 'N/A'); ?></td>
-                    <td>
-                        <?php if (!empty($subject['icon'])): ?>
-                            <img src="<?php echo htmlspecialchars($subject['icon']); ?>" alt="<?php echo htmlspecialchars(isset($subject['name']) ? $subject['name'] : 'Icon'); ?>" width="50">
-                        <?php else: ?>
-                            N/A
-                        <?php endif; ?>
-                    </td>
-                    <td><?php echo htmlspecialchars(isset($subject['status']) ? $subject['status'] : 'N/A'); ?></td>
-                    <td>
-                        <?php if (!empty($subject['color'])): ?>
-                            <div style="width: 20px; height: 20px; background-color: <?php echo htmlspecialchars($subject['color']); ?>; border: 1px solid #000;"></div>
-                        <?php else: ?>
-                            N/A
-                        <?php endif; ?>
-                    </td>
-                </tr>
-            <?php endforeach; ?>
-            </tbody>
-        </table>
-        <a href="dashboard.php" class="button">Back to Dashboard</a>
-    <?php else: ?>
-        <p class="error"><?php echo htmlspecialchars($result['message']); ?></p>
-        <a href="dashboard.php" class="button">Back to Dashboard</a>
-    <?php endif; ?>
+    <p>Welcome, <?php echo htmlspecialchars($user_email); ?>!</p>
+
+    <!-- Loading Indicator -->
+    <div id="loading" style="display: none;">
+        <p>Loading subjects...</p>
+    </div>
+
+    <!-- Error Message Container -->
+    <div id="error-message" class="error" style="display: none;">
+        <p></p>
+    </div>
+
+    <!-- Subjects Table -->
+    <table id="subjects-table">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>ID</th>
+            <th>Department</th>
+            <th>FID</th>
+            <th>Date Modified</th>
+            <th>Icon</th>
+            <th>Status</th>
+            <th>Color</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Subjects will be dynamically inserted here -->
+        </tbody>
+    </table>
+
+    <a href="dashboard.php" class="button">Back to Dashboard</a>
 </div>
+
+<!-- Include jQuery via CDN -->
+<!--<script src="https://code.jquery.com/jquery-3.6.0.min.js"-->
+<!--        integrity="sha256-/xUj+3OJ8QKnGxJ6F+GBUzwbfhNvNijPzkHJRZxYjv4="-->
+<!--        crossorigin="anonymous"></script>-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script>
+    $(document).ready(function() {
+        alert('a');
+        // Function to fetch and display subjects
+        function loadSubjects() {
+            // Show the loading indicator
+            $('#loading').show();
+            $('#error-message').hide();
+            $('#subjects-table tbody').empty();
+
+            $.ajax({
+                url: '../api_ajax/get_subjects.php',
+                method: 'GET',
+                dataType: 'json',
+                success: function(response) {
+                    // Hide the loading indicator
+                    $('#loading').hide();
+                    console.log(response.code);
+                    if (response.success) {
+                        var subjects = response.subjects || [];
+
+
+                        if (subjects.length === 0) {
+                            $('#subjects-table tbody').append('<tr><td colspan="8">No subjects found.</td></tr>');
+                            return;
+                        }
+
+                        // Iterate through subjects and append to the table
+                        $.each(subjects, function(index, subject) {
+                            var iconHtml = subject.icon ? '<img src="' + subject.icon + '" alt="' + (subject.name || 'Icon') + '" width="50">' : 'N/A';
+                            var colorHtml = subject.color ? '<div style="width: 20px; height: 20px; background-color: ' + subject.color + '; border: 1px solid #000;"></div>' : 'N/A';
+
+                            var row = '<tr>' +
+                                '<td>' + htmlspecialchars(subject.name || 'N/A') + '</td>' +
+                                '<td>' + htmlspecialchars(subject.id || 'N/A') + '</td>' +
+                                '<td>' + htmlspecialchars(subject.department || 'N/A') + '</td>' +
+                                '<td>' + htmlspecialchars(subject.fid || 'N/A') + '</td>' +
+                                '<td>' + htmlspecialchars(subject.date_modified || 'N/A') + '</td>' +
+                                '<td>' + iconHtml + '</td>' +
+                                '<td>' + htmlspecialchars(subject.status || 'N/A') + '</td>' +
+                                '<td>' + colorHtml + '</td>' +
+                                '</tr>';
+
+                            $('#subjects-table tbody').append(row);
+                        });
+                    } else {
+                        // Display error message from the response
+                        $('#error-message p').text(response.message || 'An error occurred.');
+                        $('#error-message').show();
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    // Hide the loading indicator
+                    $('#loading').hide();
+
+                    // Display a generic error message
+                    $('#error-message p').text('Failed to load subjects. Please try again later.');
+                    $('#error-message').show();
+
+                    // Optional: Log the error details for debugging
+                    // console.error('AJAX Error:', textStatus, errorThrown);
+                }
+            });
+        }
+
+        // Function to escape HTML special characters to prevent XSS
+        function htmlspecialchars(text) {
+            return $('<div>').text(text).html();
+        }
+
+        // Load subjects on page load
+        loadSubjects();
+    });
+</script>
 
 <?php include __DIR__ . '/../templates/footer.php'; ?>
