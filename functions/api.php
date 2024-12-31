@@ -248,4 +248,80 @@ function fetch_all_subjects($examId, $refreshToken, $accessToken) {
 
     return api_request_get('allsubjects', $data, 'GET', $accessToken,$refreshToken);
 }
+
+function api_request_post($endpoint, $data = null, $method = 'POST', $accessToken = null) {
+    $url = API_BASE_URL . $endpoint;
+
+    $payload = json_encode($data);
+
+    $ch = curl_init($url);
+
+    // Set the POST fields as JSON
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
+
+    // Set headers
+    $headers = [
+        'Content-Type: application/json',
+        'Accept: application/json'
+    ];
+
+    // Add Authorization header if accessToken is provided
+    if ($accessToken) {
+        $headers[] = 'Authorization: Bearer ' . $accessToken;
+    }
+
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+    // Ensure the request method is POST
+    curl_setopt($ch, CURLOPT_POST, true);
+
+    // Return the response instead of printing
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+    // Execute the request
+    $response = curl_exec($ch);
+
+    // Check for cURL errors
+    if (curl_errno($ch)) {
+        $error_msg = curl_error($ch);
+        curl_close($ch);
+        return [
+            "success" => false,
+            "message" => "cURL Error: {$error_msg}",
+        ];
+    }
+
+    // Capture HTTP status code
+    $http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+    // Close the cURL session
+    curl_close($ch);
+
+    // Decode the JSON response
+    $decoded = json_decode($response, true);
+
+    // Handle JSON decode errors
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        return [
+            "success" => false,
+            "message" => "Invalid JSON response.",
+            "http_status" => $http_status,
+            "raw_response" => $response,
+        ];
+    }
+
+    // Check for API-level errors
+    if (isset($decoded['error'])) {
+        return [
+            "success" => false,
+            "message" => $decoded['error'],
+            "http_status" => $http_status,
+        ];
+    }
+
+    // Return the decoded response
+    return $decoded;
+}
+
+
 ?>
