@@ -26,7 +26,7 @@ if (!is_logged_in()) {
 }
 
 // Retrieve user data from the session
-$user = $_SESSION['user'] ?? [];
+$user = isset($_SESSION['user']) ? $_SESSION['user'] : [];
 
 // Extract user UID
 $uid = isset($user['localId']) ? $user['localId'] : '';
@@ -193,8 +193,13 @@ $profileData = [
     "uid" => $uid
 ];
 
+$user = isset($_SESSION['user']) ? $_SESSION['user'] : [];
+
+// Extract accessToken and refreshToken
+$accessToken = isset($user['idToken']) ? $user['idToken'] : '';
+$refreshToken = isset($user['refreshToken']) ? $user['refreshToken'] : '';
 // Send data to the API
-$apiResponse = api_request_post('profileSetup', $profileData, 'POST', null);
+$apiResponse = api_request_post('profileSetup', $profileData, 'POST', $accessToken,$refreshToken);
 
 // Return the API response to the frontend
 echo json_encode($apiResponse);

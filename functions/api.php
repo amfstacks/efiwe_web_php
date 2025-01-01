@@ -249,7 +249,7 @@ function fetch_all_subjects($examId, $refreshToken, $accessToken) {
     return api_request_get('allsubjects', $data, 'GET', $accessToken,$refreshToken);
 }
 
-function api_request_post($endpoint, $data = null, $method = 'POST', $accessToken = null) {
+function api_request_post($endpoint, $data = null, $method = 'POST', $accessToken = null,$refreshToken=null) {
     $url = API_BASE_URL . $endpoint;
 
     $payload = json_encode($data);
@@ -318,8 +318,7 @@ function api_request_post($endpoint, $data = null, $method = 'POST', $accessToke
             "http_status" => $http_status,
         ];
     }
-
-    // Return the decoded response
+echo $data['uid'];
     return $decoded;
 }
 

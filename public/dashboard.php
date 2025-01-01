@@ -7,8 +7,10 @@ require_once __DIR__ . '/../functions/api.php';
 require_login();
 
 $user = isset($_SESSION['user']) ? $_SESSION['user'] : [];
-
+//var_dump($_SESSION['user']);
 // You can retrieve additional user data here if needed
+echo $uid = isset($user['localId']) ? $user['localId'] : '';
+
 $page_title = 'Dashboard';
 include __DIR__ . '/../templates/header.php';
 ?>
