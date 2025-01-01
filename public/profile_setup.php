@@ -131,7 +131,7 @@ include __DIR__ . '/../templates/header.php';
                         // Iterate through subjects and create cards
                         subjects.forEach(subject => {
                             const subjectCard = $(`
-                            <div class="subject-card" data-id="${subject.id}" data-color="${convertColor(subject.color)}">
+                            <div class="subject-card" data-id="${subject.fid}" data-color="${convertColor(subject.color)}">
                                 <img src="${subject.icon}" alt="${subject.name}" class="subject-icon">
                                 <p class="subject-name">${subject.name}</p>
                             </div>

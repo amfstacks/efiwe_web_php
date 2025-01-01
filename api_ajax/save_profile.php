@@ -11,7 +11,7 @@ require_once __DIR__ . '/../functions/auth.php';
 require_once __DIR__ . '/../functions/api.php';
 
 // Start the session
-session_start();
+//session_start();
 
 // Set response header to JSON
 header('Content-Type: application/json');
@@ -162,7 +162,11 @@ if (!empty($errors)) {
     ]);
     exit();
 }
+$user = isset($_SESSION['user']) ? $_SESSION['user'] : [];
 
+// Extract accessToken and refreshToken
+$accessToken = isset($user['idToken']) ? $user['idToken'] : '';
+$refreshToken = isset($user['refreshToken']) ? $user['refreshToken'] : '';
 // Prepare data for the API
 $profileData = [
     "firstname" => $firstname,
@@ -190,16 +194,15 @@ $profileData = [
     "dailyLogin" => [],
     "nodailyTask" => [],
     "dateRegistered" => date('c'), // ISO 8601 format
-    "uid" => $uid
+    "uid" => $uid,
+    "refreshtoken" => $refreshToken
 ];
 
-$user = isset($_SESSION['user']) ? $_SESSION['user'] : [];
-
-// Extract accessToken and refreshToken
-$accessToken = isset($user['idToken']) ? $user['idToken'] : '';
-$refreshToken = isset($user['refreshToken']) ? $user['refreshToken'] : '';
+//var_dump($profileData);
+//exit();
 // Send data to the API
 $apiResponse = api_request_post('profileSetup', $profileData, 'POST', $accessToken,$refreshToken);
+//$apiResponse = api_request('profileSetup', $profileData, 'POST', $accessToken);
 
 // Return the API response to the frontend
 echo json_encode($apiResponse);
