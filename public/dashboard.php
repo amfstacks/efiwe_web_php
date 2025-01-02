@@ -197,7 +197,6 @@ include __DIR__ . '/../templates/header.php';
                     const subjects = response.subjects || [];
                     const selectedSubjectIds = mySelectedSubjects || [];
                     const mySubjectsGrid = $('#my-subjects-grid');
-
                     if (selectedSubjectIds.length === 0) {
                         mySubjectsGrid.append('<p>No subjects selected.</p>');
                     } else {
