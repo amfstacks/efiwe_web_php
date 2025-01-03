@@ -237,9 +237,6 @@ include __DIR__ . '/../templates/header.php';
         // Call loadMySubjects after the page has finished loading
         loadMySubjects();
 
-        // If you have an existing loadSubjects function to load all subjects,
-        // you can call it here as well
-        // loadSubjects(); // Assuming loadSubjects is defined and handles the selectable subjects
     });
 </script>
 <style>
