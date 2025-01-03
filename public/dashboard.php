@@ -24,7 +24,7 @@ if (empty($uid)) {
 
 // API Endpoint
 $apiUrl = 'https://fayabase.com/efiwe/api/userDetails';
-
+//todo save this to constant or include file
 // Build the query parameters
 $queryParams = http_build_query([
     'uid' => $uid,
