@@ -31,6 +31,7 @@ $queryParams = http_build_query([
     'uid' => $uid,
     'refreshtoken' => $refreshToken
 ]);
+//note
 if ($accessToken) {
     $headers[] = 'Authorization: Bearer ' . $accessToken;
 }
