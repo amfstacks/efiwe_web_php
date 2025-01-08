@@ -23,86 +23,95 @@ if (empty($uid)) {
 }
 
 // API Endpoint
-$apiUrl = 'https://fayabase.com/efiwe/api/userDetails';
-//todo save this to constant or include file
-//todo note
-// Build the query parameters
-$queryParams = http_build_query([
+//$apiUrl = 'https://fayabase.com/efiwe/api/userDetails';
+$queryParams = [
     'uid' => $uid,
     'refreshtoken' => $refreshToken
-]);
-//note
-if ($accessToken) {
-    $headers[] = 'Authorization: Bearer ' . $accessToken;
-}
-// Complete URL with query parameters
-$fullUrl = $apiUrl . '?' . $queryParams;
-
-// Initialize cURL
-$ch = curl_init($fullUrl);
-
-// Set cURL options
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); // Return response instead of outputting
-curl_setopt($ch, CURLOPT_HTTPHEADER, [
-    'Accept: application/json'
-]);
-curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-// Execute the request
-$response = curl_exec($ch);
-
-// Capture HTTP status code
-$http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-
-// Check for cURL errors
-if (curl_errno($ch)) {
-    $error_msg = curl_error($ch);
-    curl_close($ch);
-    echo json_encode([
-        "success" => false,
-        "message" => "cURL Error: {$error_msg}",
-        "http_status" => $http_status
-    ]);
-    exit();
-}
-
-// Close the cURL session
-curl_close($ch);
-
-// Decode the JSON response
-$decodedResponse = json_decode($response, true);
-
-// Check for JSON decode errors
-if (json_last_error() !== JSON_ERROR_NONE) {
-    echo json_encode([
-        "success" => false,
-        "message" => "Invalid JSON response.",
-        "http_status" => $http_status,
-        "raw_response" => $response
-    ]);
-    exit();
-}
-
-// Check API-level success
-if (!$decodedResponse['success']) {
-    echo json_encode([
-        "success" => false,
-        "message" => $decodedResponse['message'],
-        "code" => $decodedResponse['code']
-    ]);
-    exit();
-}
+];
+$response = api_request_get('userDetails',$queryParams, 'GET', $accessToken, $refreshToken);
+//var_dump($response);
+//exit;
+////todo save this to constant or include file
+////todo note
+//// Build the query parameters
+//$queryParams = http_build_query([
+//    'uid' => $uid,
+//    'refreshtoken' => $refreshToken
+//]);
+////note
+//if ($accessToken) {
+//    $headers[] = 'Authorization: Bearer ' . $accessToken;
+//}
+//// Complete URL with query parameters
+//$fullUrl = $apiUrl . '?' . $queryParams;
+//
+//// Initialize cURL
+//$ch = curl_init($fullUrl);
+//
+//// Set cURL options
+//curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); // Return response instead of outputting
+//curl_setopt($ch, CURLOPT_HTTPHEADER, [
+//    'Accept: application/json'
+//]);
+//curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+//// Execute the request
+//$response = curl_exec($ch);
+//
+//// Capture HTTP status code
+//$http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+//
+//// Check for cURL errors
+//if (curl_errno($ch)) {
+//    $error_msg = curl_error($ch);
+//    curl_close($ch);
+//    echo json_encode([
+//        "success" => false,
+//        "message" => "cURL Error: {$error_msg}",
+//        "http_status" => $http_status
+//    ]);
+//    exit();
+//}
+//
+//// Close the cURL session
+//curl_close($ch);
+//
+//// Decode the JSON response
+//$decodedResponse = json_decode($response, true);
+//
+//// Check for JSON decode errors
+//if (json_last_error() !== JSON_ERROR_NONE) {
+//    echo json_encode([
+//        "success" => false,
+//        "message" => "Invalid JSON response.",
+//        "http_status" => $http_status,
+//        "raw_response" => $response
+//    ]);
+//    exit();
+//}
+//
+//// Check API-level success
+//if (!$decodedResponse['success']) {
+//    echo json_encode([
+//        "success" => false,
+//        "message" => $decodedResponse['message'],
+//        "code" => $decodedResponse['code']
+//    ]);
+//    exit();
+//}
 
 // Extract user data
-$userData = $decodedResponse['data'];
-$selectedSubjects = isset($userData['subjectSelect']) ? $userData['subjectSelect'] : [];
+if ($response['success']) {
+    $userData = $response['data'];
+    $selectedSubjects = isset($userData['subjectSelect']) ? $userData['subjectSelect'] : [];
 
 // Optional: Store token if needed
-$isNewToken = $decodedResponse['isNewToken'];
-$newToken = $decodedResponse['token'];
+    $isNewToken = $response['isNewToken'];
+    $newToken = $response['token'];
 
 // Update session with new token if applicable
-if ($isNewToken && !empty($newToken)) {
-    $_SESSION['user']['idToken'] = $newToken;
+    if ($isNewToken && !empty($newToken)) {
+        $_SESSION['user']['idToken'] = $newToken;
+    }
 }
 
 // Set page title
