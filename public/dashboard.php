@@ -140,7 +140,7 @@ include __DIR__ . '/../templates/header.php';
             <li><strong>Date of Birth:</strong> <?php echo htmlspecialchars($userData['dob']); ?></li>
             <li><strong>Phone Number:</strong> <?php echo htmlspecialchars($userData['phoneNumber']); ?></li>
             <li><strong>Class:</strong> <?php echo htmlspecialchars($userData['class']); ?></li>
-            <li><strong>Exam:</strong> <?php echo htmlspecialchars($userData['exam']); ?></li>
+<!--            <li><strong>Exam:</strong> --><?php //echo htmlspecialchars($userData['exam']); ?><!--</li>-->
             <li><strong>State:</strong> <?php echo htmlspecialchars($userData['state']); ?></li>
             <li><strong>City:</strong> <?php echo htmlspecialchars($userData['city']); ?></li>
             <li><strong>Home Address:</strong> <?php echo htmlspecialchars($userData['homeaddress']); ?></li>
