@@ -1,9 +1,44 @@
 <?php
-$page_title = 'Sign In';
+$page_title = 'Sign Up';
 
 require_once __DIR__ . '/../templates/authHeader.php';
 
 
+$errors = [];
+$success = '';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Sanitize and validate inputs
+    $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
+    $password = isset($_POST['password']) ? $_POST['password'] : '';
+    $confirm_password = isset($_POST['confirm_password']) ? $_POST['confirm_password'] : '';
+
+    if (!$email) {
+        $errors[] = 'Please enter a valid email address.';
+    }
+
+    if (empty($password)) {
+        $errors[] = 'Please enter a password.';
+    }
+
+    if ($password !== $confirm_password) {
+        $errors[] = 'Passwords do not match.';
+    }
+
+    if (empty($errors)) {
+        // Call the signup API
+//        echo $email;
+//        echo $password;
+        $result = signup($email, $password);
+//var_dump($result);
+//exit;
+        if ($result['success']) {
+            $success = $result['message'];
+        } else {
+            $errors[] = $result['message'];
+        }
+    }
+}
 ?>
 
 
@@ -58,13 +93,30 @@ require_once __DIR__ . '/../templates/authHeader.php';
                                   <center class="m-b-20 col-indaigo text-muted">
                                       <i class="fas fa-user-graduate font-50 btn-outline-primary"></i>
                                       <br><br>
-                                      <b> JAMBITE LOGIN </b>
+                                      <b> JAMBITE SIGNUP </b>
 
 
                                       <hr style="width: 40%;">
                                   </center>
+                                  <?php if (!empty($errors)): ?>
+<!--                                      <div class="alert alert-danger"><p><b>Do not send money to anyone for admission purposes.</b><br> All payments should be made through official school channels. The school is not responsible for payments made to unauthorized persons.</p></div>-->
+                                      <div class="alert alert-danger">
+                                          <ul>
+                                              <?php foreach ($errors as $error): ?>
+                                                  <li><?php echo htmlspecialchars($error); ?></li>
+                                              <?php endforeach; ?>
+                                          </ul>
+                                      </div>
+                                  <?php endif; ?>
+
+                                  <?php if ($success): ?>
+                                  <div class="success">
+                                      <?php echo $success; ?>
+                                  </div>
+                                  <?php endif; ?>
+
                                   <div class="form-group floating-addon">
-                                      <label for="email">Username || Email</label>
+                                      <label for="email">Email</label>
                                       <div class="input-group">
                                           <div class="input-group-prepend">
                                               <div class="input-group-text">
@@ -72,7 +124,7 @@ require_once __DIR__ . '/../templates/authHeader.php';
                                                   <!-- <i class="material-icons">lock</i> -->
                                               </div>
                                           </div>
-                                          <input id="lusername" type="text" class="form-control" name="text" tabindex="1" required autofocus>
+                                          <input id="lusername" type="text" class="form-control" name="email" tabindex="1" required autofocus>
 
                                       </div>
                                       <!-- <input id="lusername" type="text" class="form-control" name="text" tabindex="1" required autofocus> -->
@@ -95,7 +147,26 @@ require_once __DIR__ . '/../templates/authHeader.php';
 
                                       </div>
 
-                                      <!-- <input id="lpassword" type="password" class="form-control" name="password" tabindex="2" required> -->
+                                      <div class="invalid-feedback">
+                                          please fill in your password
+                                      </div>
+                                  </div>
+
+                                  <div class="form-group floating-addon ">
+
+                                      <label for="password" class="control-label">Password Again</label>
+                                      <div class="input-group">
+                                          <div class="input-group-prepend">
+                                              <div class="input-group-text">
+                                                  <i class="fas fa-lock"></i>
+                                                  <!-- <i class="material-icons">lock</i> -->
+                                              </div>
+                                          </div>
+                                          <input id="lpassword" type="password" class="form-control" name="confirm_password" tabindex="2" required>
+
+
+                                      </div>
+
                                       <div class="invalid-feedback">
                                           please fill in your password
                                       </div>
@@ -108,10 +179,22 @@ require_once __DIR__ . '/../templates/authHeader.php';
                                   </div>
 
                                   <div class="mb-4 text-muted text-center " style=" border:solid 1px; padding:10px;">
-                                      New to  <?php echo strtolower(APP_NAME)?>? <a href="signup.php" class="text-success" style="cursor: pointer;"> Start here</a>
+                                      New to  <?php echo strtolower(APP_NAME)?>? <a href="login.php" class="text-success" style="cursor: pointer;"> Start here</a>
                                   </div>
-
+                                  <!-- <div class="input-group">
+                                    <div class="input-group-prepend" style="border-right: none !important;">
+                                      <div class="input-group-text form-control" style="border-right: none !important;">
+                                        <i class="fas fa-phone"></i>
+                                      </div>
+                                    </div>
+                                    <input type="text" class="form-control phone-number" style="border-left: none !important;">
+                                  </div> -->
                               </form>
+
+                              <!-- <div class="mt-5 text-muted text-center" style=" border:solid 1px; padding:10px;"> -->
+                              <!-- Don't have an account? <a id="regswitch" class="text-warning" style="cursor: pointer;">Create One</a> -->
+
+                              <!-- </div> -->
                           </div>
                       </div>
 

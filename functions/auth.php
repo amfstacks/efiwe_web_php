@@ -9,6 +9,7 @@ session_start();
  * @return bool True if logged in, false otherwise.
  */
 function is_logged_in() {
+//    return true;
     return isset($_SESSION['user']);
 }
 

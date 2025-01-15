@@ -37,13 +37,25 @@ function api_request($endpoint, $data = null, $method = 'POST', $accessToken = n
 
 // Execute the request
     $response = curl_exec($ch);
-var_dump($response);
+//var_dump($response);
 //exit;
 // Check for cURL errors
+//    if (curl_errno($ch)) {
+//        $error_msg = curl_error($ch);
+//        curl_close($ch);
+//        die("cURL Error: {$error_msg}");
+//
+//    }
     if (curl_errno($ch)) {
         $error_msg = curl_error($ch);
         curl_close($ch);
-        die("cURL Error: {$error_msg}");
+        if(strpos($error_msg, 'resolve host') !== false){
+            $error_msg = 'Kindly check your network connection ' ;
+        }
+        return [
+            "success" => false,
+            "message" => " Error: {$error_msg}",
+        ];
     }
 
 // Close the cURL session
