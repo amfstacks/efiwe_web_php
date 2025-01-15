@@ -139,6 +139,8 @@ include __DIR__ . '/../templates/header.php';
 
 
 
+
+        //note
     ?>
     <div class="user-details">
         <h3>Your Details:</h3>
