@@ -114,8 +114,8 @@ li.parsley-required {
     .p-l-5i{padding-left:5px !important}
     .m-l-5i{margin-left:5px !important}
     .card-body{
-        padding-left:0px !important;
-        padding-right:0px !important;
+        padding-left:5px !important;
+        padding-right:5px !important;
     }
     .break-line-mobile{
         display: block;

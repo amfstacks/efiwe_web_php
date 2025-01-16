@@ -147,218 +147,138 @@
                         </div>
                     </div>
 
-                    <div class="col-xl-8 col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                    <div class="card gradient-bottom">
-                        <div class="card-header">
-                            <h4>Top 5 Products</h4>
-                            <div class="card-header-action dropdown">
-                                <i class="fa fa-check-circle font-20"></i>
-                            </div>
-                        </div>
-                        <div class="card-body" id="top-5-scroll" tabindex="2" style="height: 315px; overflow: hidden; outline: none;">
-                            <ul class="list-unstyled list-unstyled-border">
-
-                                <li class="media">
-                                    <img class="mr-3 rounded" width="55" src="assets/img/products/product-5.png" alt="product">
-                                    <div class="media-body">
-                                        <div class="float-right">
-<!--                                            <div class="font-weight-600 text-muted text-small">19 Sales</div>-->
-                                        </div>
-                                        <div class="media-title">Camera</div>
-                                        <div class="mt-1">
-                                            <div class="budget-price bg-grey">
-                                                <div class="budget-price-square bg-primary " data-width="81%" style="width: 81%;"></div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-
-                    </div>
-                    </div>
-
-
-
-
-
-
-
-                    <!-- <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                      <div class="card">
-                        <div class="card-statistic-4">
-                          <div class="align-items-center justify-content-between">
-                            <div class="row ">
-                              <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pr-0 pt-3">
-                                <div class="card-content">
-                                  <h5 class="font-15">Revenue</h5>
-                                  <h2 class="mb-3 font-18">$48,697</h2>
-                                  <p class="mb-0"><span class="col-green">42%</span> Increase</p>
-                                </div>
-                              </div>
-                              <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pl-0">
-                                <div class="banner-img">
-                                  <img src="assets/img/banner/4.png" alt="">
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div> -->
-                </div>
-                <!-- <div class="row">
-                <div class="col-xl-3 col-lg-6">
-                  <div class="alert alert-primary alert-has-icon">
-                            <div class="alert-icon"><i class="far fa-lightbulb"></i></div>
-                            <div class="alert-body">
-                              <div class="alert-title">Primary</div>
-                              This is a primary alert.
-                            </div>
-                          </div>
-                </div>
-                  </div> -->
-                <div class="row">
-                    <div class="col-12">
+                    <div class="col-12 col-sm-12 col-lg-6">
                         <div class="card">
                             <div class="card-header">
-                                <h4>Activity Calendar</h4>
+                                <h4>Daily Tasks</h4>
                             </div>
                             <div class="card-body">
-                                <div class="fc-overflow">
-                                    <img src="img/loader.gif"  class="mg-t-5 circle-loader " id="loadcal" style="display: none; height:20px !important;">
-
-                                    <div id="myEvent"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-                <!--<div class="row">-->
-                <!--  <div class="col-12">-->
-                <!--    <div class="card">-->
-                <!--      <div class="card-header">-->
-                <!--        <h4>Exam Timetable</h4>-->
-                <!--      </div>-->
-                <!--      <div class="card-body">-->
-                <!--        <div class="table-responsive">-->
-                <!--          <table class="table table-striaped table-hoaver" id="savae-stage" style="width:100%;">-->
-                <!--            <thead>-->
-                <!--              <tr>-->
-                <!--               <th>S/N</th>-->
-                <!--                <th>Course</th>-->
-                <!--                <th>Date and Time</th>-->
-
-                <!--              </tr>-->
-                <!--            </thead>-->
-                <!--            <tbody>-->
-
-
-                <!--            </tbody>-->
-                <!--          </table>-->
-                <!--        </div>-->
-                <!--      </div>-->
-                <!--    </div>-->
-                <!--  </div>-->
-                <!--</div>-->
-                <!-- <button type="button" class="btn btn-primary" data-toggle="modal"
-                          data-target="#exampleModalCenter">Vertically
-                          Centered</button> -->
-            </section>
-            <div class="settingSidebar">
-                <a href="javascript:void(0)" class="settingPanelToggle"> <i class="fa fa-spin fa-cog"></i>
-                </a>
-                <div class="settingSidebar-body ps-container ps-theme-default">
-                    <div class=" fade show active">
-                        <div class="setting-panel-header">Setting Panel
-                        </div>
-                        <div class="p-15 border-bottom">
-                            <h6 class="font-medium m-b-10">Select Layout</h6>
-                            <div class="selectgroup layout-color w-50">
-                                <label class="selectgroup-item">
-                                    <input type="radio" name="value" value="1" class="selectgroup-input-radio select-layout" checked>
-                                    <span class="selectgroup-button">Light</span>
-                                </label>
-                                <label class="selectgroup-item">
-                                    <input type="radio" name="value" value="2" class="selectgroup-input-radio select-layout">
-                                    <span class="selectgroup-button">Dark</span>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="p-15 border-bottom">
-                            <h6 class="font-medium m-b-10">Sidebar Color</h6>
-                            <div class="selectgroup selectgroup-pills sidebar-color">
-                                <label class="selectgroup-item">
-                                    <input type="radio" name="icon-input" value="1" class="selectgroup-input select-sidebar">
-                                    <span class="selectgroup-button selectgroup-button-icon" data-toggle="tooltip"
-                                          data-original-title="Light Sidebar"><i class="fas fa-sun"></i></span>
-                                </label>
-                                <label class="selectgroup-item">
-                                    <input type="radio" name="icon-input" value="2" class="selectgroup-input select-sidebar" checked>
-                                    <span class="selectgroup-button selectgroup-button-icon" data-toggle="tooltip"
-                                          data-original-title="Dark Sidebar"><i class="fas fa-moon"></i></span>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="p-15 border-bottom">
-                            <h6 class="font-medium m-b-10">Color Theme</h6>
-                            <div class="theme-setting-options">
-                                <ul class="choose-theme list-unstyled mb-0">
-                                    <li title="white" class="active">
-                                        <div class="white"></div>
+                                <ul class="list-unstyled user-progress list-unstyled-border list-unstyled-noborder">
+                                    <li class="media">
+                                        <img alt="image" class="mr-3 rounded-circle" width="50" src="assets/img/users/user-1.png">
+                                        <div class="media-body">
+                                            <div class="media-title">Cara Stevens Cara Stevens Cara Stevens Cara Stevens</div>
+                                            <div class="text-job text-muted">Web Developer</div>
+                                        </div>
+                                        <div class="media-progressbar">
+                                            <div class="progress-text">30%</div>
+                                            <div class="progress" data-height="6" style="height: 6px;">
+                                                <div class="progress-bar bg-primary" data-width="30%" style="width: 30%;"></div>
+                                            </div>
+                                        </div>
+                                        <div class="media-cta">
+                                            <a href="#" class="btn btn-outline-primary">Detail</a>
+                                        </div>
                                     </li>
-                                    <li title="cyan">
-                                        <div class="cyan"></div>
+                                    <li class="media">
+                                        <img alt="image" class="mr-3 rounded-circle" width="50" src="assets/img/users/user-5.png">
+                                        <div class="media-body">
+                                            <div class="media-title">Ashton Cox</div>
+                                            <div class="text-job text-muted">Web Developer</div>
+                                        </div>
+                                        <div class="media-progressbar">
+                                            <div class="progress-text">67%</div>
+                                            <div class="progress" data-height="6" style="height: 6px;">
+                                                <div class="progress-bar bg-primary" data-width="67%" style="width: 67%;"></div>
+                                            </div>
+                                        </div>
+                                        <div class="media-cta">
+                                            <a href="#" class="btn btn-outline-primary">Detail</a>
+                                        </div>
                                     </li>
-                                    <li title="black">
-                                        <div class="black"></div>
-                                    </li>
-                                    <li title="purple">
-                                        <div class="purple"></div>
-                                    </li>
-                                    <li title="orange">
-                                        <div class="orange"></div>
-                                    </li>
-                                    <li title="green">
-                                        <div class="green"></div>
-                                    </li>
-                                    <li title="red">
-                                        <div class="red"></div>
+                                    <li class="media">
+                                        <img alt="image" class="mr-3 rounded-circle" width="50" src="assets/img/users/user-4.png">
+                                        <div class="media-body">
+                                            <div class="media-title">Sarah Smith</div>
+                                            <div class="text-job text-muted">Web Developer</div>
+                                        </div>
+                                        <div class="media-progressbar">
+                                            <div class="progress-text">45%</div>
+                                            <div class="progress" data-height="6" style="height: 6px;">
+                                                <div class="progress-bar bg-primary" data-width="45%" style="width: 45%;"></div>
+                                            </div>
+                                        </div>
+                                        <div class="media-cta">
+                                            <a href="#" class="btn btn-outline-primary">Detail</a>
+                                        </div>
                                     </li>
                                 </ul>
                             </div>
                         </div>
-                        <div class="p-15 border-bottom">
-                            <div class="theme-setting-options">
-                                <label class="m-b-0">
-                                    <input type="checkbox" name="custom-switch-checkbox" class="custom-switch-input"
-                                           id="mini_sidebar_setting">
-                                    <span class="custom-switch-indicator"></span>
-                                    <span class="control-label p-l-10">Mini Sidebar</span>
-                                </label>
-                            </div>
+                    </div>
+
+                    <div class="card mat-4 col-lg-6">
+                        <div class="card-header">
+                            <h4>My Subjects</h4>
                         </div>
-                        <div class="p-15 border-bottom">
-                            <div class="theme-setting-options">
-                                <label class="m-b-0">
-                                    <input type="checkbox" name="custom-switch-checkbox" class="custom-switch-input"
-                                           id="sticky_header_setting">
-                                    <span class="custom-switch-indicator"></span>
-                                    <span class="control-label p-l-10">Sticky Header</span>
-                                </label>
+                        <div class="card-body pb-0">
+                            <div class="row">
+                                <div class="col-6 col-sm-3 col-lg-3 mb-4 mb-md-0">
+                                    <div class="avatar-item">
+                                        <img alt="image" src="assets/img/users/user-1.png" class="img-fluid" data-toggle="tooltip" title="" data-original-title="Ashton Cox">
+                                        <div class="avatar-badge" title="" data-toggle="tooltip" data-original-title="Editor"><i class="fas fa-wrench"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-sm-3 col-lg-3 mb-4 mb-md-0">
+                                    <div class="avatar-item">
+                                        <img alt="image" src="assets/img/users/user-2.png" class="img-fluid" data-toggle="tooltip" title="" data-original-title="John Doe">
+                                        <div class="avatar-badge" title="" data-toggle="tooltip" data-original-title="Admin"><i class="fas fa-cog"></i></div>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-sm-3 col-lg-3 mb-4 mb-md-0">
+                                    <div class="avatar-item">
+                                        <img alt="image" src="assets/img/users/user-3.png" class="img-fluid" data-toggle="tooltip" title="" data-original-title="Airi Satou">
+                                        <div class="avatar-badge" title="" data-toggle="tooltip" data-original-title="Author"><i class="fas fa-pencil-alt"></i></div>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-sm-3 col-lg-3 mb-4 mb-md-0">
+                                    <div class="avatar-item">
+                                        <img alt="image" src="assets/img/users/user-4.png" class="img-fluid" data-toggle="tooltip" title="" data-original-title="Hasan Basri">
+                                        <div class="avatar-badge" title="" data-toggle="tooltip" data-original-title="Author"><i class="fas fa-pencil-alt"></i></div>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="mt-4 mb-4 p-3 align-center rt-sidebar-last-ele">
-                            <a href="#" class="btn btn-icon icon-left btn-primary btn-restore-theme">
-                                <i class="fas fa-undo"></i> Restore Default
-                            </a>
+                            <div class="row">
+                                <div class="col-6 col-sm-3 col-lg-3 mb-4 mb-md-0">
+                                    <div class="avatar-item">
+                                        <img alt="image" src="assets/img/users/user-5.png" class="img-fluid" data-toggle="tooltip" title="" data-original-title="Airi Satou">
+                                        <div class="avatar-badge" title="" data-toggle="tooltip" data-original-title="Editor"><i class="fas fa-wrench"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-sm-3 col-lg-3 mb-4 mb-md-0">
+                                    <div class="avatar-item">
+                                        <img alt="image" src="assets/img/users/user-4.png" class="img-fluid" data-toggle="tooltip" title="" data-original-title="Angelica Ramos">
+                                        <div class="avatar-badge" title="" data-toggle="tooltip" data-original-title="Admin"><i class="fas fa-cog"></i></div>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-sm-3 col-lg-3 mb-4 mb-md-0">
+                                    <div class="avatar-item">
+                                        <img alt="image" src="assets/img/users/user-1.png" class="img-fluid" data-toggle="tooltip" title="" data-original-title="Ashton Cox">
+                                        <div class="avatar-badge" title="" data-toggle="tooltip" data-original-title="Author"><i class="fas fa-pencil-alt"></i></div>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-sm-3 col-lg-3 mb-4 mb-md-0">
+                                    <div class="avatar-item">
+                                        <img alt="image" src="assets/img/users/user-2.png" class="img-fluid" data-toggle="tooltip" title="" data-original-title="Cara Stevens">
+                                        <div class="avatar-badge" title="" data-toggle="tooltip" data-original-title="Admin"><i class="fas fa-cog"></i></div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
+
+
+
+
+
+
+
                 </div>
-            </div>
+
+
+            </section>
         </div>
         <footer class="main-footer">
             <div class="footer-left">
