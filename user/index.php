@@ -213,59 +213,36 @@
                         </div>
                         <div class="card-body pb-0">
                             <div class="row">
-                                <div class="col-6 col-sm-3 col-lg-3 mb-4 mb-md-0">
-                                    <div class="avatar-item">
-                                        <img alt="image" src="assets/img/users/user-1.png" class="img-fluid" data-toggle="tooltip" title="" data-original-title="Ashton Cox">
-                                        <div class="avatar-badge" title="" data-toggle="tooltip" data-original-title="Editor"><i class="fas fa-wrench"></i>
-                                        </div>
+                                <!-- Rectangle 1 -->
+                                <div class="col-6 col-sm-3 col-lg-6 mb-4">
+                                    <div class="rectangle bg-blue">
+                                        <div class="icon">🔵</div>
+                                        <div class="title">Item AB</div>
                                     </div>
                                 </div>
-                                <div class="col-6 col-sm-3 col-lg-3 mb-4 mb-md-0">
-                                    <div class="avatar-item">
-                                        <img alt="image" src="assets/img/users/user-2.png" class="img-fluid" data-toggle="tooltip" title="" data-original-title="John Doe">
-                                        <div class="avatar-badge" title="" data-toggle="tooltip" data-original-title="Admin"><i class="fas fa-cog"></i></div>
+                                <!-- Rectangle 2 -->
+                                <div class="col-6 col-sm-3 col-lg-6 mb-4">
+                                    <div class="rectangle bg-green">
+                                        <div class="icon">🟢</div>
+                                        <div class="title">Item AB</div>
                                     </div>
                                 </div>
-                                <div class="col-6 col-sm-3 col-lg-3 mb-4 mb-md-0">
-                                    <div class="avatar-item">
-                                        <img alt="image" src="assets/img/users/user-3.png" class="img-fluid" data-toggle="tooltip" title="" data-original-title="Airi Satou">
-                                        <div class="avatar-badge" title="" data-toggle="tooltip" data-original-title="Author"><i class="fas fa-pencil-alt"></i></div>
+                                <!-- Rectangle 3 -->
+                                <div class="col-6 col-sm-3 col-lg-6 mb-4">
+                                    <div class="rectangle bg-yellow">
+                                        <div class="icon">🟡</div>
+                                        <div class="title">Item AB</div>
                                     </div>
                                 </div>
-                                <div class="col-6 col-sm-3 col-lg-3 mb-4 mb-md-0">
-                                    <div class="avatar-item">
-                                        <img alt="image" src="assets/img/users/user-4.png" class="img-fluid" data-toggle="tooltip" title="" data-original-title="Hasan Basri">
-                                        <div class="avatar-badge" title="" data-toggle="tooltip" data-original-title="Author"><i class="fas fa-pencil-alt"></i></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-6 col-sm-3 col-lg-3 mb-4 mb-md-0">
-                                    <div class="avatar-item">
-                                        <img alt="image" src="assets/img/users/user-5.png" class="img-fluid" data-toggle="tooltip" title="" data-original-title="Airi Satou">
-                                        <div class="avatar-badge" title="" data-toggle="tooltip" data-original-title="Editor"><i class="fas fa-wrench"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-6 col-sm-3 col-lg-3 mb-4 mb-md-0">
-                                    <div class="avatar-item">
-                                        <img alt="image" src="assets/img/users/user-4.png" class="img-fluid" data-toggle="tooltip" title="" data-original-title="Angelica Ramos">
-                                        <div class="avatar-badge" title="" data-toggle="tooltip" data-original-title="Admin"><i class="fas fa-cog"></i></div>
-                                    </div>
-                                </div>
-                                <div class="col-6 col-sm-3 col-lg-3 mb-4 mb-md-0">
-                                    <div class="avatar-item">
-                                        <img alt="image" src="assets/img/users/user-1.png" class="img-fluid" data-toggle="tooltip" title="" data-original-title="Ashton Cox">
-                                        <div class="avatar-badge" title="" data-toggle="tooltip" data-original-title="Author"><i class="fas fa-pencil-alt"></i></div>
-                                    </div>
-                                </div>
-                                <div class="col-6 col-sm-3 col-lg-3 mb-4 mb-md-0">
-                                    <div class="avatar-item">
-                                        <img alt="image" src="assets/img/users/user-2.png" class="img-fluid" data-toggle="tooltip" title="" data-original-title="Cara Stevens">
-                                        <div class="avatar-badge" title="" data-toggle="tooltip" data-original-title="Admin"><i class="fas fa-cog"></i></div>
+                                <!-- Rectangle 4 -->
+                                <div class="col-6 col-sm-3 col-lg-6 mb-4">
+                                    <div class="rectangle bg-red">
+                                        <div class="icon">🔴</div>
+                                        <div class="title">Item AB</div>
                                     </div>
                                 </div>
                             </div>
+
                         </div>
                     </div>
 
