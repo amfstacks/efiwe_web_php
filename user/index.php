@@ -310,7 +310,7 @@ require_once __DIR__ . '/../templates/loggedInc.php';
 
               </div> -->
             <div class="modal-body">
-                <h5 class="modal-title" id="formModal">Dear <b>OLAIFA </b>,</h5>
+                <h5 class="modal-title" id="formModal">Dear <b> </b>,</h5>
                 <hr class="mb-0">
                 <div class="card-body ">
                     <!-- <h3 class="text-center"> welcome to your <b>dashboard</b> </h3> -->
