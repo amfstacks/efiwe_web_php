@@ -41,6 +41,7 @@ if(!$profileSet) {
             }
         }
         $_SESSION['userData'] = $userDataFetch;
+        $userData = $userDataFetch;
         $selectedSubjects = isset($userDataFetch['subjectSelect']) ? $userDataFetch['subjectSelect'] : [];
 
 // Optional: Store token if needed
@@ -64,8 +65,9 @@ if(!$profileSet) {
 //var_dump($user);
 //exit;
 
-$firstName = isset($userData['firstname']) ? $userData['firstname'] : 'Unknown';
-$surname = isset($userData['surname']) ? $userData['surname'] : 'Unknown';
+$firstName = isset($userData['firstname']) ? $userData['firstname'] : '-';
+$surname = isset($userData['surname']) ? $userData['surname'] : '-';
+$email = isset($user['email']) ? $user['email'] : '-';
 ?>
 
 

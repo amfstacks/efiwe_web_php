@@ -276,7 +276,7 @@ require_once __DIR__ . '/../templates/loggedInc.php';
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="formModal">Dear <b>BM/A24/002 </b>,</h5>
+                <h5 class="modal-title" id="formModal">Dear <b><?php echo $email; ?></b>,</h5>
                 <hr>
             </div>
             <div class="modal-body">
@@ -390,209 +390,25 @@ require_once __DIR__ . '/../templates/loggedInc.php';
 <script src="assets/js/scripts.js"></script>
 <!-- Custom JS File -->
 <script src="assets/js/custom.js"></script></body>
-
+<?php
+if ($profileSet == 0){
+?>
 <script>
-
-    var user = "OLAIFA RAMOTA OLUWABUKOLA";
-    function myfunction(){
-        setTimeout(function(){
-            tryc("info", "You have some unchecked important notifications","", "topRight");
-
-        }, 5000);
-    }
-</script>
-<script>
-
-    tryc('success', 'Welcome '+user  );
-
-
-</script><script>
-
-    window.onload(myfunction());
-
-</script>
-
-<script>
-
-    var user = "";
-    function myfunction(){
-        setTimeout(function(){
-            tryc("info", "You have some unchecked important notifications");
-
-        }, 5000);
-    }
-
-    var studclass = '1';
-    $(document).ready(function() {
-
-        // showSwal('rsuccess');
-        $('#setup').click(function(e){
-// alert('a');
-
-            var sub = [];
-            var datab =
-                $('.sub option:selected');
-            datab.each(function(){
-                sub.push($(this).val());
-            })
-
-            // sub[i] = $(selected).val();
-            console.log(sub);
-            // alert(sub);
-
-            if(sub.length < 1){
-
-                //  showToastPosition('selempty');
-                tryc("warning", "Subjects cannot be empty");
-
-                return false;
-
-            }
-            var jsonsub = JSON.stringify(sub);
-
-            $.ajax
-            ({
-
-                type: "POST",
-                url: "func/setup.php",
-//    data: "subj="+jsonsub+"&class="+jsonclas,
-                data: {  mysubjects: jsonsub, studclass:studclass },
-                timeout:20000,
-                beforeSend: function() {
-                    $('.circle-loader').css({"display":"block"});
-                    $('#setup').attr('disabled', 'disabled');
-                    $('#setup').text('setting up...');
-                },
-
-                success:function(response) {
-
-
-                    // alert (response);
-                    if(response.trim()=="success")
-                    {
-                        $('.circle-loader').css({"display":"none"});
-                        // showSwal('rsuccess-message');
-                        // $('#regform').css({"display":"none"});
-                        // $('#headhide').css({"display":"none"});
-                        // $('#headshow').css({"display":"block"});
-                        $('#setup').attr('disabled', 'disabled');
-                        $('#setup').removeClass("btn-primary");
-
-                        $('#setup').addClass("btn-success");
-                        $('#setup').text('setup complete...');
-                        tryc("success" , "Subjects successfully Setup");
-
-                        setTimeout(function() {
-                            // showSwal('rsuccess');
-
-                            // $("#emailid").css({"display":"none"});
-                            window.location.href="index.php?act=sset";
-                        }, 1000);
-
-                    }
-                    else if(response.trim()=="error"){
-                        tryc("error" , "Subjects  Setup error, Please try again");
-
-                        $('#setup').attr('disabled', false);
-                        $('#setup').text('Set up');
-                    }
-
-                },
-
-                error: function(xhr, textStatus, errorThrown) {
-
-                    if (textStatus == 'timeout') {
-
-                        // subjst.abort();
-                        tryc("warning", "Your internet connection seems to be slow, please exercise patience...");
-
-                        //    $('#setup').attr('disabled', false);
-                        // $('#setup').text('Set up');
-                    }
-                } ,
-
-            });
-
-            return false;
-
-
-
-// return false;
-        });
-    });
-
-
-
-</script>
-<script>
-    get_prog();
-    function get_prog(){
-        // alert('here');
-        val = BM/A24/002;
-        $.ajax({
-            type: "POST",
-            url: "stapi/getovrp.php",
-            data: { user_id: val,  },
-            dataType:"json",
-            // data:'class_id='+val+'user_id='+userq,
-            beforeSend:function(){
-                // $('#button_action').attr('disabled', 'disabled');
-                // $('#button_action').val('Validate...');
-                // alert('a');
-                $("#loaderb").show();
-            },
-            success: function(data){
-                $("#loaderb").hide();
-                // alert (data.all);
-                // alert(data.allp);
-                $('#lnpg').text(data.allp);
-                $("#lnpg").show();
-                $(".lnpbar").width(data.allp + '%');
-                $(".lnpbar").text(data.allp + '%');
-
-
-            }
-        });
-    }
-
-
     $(document).ready(function(){
-
-
-        var dataTable = $('#savae-staaage').DataTable({
-            "processing" : true,
-            "serverSide" : true,
-            "searching" : false,
-            "ordering" : false,
-
-
-            "order" : [],
-            "ajax" : {
-                url: "videre/schedexna.php",
-                method:"POST",
-                data:{action:'fetch', page:'schedule'}
-            },
-
-            "columnDefs":[
-                {
-
-                    "orderable":false,
-                },
-            ],
-        });
-
-        // $("#notification-modal").modal('show');
-        // alert("right");
+        $("#exampleModalCenter").modal('show');
+        tryc("info", "Set up your Bio-Data");
     });
+</script>
 
+    <?php
 
-    // var user = "";
-    // console.log(user);
+}
+?>
+<script>
 
-    // showToastPosition('welcome',user);
-    // showToastPosition('welcome',trim());
+    // tryc('success', 'Welcome '+user  );
 
 
 </script>
-<!-- index.html  21 Nov 2019 03:47:04 GMT -->
+
 </html>
