@@ -174,12 +174,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                                   <div class="form-group">
                                       <button type="submit" id="submitlog" class="btn btn-primary btn-lg btn-block" tabindex="4" >
-                                          Login
+                                          Register
                                       </button>
                                   </div>
 
                                   <div class="mb-4 text-muted text-center " style=" border:solid 1px; padding:10px;">
-                                      New to  <?php echo strtolower(APP_NAME)?>? <a href="login.php" class="text-success" style="cursor: pointer;"> Start here</a>
+                                     Already have an account ? <a href="login.php" class="text-success" style="cursor: pointer;"> Login</a>
                                   </div>
                                   <!-- <div class="input-group">
                                     <div class="input-group-prepend" style="border-right: none !important;">

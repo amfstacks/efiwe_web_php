@@ -3,7 +3,36 @@ $page_title = 'Sign In';
 
 require_once __DIR__ . '/../templates/authHeader.php';
 
+$errors = [];
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Sanitize and validate inputs
+    $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
+    $password = isset($_POST['password']) ? $_POST['password'] : '';
+
+    if (!$email) {
+        $errors[] = 'Please enter a valid email address.';
+    }
+
+    if (empty($password)) {
+        $errors[] = 'Please enter your password.';
+    }
+
+    if (empty($errors)) {
+        // Call the signin API
+        $result = signin($email, $password);
+
+        if ($result['success']) {
+            // Assuming the API returns user data including accessToken
+            $user_data = $result['data'];
+            login_user($user_data);
+            header('Location: dashboard.php');
+            exit();
+        } else {
+            $errors[] = $result['message'];
+        }
+    }
+}
 ?>
 
 
@@ -63,8 +92,21 @@ require_once __DIR__ . '/../templates/authHeader.php';
 
                                       <hr style="width: 40%;">
                                   </center>
+
+                                  <?php if (!empty($errors)): ?>
+                                      <!--                                      <div class="alert alert-danger"><p><b>Do not send money to anyone for admission purposes.</b><br> All payments should be made through official school channels. The school is not responsible for payments made to unauthorized persons.</p></div>-->
+                                      <div class="alert alert-danger">
+                                          <ul>
+                                              <?php foreach ($errors as $error): ?>
+                                                  <li><?php echo htmlspecialchars($error); ?></li>
+                                              <?php endforeach; ?>
+                                          </ul>
+                                      </div>
+                                  <?php endif; ?>
+
+
                                   <div class="form-group floating-addon">
-                                      <label for="email">Username || Email</label>
+                                      <label for="email">Email</label>
                                       <div class="input-group">
                                           <div class="input-group-prepend">
                                               <div class="input-group-text">
@@ -72,7 +114,7 @@ require_once __DIR__ . '/../templates/authHeader.php';
                                                   <!-- <i class="material-icons">lock</i> -->
                                               </div>
                                           </div>
-                                          <input id="lusername" type="text" class="form-control" name="text" tabindex="1" required autofocus>
+                                          <input id="lusername" type="text" class="form-control" name="email" tabindex="1" required autofocus>
 
                                       </div>
                                       <!-- <input id="lusername" type="text" class="form-control" name="text" tabindex="1" required autofocus> -->
