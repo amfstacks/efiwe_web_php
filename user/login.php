@@ -4,7 +4,6 @@ $page_title = 'Sign In';
 require_once __DIR__ . '/../templates/authHeader.php';
 
 $errors = [];
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Sanitize and validate inputs
     $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);

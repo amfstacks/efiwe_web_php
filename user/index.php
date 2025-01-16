@@ -1,3 +1,8 @@
+<?php
+require_once __DIR__ . '/../templates/loggedInc.php';
+
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 

@@ -34,6 +34,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 //exit;
         if ($result['success']) {
             $success = $result['message'];
+
+            $result = signin($email, $password);
+
+            if ($result['success']) {
+                // Assuming the API returns user data including accessToken
+                $user_data = $result['data'];
+                login_user($user_data);
+//                header('Location: /');
+                header('Location: index');
+
+                exit();
+            }
         } else {
             $errors[] = $result['message'];
         }

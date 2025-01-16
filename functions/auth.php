@@ -18,7 +18,7 @@ function is_logged_in() {
  */
 function require_login() {
     if (!is_logged_in()) {
-        header('Location: signin.php');
+        header('Location: login');
         exit();
     }
 }
@@ -38,5 +38,7 @@ function login_user($user_data) {
 function logout_user() {
     session_unset();
     session_destroy();
+    header('Location: login');
+    exit();
 }
 ?>
