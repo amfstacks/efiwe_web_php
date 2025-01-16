@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Assuming the API returns user data including accessToken
             $user_data = $result['data'];
             login_user($user_data);
-            header('Location: dashboard.php');
+            header('Location: index');
             exit();
         } else {
             $errors[] = $result['message'];

@@ -52,7 +52,7 @@ require_once __DIR__ . '/../templates/loggedInc.php';
                             <!-- <i class="material-icons" style="vertical-align: top;">account_box</i> -->
 
                             <i class="fas fa-user-graduate"></i>
-                            <span style="font-size: 13px;">DASHBOARD </span>
+                            <span style="font-size: 13px;">DASHBOARD  <?php  echo $profileSet ?></span>
                         </button>
 
                     </div>
@@ -76,7 +76,7 @@ require_once __DIR__ . '/../templates/loggedInc.php';
                                     <div class="row ">
                                         <div class="col-lg-7 col-md-6 col-sm-6 col-xs-6 pr-0 pt-3">
                                             <div class="card-content">
-                                                <h5 class="font-15"> OLAIFA RAMOTA OLUWABUKOLA</h5>
+                                                <h5 class="font-15"> <?php echo $surname." ". $firstName ?></h5>
 
                                                 <!-- <h2 class="mb-3 font-18">1,287</h2> -->
                                                 <p class="mb-3"><span class="col-orange">Full Name</span> </p>

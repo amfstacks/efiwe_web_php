@@ -108,7 +108,8 @@ function api_request_get($endpoint, $data = null, $method = 'GET', $accessToken 
 
     // Execute the request
     $response = curl_exec($ch);
-
+//var_dump($response);
+//exit;
     // Check for cURL errors
     if (curl_errno($ch)) {
         $error_msg = curl_error($ch);
