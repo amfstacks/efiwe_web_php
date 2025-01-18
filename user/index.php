@@ -60,7 +60,7 @@ require_once __DIR__ . '/../templates/loggedInc.php';
                                         <div class="col-lg-5 col-md-6 col-sm-6 col-xs-6 pl-0">
                                             <div class="banner-img">
 
-                                                <img src="assets/img/user.png" alt="">
+                                                <img src="assets/img/user.png" alt="" class="rounded-circle author-box-picture">
                                             </div>
                                         </div>
                                     </div>

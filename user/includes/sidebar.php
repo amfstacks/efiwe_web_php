@@ -11,20 +11,20 @@
         <ul class="sidebar-menu ">
             <li class="menu-header">Main</li>
             <li class="dropdown active">
-                <a href="index.php" class="nav-link"><i class="
+                <a href="index" class="nav-link"><i class="
 
               fas fa-chart-area"></i><span>Dashboard</span></a>
             </li>
 
             <li class="menu-header"></li>
             <li class="dropdown ">
-                <a href="index" class="nav-link"><i class="fas fa-tasks"></i><span>Tasks</span></a>
+                <a href="#" class="nav-link"><i class="fas fa-tasks"></i><span>Tasks</span></a>
             </li>
 
 
             <li class="menu-header"></li>
             <li class="dropdown ">
-                <a href="index" class="nav-link"><i class="
+                <a href="#" class="nav-link"><i class="
 
               fas fa-chart-area"></i><span>Library</span></a>
             </li>
@@ -32,7 +32,7 @@
 
             <li class="menu-header"></li>
             <li class="dropdown ">
-                <a href="index" class="nav-link"><i class="
+                <a href="#" class="nav-link"><i class="
 
               fas fa-chart-area"></i><span>Test</span></a>
             </li>
