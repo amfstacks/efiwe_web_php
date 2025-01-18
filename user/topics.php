@@ -34,7 +34,7 @@ $currentSubjectName = strtoupper($currentSubjectName);
                             <div class="card">
 
                                 <div class="padding-20">
-                                    <a href="#" class="badge badge-light" id="go-back-btn">Go Back</a>
+                                    <a href="#" class="badge badge-light mb-4" id="go-back-btn">Go Back</a>
 <!--                                    <button class="btn btn-lg btn-success font-20 mb-2">-->
 <!--                                    </button>-->
 
@@ -47,8 +47,8 @@ $currentSubjectName = strtoupper($currentSubjectName);
 
 
                                             <div id="topics-container">
-                                                <h4>Topics</h4>
-                                                <ul id="topics-list">
+                                                <h5>Topics</h5>
+                                                <ul id="topics-list" class="list-group">
                                                     <!-- Topics will be dynamically inserted here -->
                                                 </ul>
                                             </div>
@@ -91,6 +91,13 @@ include 'includes/footerjs.php';
     $(document).ready(function() {
         function loadTopics(subjectId) {
             $('#topics-list').empty(); // Clear previous topics
+            const skeletonLoader = $(`
+            <div class="askeleton-loader topic-item"></div>
+            <div class="askeleton-loader topic-item"></div>
+            <div class="askeleton-loader topic-item"></div>
+            <div class="askeleton-loader topic-item"></div>
+        `);
+            $('#topics-list').append(skeletonLoader);
             $('#topics-container').show(); // Show the topics container
             $.ajax({
                 url: '../api_ajax/get_Topics.php', // Use the same API or a specific one for topics
@@ -100,14 +107,14 @@ include 'includes/footerjs.php';
                 success: function(response) {
                     if (response.success) {
                         const topics = response.topics || [];
-
+                        $('#topics-list').empty();
                         if (topics.length === 0) {
                             $('#topics-list').append('<li>No topics available for this subject.</li>');
                         } else {
                             // Iterate through topics and display them
                             topics.forEach(topic => {
                                 const topicItem = $(`
-                                <li class="topic-item">
+                                <li class="topic-item list-group-item col-lg-6">
                                     <a href="${topic.video}" target="_blank">${topic.topic}</a>
                                 </li>
                             `);
@@ -125,7 +132,7 @@ include 'includes/footerjs.php';
             });
         }
 
-        // loadTopics();
+        loadTopics();
     });
 </script>
 <script>
@@ -137,62 +144,34 @@ include 'includes/footerjs.php';
 
 </script>
 <style>
-    .profile-setup-container {
-        max-width: 800px;
-        margin: 0 auto;
-        padding: 20px;
+    .askeleton-loader {
+        width: 100%;
+        height: 50px; /* Adjust based on your actual list item height */
+        background: #e0e0e0;
+        margin: 10px 0;
+        border-radius: 4px;
+        position: relative;
+        overflow: hidden;
     }
 
-    .form-group {
-        margin-bottom: 15px;
+    .askeleton-loader::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(200, 200, 200, 0.8) 50%, rgba(255, 255, 255, 0) 100%);
+        animation: loading 1.5s infinite;
     }
 
-    .subjects-grid {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 15px;
-    }
-
-    .subject-card {
-        width: 150px;
-        padding: 10px;
-        border: 1px solid #ccc;
-        border-radius: 8px;
-        text-align: center;
-        cursor: pointer;
-        transition: transform 0.2s, box-shadow 0.2s;
-    }
-
-    .subject-card:hover {
-        transform: scale(1.05);
-        box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-
-    .subject-card.selected {
-        /*border: 2px solid #000;*/
-    }
-
-    .subject-icon {
-        width: 50px;
-        height: 50px;
-        object-fit: contain;
-        margin-bottom: 10px;
-    }
-
-    .error-message {
-        color: red;
-        font-size: 0.9em;
-    }
-
-    .success-message {
-        color: green;
-        font-size: 1em;
-        margin-top: 15px;
-    }
-
-    button {
-        padding: 10px 20px;
-        font-size: 1em;
+    @keyframes loading {
+        0% {
+            left: -100%;
+        }
+        100% {
+            left: 100%;
+        }
     }
 </style>
 </html>

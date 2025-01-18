@@ -76,7 +76,7 @@ function api_request_get($endpoint, $data = null, $method = 'GET', $accessToken 
     if ($refreshToken == '' || $refreshToken == null) {
         return [
             "success" => false,
-            "message" => "access token is missing",
+            "message" => "refresh token is missing",
         ];
     }
     $url = API_BASE_URL . $endpoint;
