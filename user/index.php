@@ -316,29 +316,12 @@ require_once __DIR__ . '/../templates/loggedInc.php';
     </div>
 </div>
 
-<!-- General JS Scripts -->
-<script src="assets/js/app.min.js"></script>
 
-<script src="assets/bundles/select2/dist/js/select2.full.min.js"></script>
 
-<script src="assets/bundles/datatables/datatables.min.js"></script>
-<script src="assets/bundles/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
-<script src="assets/bundles/jquery-ui/jquery-ui.min.js"></script>
-<!-- Page Specific JS File -->
-<script src="assets/js/page/datatables.js"></script>
-<!-- JS Libraies -->
-<script src="assets/bundles/izitoast/js/iziToast.min.js"></script>
-<script src="assets/js/page/toastr.js"></script>
-
-<!-- Page Specific JS File -->
-<script src="assets/js/page/index.js"></script>
-<script src="assets/bundles/fullcalendar/fullcalendar.min.js"></script>
-<!-- Page Specific JS File -->
-<script src="assets/js/page/calendar.js"></script>
-<!-- Template JS File -->
-<script src="assets/js/scripts.js"></script>
-<!-- Custom JS File -->
-<script src="assets/js/custom.js"></script></body>
+<?php
+include 'includes/footerjs.php';
+?>
+</body>
 <?php
 if ($profileSet == 0){
 ?>
@@ -413,12 +396,14 @@ if ($profileSet == 0){
                             const subject = subjects.find(sub => sub.fid === subjectId);
                             if (subject) {
                                 const subjectCard = $(`
-                                <div class="col-6 col-sm-3 col-lg-6 mb-4">
+
+                                <div class="col-6 col-sm-3 col-lg-6 mb-4 mysubjectCard" data-id="${subject.fid}">
                                     <div class="rectangle">
                                        <div class="icon"> <img src="${subject.icon}" alt="${subject.name}" class="subject-icon"></div>
  <div class="title">${subject.name}</div>
                                     </div>
                                 </div>
+
                             `);
                                 subjectCard.find('.rectangle').css('background-color', convertColor(subject.color));
 
@@ -445,9 +430,30 @@ if ($profileSet == 0){
     }
     // tryc('success', 'Welcome '+user  );
 
+
+
     $(document).ready(function() {
         // Call loadMySubjects after the page has finished loading
         loadMySubjects();
+        $(document).on('click', '.mysubjectCard', function() {
+            const subjectId = $(this).data('id');
+            const subjectName = $(this).find('.title').text();
+
+            // Trigger the session store using an AJAX request
+            $.ajax({
+                url: 'set_subject_session.php',
+                method: 'POST',
+                data: { subjectId: subjectId, subjectName: subjectName },
+                success: function(response) {
+                    // history.pushState(null, null, window.location.href);
+                    // After successful session setting, redirect to the topics page
+                    window.location.href = 'topics';  // Redirect without query params
+                },
+                error: function() {
+                    alert('An error occurred. Please try again.');
+                }
+            });
+        });
 
     });
 </script>

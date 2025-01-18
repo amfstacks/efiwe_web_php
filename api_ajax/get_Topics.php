@@ -25,16 +25,30 @@ if (!is_logged_in()) {
 
 // Retrieve user data from the session
 $user = isset($_SESSION['user']) ? $_SESSION['user'] : [];
-
+$uid = isset($user['localId']) ? $user['localId'] : '';
 // Extract accessToken and refreshToken
 $accessToken = isset($user['idToken']) ? $user['idToken'] : '';
- $refreshToken = isset($user['refreshToken']) ? $user['refreshToken'] : '';
+$refreshToken = isset($user['refreshToken']) ? $user['refreshToken'] : '';
 
 // Define your examId
 $examId = "X2j9hFD6O7RGAER6bn3b";
+//$subjectId = "Sqn3YPikF2m4lm9qsPoM";
+//$uid = "6ta6rmIRBMTgrWL1KdljDlj8dd02";
+
+$currentSubjectId = isset($_SESSION['currentSubjectId']) ? $_SESSION['currentSubjectId'] : null;
+
+// Ensure the subject is set, otherwise redirect to an error page or show a message
+if (!$currentSubjectId) {
+    // Optionally, redirect to a 404 or show an error
+    echo json_encode([
+        "success" => false,
+        "message" => "Please select a subject."
+    ]);
+    exit();
+}
 
 // Fetch all subjects from the API
-$result = fetch_all_subjects($examId, $refreshToken, $accessToken);
+$result = fetch_subject_topics($uid,$currentSubjectId, $refreshToken, $accessToken);
 
 // Return the result as JSON
 header('Content-Type: application/json');
