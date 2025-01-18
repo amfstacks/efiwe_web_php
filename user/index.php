@@ -1,36 +1,11 @@
 <?php
+$page_title = 'STUDENT || DASHBOARD';
+
 require_once __DIR__ . '/../templates/loggedInc.php';
 
 
 ?>
-<!DOCTYPE html>
-<html lang="en">
 
-
-<!-- index.html  21 Nov 2019 03:44:50 GMT -->
-<head>
-    <meta charset="UTF-8">
-    <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
-    <title>STUDENT || HOME</title>
-    <!-- General CSS Files -->
-    <link rel="stylesheet" href="assets/css/app.min.css">
-    <link rel="stylesheet" href="assets/bundles/bootstrap-social/bootstrap-social.css">
-
-    <link rel="stylesheet" href="assets/bundles/fullcalendar/fullcalendar.min.css">
-    <link rel="stylesheet" href="assets/bundles/datatables/datatables.min.css">
-    <link rel="stylesheet" href="assets/bundles/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css">
-    <link rel="stylesheet" href="assets/bundles/izitoast/css/iziToast.min.css">
-    <link rel="stylesheet" href="assets/bundles/select2/dist/css/select2.min.css">
-
-    <!-- Template CSS -->
-    <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="stylesheet" href="assets/css/components.css">
-    <!-- Custom style CSS -->
-    <link rel="stylesheet" href="assets/css/custom.css">
-    <link rel='shortcut icon' type='image/x-icon' href='assets/img/favicon.ico' />
-
-
-</head>
 
 <body>
 <div class="loader"></div>
@@ -288,9 +263,9 @@ require_once __DIR__ . '/../templates/loggedInc.php';
                         <!-- <small class="text-muted">With faded secondary text</small> -->
                     </h3>
                     <p class="lead mt-4">
-                        Take a step forward by  setting up your Biodata.
+                        Take a step forward by  setting up your Biodata and your JAMB Subjects.
                     </p>
-                    <a href="biodata.php">     <button type="button" class="btn btn-primary" >  <i class="fa fa-spin fa-cog"></i> Setup  Biodata
+                    <a href="profile-setup.php">     <button type="button" class="btn btn-primary" >  <i class="fa fa-spin fa-cog"></i> Setup  Biodata
                         </button></a>
                 </div>
 
