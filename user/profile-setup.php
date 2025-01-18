@@ -25,9 +25,9 @@ require_once __DIR__ . '/../templates/loggedInc.php';
                                 <div class="padding-20">
 
                                     <button class="btn btn-lg btn-success font-20 mb-2">
-                                        Matric Number: BM/A24/002</button>
+                                        </button>
 
-                                    <form  class="needs-validation" novalidate=""  id="bioform" action="func/biodata.php" method="POST" enctype="multipart/form-data" >
+                                    <form  class="needs-validation" novalidate=""  id="profile-form"   enctype="multipart/form-data" >
                                         <div class="card-header">
                                             <h4> Update your Biodata</h4>
                                         </div>
@@ -40,7 +40,7 @@ require_once __DIR__ . '/../templates/loggedInc.php';
                                             <div class="row">
                                                 <div class="form-group col-md-6 col-12">
                                                     <label>First Name:</label>
-                                                    <input type="text" class="form-control" id="firstname" name="firstname" >
+                                                    <input type="text" class="form-control" id="firstname" name="firstname" required >
                                                     <div class="invalid-feedback">
                                                         Please fill in your first name
                                                     </div>
@@ -48,7 +48,7 @@ require_once __DIR__ . '/../templates/loggedInc.php';
 
                                                 <div class="form-group col-md-6 col-12">
                                                     <label>Surname:</label>
-                                                    <input type="text" class="form-control" id="surname" name="surname" >
+                                                    <input type="text" class="form-control" id="surname" name="surname" required >
                                                     <div class="invalid-feedback">
                                                         Please fill in your surname
                                                     </div>
@@ -61,7 +61,7 @@ require_once __DIR__ . '/../templates/loggedInc.php';
                                                         <option value="">Select your gender</option>
 
                                                         <option value="1" >Male</option>
-                                                        <option value="2" selected>Female</option>
+                                                        <option value="2" >Female</option>
 
 
                                                     </select>
@@ -71,7 +71,7 @@ require_once __DIR__ . '/../templates/loggedInc.php';
                                                 </div>
                                                 <div class="form-group col-md-6 col-12">
                                                     <label>Phone Number</label>
-                                                    <input type="number" placeholder="Enter your Phone Number"class="form-control" id="phoneNumber" name="phoneNumber"  required>
+                                                    <input type="number" placeholder="Enter your Phone Number" class="form-control" id="phoneNumber" name="phoneNumber"  required>
                                                     <div class="invalid-feedback">
                                                         Please fill in your contact number
                                                     </div>
@@ -145,7 +145,7 @@ require_once __DIR__ . '/../templates/loggedInc.php';
 
                                                 <div class="form-group col-md-6 col-12">
                                                     <label>Date Of Birth</label>
-                                                    <input type="date" class="form-control" value="2002-05-26"  name="dob" id="dob">
+                                                    <input type="date" class="form-control"   name="dob" id="dob">
 
                                                     <div class="invalid-feedback">
                                                         Please select your Date Of Birth
@@ -165,12 +165,14 @@ require_once __DIR__ . '/../templates/loggedInc.php';
                                             <hr>
                                             <div class="row">
                                                 <div class="form-group">
-                                                    <label>Select 4 Subjects:</label>
-                                                    <div id="subjects-grid" class="subjects-grid">
+                                                    <label>
+                                                        <h5> Select your 4 JAMB Subjects:</h5>
+                                                    </label>
+                                                    <div id="subjects-grid" class="subjects-grid rowa">
                                                         <p id="preload-subject" class="info-message" style="display: none;">loading subjects..</p>
                                                         <!-- Subjects will be dynamically inserted here -->
                                                     </div>
-                                                    <p id="subject-error" class="error-message" style="display: none;">Please select exactly 4 subjects.</p>
+                                                    <p id="subject-error" class="alert alert-danger alert-dismissible show fade mt-4 text-white font-weight-bold" style="display: none;">Please select exactly 4 subjects.</p>
                                                 </div>
 
                                             </div>
@@ -179,8 +181,22 @@ require_once __DIR__ . '/../templates/loggedInc.php';
 
                                         </div>
                                         <div class="card-footer text-right">
+                                            <button type="submit" id="submit-button" class="btn btn-icon icon-left btn-primary btn-lg"> <i class="fas fa-save"></i>Save Profile</button>
                                         </div>
                                     </form>
+                                    <div id="form-success" class="success-message" style="display: none;">
+                                        Profile saved successfully!
+                                    </div>
+<!--                                    <div id="form-error" class="error-message" style="display: none;">-->
+<!--                                        Failed to save profile. Please try again.-->
+<!--                                    </div>-->
+                                    <div id="form-error" class="alert alert-danger alert-has-icon col-lg-6 col-sm-12" style="display: none;">
+                                        <div class="alert-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                                        <div class="alert-body">
+                                            <div class="alert-title">Error</div>
+                                            <span id="form-error-text">Failed to save profile. Please try again.</span>
+                                        </div>
+                                    </div>
 
                                 </div>
                             </div>
@@ -212,11 +228,13 @@ include 'includes/footerjs.php';
 
         // Function to fetch and display subjects
         function loadSubjects() {
+            $('#preload-subject').show();
             $.ajax({
                 url: '../api_ajax/get_subjects.php',
                 method: 'GET',
                 dataType: 'json',
                 success: function(response) {
+                    $('#preload-subject').hide();
                     if (response.success) {
                         const subjects = response.subjects || [];
                         const subjectsGrid = $('#subjects-grid');
@@ -229,7 +247,7 @@ include 'includes/footerjs.php';
                         // Iterate through subjects and create cards
                         subjects.forEach(subject => {
                             const subjectCard = $(`
-                            <div class="subject-card" data-id="${subject.fid}" data-color="${convertColor(subject.color)}">
+                            <div class="subject-card col-lg-3 col-md-6 col-sm-4" data-id="${subject.fid}" data-color="${convertColor(subject.color)}">
                                 <img src="${subject.icon}" alt="${subject.name}" class="subject-icon">
                                 <p class="subject-name">${subject.name}</p>
                             </div>
@@ -248,6 +266,10 @@ include 'includes/footerjs.php';
                                 // Deselect the subject
                                 $(this).removeClass('selected').css('background-color', '');
                                 selectedSubjects = selectedSubjects.filter(id => id !== subjectId);
+                                $(this).find('.subject-name').css({
+                                    'font-weight': 'normal',
+                                    'color': 'black'
+                                });
                             } else {
                                 if (selectedSubjects.length >= 4) {
                                     alert('You can only select up to 4 subjects.');
@@ -256,6 +278,10 @@ include 'includes/footerjs.php';
                                 // Select the subject
                                 $(this).addClass('selected').css('background-color', subjectColor);
                                 selectedSubjects.push(subjectId);
+                                $(this).find('.subject-name').css({
+                                    'font-weight': 'bold',
+                                    'color': 'white'
+                                });
                             }
 
                             // Hide or show error message based on selection
@@ -273,6 +299,8 @@ include 'includes/footerjs.php';
                     subjectsGrid.append('<p>Failed to load subjects. Please reload page.</p>');
                     alert('Failed to load subjects. Please try again later.');
                     console.error('AJAX Error:', textStatus, errorThrown);
+                    $('#preload-subject').hide();
+
                 }
             });
         }
@@ -314,8 +342,9 @@ include 'includes/footerjs.php';
             formData.append('subjectSelect', selectedSubjects.join(', '));
 
             // Disable the submit button to prevent multiple submissions
-            $('#submit-button').prop('disabled', true).text('Saving...');
 
+            $('#submit-button').addClass("btn-progress", "disabled").text('Saving...');
+            $('#form-error').hide();
             $.ajax({
                 url: '../api_ajax/save_profile.php',
                 method: 'POST',
@@ -328,20 +357,26 @@ include 'includes/footerjs.php';
                         $('#form-success').show().delay(3000).fadeOut();
                         $('#form-error').hide();
                         // Optionally, redirect to another page
-                        // window.location.href = 'dashboard.php';
+                        window.location.href = 'index.php';
                     } else {
-                        $('#form-error').text(response.message || 'Failed to save profile.').show();
+                        $('#form-error').show();
+                        $('#form-error-text').text(response.message || 'Failed to save profile.').show();
                         $('#form-success').hide();
                     }
                     // Re-enable the submit button
-                    $('#submit-button').prop('disabled', false).text('Save Profile');
+                    // $('#submit-button').prop('disabled', false).text('Save Profile');
+                    $('#submit-button').removeClass("btn-progress", "disabled").text('Save Profile');
+
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
-                    $('#form-error').text('An error occurred while saving your profile. Please try again.').show();
+                    $('#form-error').show();
+                    $('#form-error-text').text('An error occurred while saving your profile. Please try again.').show();
                     $('#form-success').hide();
                     console.error('AJAX Error:', textStatus, errorThrown);
                     // Re-enable the submit button
-                    $('#submit-button').prop('disabled', false).text('Save Profile');
+                    // $('#submit-button').prop('disabled', false).text('Save Profile');
+                    $('#submit-button').removeClass("btn-progress", "disabled").text('Save Profile');
+
                 }
             });
         });
@@ -391,7 +426,7 @@ include 'includes/footerjs.php';
     }
 
     .subject-card.selected {
-        border: 2px solid #000;
+        /*border: 2px solid #000;*/
     }
 
     .subject-icon {

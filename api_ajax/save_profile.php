@@ -40,6 +40,7 @@ if (empty($uid)) {
     exit();
 }
 
+
 // Handle file upload for profile image
 $profileUrl = '';
 $setProfile = false;
@@ -95,13 +96,17 @@ $phoneNumber = isset($_POST['phoneNumber']) ? trim($_POST['phoneNumber']) : '';
 $class = isset($_POST['class']) ? trim($_POST['class']) : '';
 $exam = isset($_POST['exam']) ? trim($_POST['exam']) : '';
 $state = isset($_POST['state']) ? trim($_POST['state']) : '';
-$city = isset($_POST['city']) ? trim($_POST['city']) : '';
+$city = isset($_POST['lga']) ? trim($_POST['lga']) : '';
 $homeaddress = isset($_POST['homeaddress']) ? trim($_POST['homeaddress']) : '';
 $subjectSelect = isset($_POST['subjectSelect']) ? trim($_POST['subjectSelect']) : '';
 
 // Validate required fields
 $errors = [];
 
+
+$exam = "X2j9hFD6O7RGAER6bn3b";
+$email =  $user['email'];
+$class = 'abc';
 if (empty($firstname)) {
     $errors[] = "First name is required.";
 }
