@@ -5,216 +5,1001 @@
 <html lang="en">
 
 
-<!-- auth-login.html  21 Nov 2019 03:49:32 GMT -->
+<!-- profile.html  21 Nov 2019 03:49:30 GMT -->
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
-    <title>Applicant Login</title>
+    <title>Profile</title>
     <!-- General CSS Files -->
-    <link rel="stylesheet" href="assets/css/app.min.css">
-    <link rel="stylesheet" href="assets/bundles/bootstrap-social/bootstrap-social.css">
-    <link rel="stylesheet" href="assets/bundles/select2/dist/css/select2.min.css">
-    <link rel="stylesheet" href="assets/bundles/izitoast/css/iziToast.min.css">
+    <link rel="stylesheet" href="../assets/css/app.min.css">
+    <link rel="stylesheet" href="../assets/bundles/bootstrap-social/bootstrap-social.css">
+    <link rel="stylesheet" href="../assets/bundles/select2/dist/css/select2.min.css">
+    <link rel="stylesheet" href="../assets/bundles/izitoast/css/iziToast.min.css">
 
     <!-- Template CSS -->
-    <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="stylesheet" href="assets/css/components.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/components.css">
     <!-- Custom style CSS -->
-
+    <link rel="stylesheet" href="../assets/css/custom.css">
+    <link rel='shortcut icon' type='image/x-icon' href='../assets/img/favicon.ico' />
     <style>
+        /* Select2 specific class to set 100% width */
+        .select2-container {
+            width: 100% !important;
+        }
 
-        .image-container {
-            position: relative;
+        .select2-container .select2-selection--single {
+            width: 100% !important;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
             width: 100%;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
             height: 100%;
-            border-radius: 0 20px 20px 0; /* Rounded corners for the container */
-            overflow: hidden; /* Ensures the overlay and image are contained */
-        }
-
-        .image-container img.rounded-image {
-            width: 100%; /* Make sure the image covers the container */
-            height: auto; /* Maintain aspect ratio */
-            display: block; /* Remove bottom space/gap */
-        }
-
-        .overlay-mask {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5); /* Black overlay with 50% opacity */
-            z-index: 1; /* Overlay must be above the image */
-        }
-
-        .centered-text {
-            position: absolute;
-            top: 50%; /* Position halfway down the parent */
-            left: 50%; /* Position halfway across the parent */
-            transform: translate(-50%, -50%); /* Offset the position to truly center the element */
-            color: white; /* High contrast color */
-            font-size: 24px; /* Adjust size as necessary */
-            z-index: 2; /* Make sure the text is above the overlay */
-            text-align: center; /* Ensure multi-line text is centered */
-            width: 80%;
         }
 
     </style>
-    <link rel="stylesheet" href="assets/css/custom.css">
-    <link rel='shortcut icon' type='image/x-icon' href='assets/img/favicon.ico' />
-
-    <script src="assets/js/jquery-3.3.1.min.js"></script>
-
-    <meta title="">
-    <meta description="">
-    <script>
-
-        function isValidEmailAddress(emailAddress) {
-            var pattern = /^([a-z\d!#$%&'*+\-\/=?^_`{|}~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]+(\.[a-z\d!#$%&'*+\-\/=?^_`{|}~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]+)*|"((([ \t]*\r\n)?[ \t]+)?([\x01-\x08\x0b\x0c\x0e-\x1f\x7f\x21\x23-\x5b\x5d-\x7e\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]|\\[\x01-\x09\x0b\x0c\x0d-\x7f\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))*(([ \t]*\r\n)?[ \t]+)?")@(([a-z\d\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]|[a-z\d\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF][a-z\d\-._~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]*[a-z\d\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])\.)+([a-z\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]|[a-z\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF][a-z\d\-._~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]*[a-z\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])\.?$/i;
-            return pattern.test(emailAddress);
-        };
-    </script>
-    <script>
-
-
-
-
-    </script>
 </head>
 
-<body class="bg-white">
+<body>
 <div class="loader"></div>
 <div id="app">
+    <div class="main-wrapper main-wrapper-1">
+        <div class="navbar-bg d-print-none"></div>
+        <nav class="navbar navbar-expand-lg main-navbar sticky">
+            <div class="form-inline mr-auto">
+                <ul class="navbar-nav mr-3">
+                    <li><a href="#" data-toggle="sidebar" class="nav-link nav-link-lg
+									collapse-btn"> <i data-feather="align-justify"></i></a></li>
+                    <li><a href="#" class="nav-link nav-link-lg fullscreen-btn">
+                            <i data-feather="maximize"></i>
+                        </a></li>
+                    <li class="w-100 text-center">
+                        <center>
+                            <h4 class="ml-5 mt-2 navmobile"><img src="../assets/img/logo.png" style="height:50px" class="mr-1">YAGONGWO COLLEGE OF <br class="mobile-break"> NURSING SCIENCES</h4>
+                        </center>
+                    </li>
+                </ul>
+            </div>
+            <ul class="navbar-nav navbar-right">
 
-    <section class="section" id="logsection">
+                <li class="dropdown dropdown-list-toggle"><a href="#" data-toggle="dropdown"
+                                                             class="nav-link nav-link-lg message-toggle"><i data-feather="bell" class="bell"></i>
+                        <span class="badge headerBadge1">
+              3</span> </a>
 
-        <div class="container mt-5" style="
-    max-width: 100% !important;
-    margin: 0px;
-    margin-right: 0px;
+                    <!-- <li class="dropdown dropdown-list-toggle"><a href="#" data-toggle="dropdown"
+                                 class="nav-link notification-toggle nav-link-lg"><i data-feather="bell" class="bell"></i>
+                               </a> -->
+
+                    <div class="dropdown-menu dropdown-list dropdown-menu-right pullDown">
+                        <div class="dropdown-header">
+                            3 Notifications                <div class="float-right">
+                                <a href="#"></a>
+                            </div>
+                        </div>
+                        <!-- <div class="dropdown-list-content dropdown-list-icons"> -->
+                        <div class="dropdown-list-content dropdown-list-message">
+                        </div>
+                        <div class="dropdown-footer text-center">
+                            <a href="#">.... </a>
+                        </div>
+                    </div>
+                </li>
+                <li class="dropdown"><a href="#" data-toggle="dropdown"
+                                        class="nav-link dropdown-toggle nav-link-lg nav-link-user"> <img alt="a" src="uploads/12324310a4ca04db55624b73a75276f4d03c9cimg.jpg"
+                                                                                                         class="user-img-radious-style"> <span class="d-sm-none d-lg-inline-block"></span></a>
+                    <div class="dropdown-menu dropdown-menu-right pullDown">
+                        <div class="dropdown-title">Hello  </div>
+                        <a href="biodata.php" class="dropdown-item has-icon"> <i class="far
+										fa-user"></i> Profile
+                        </a> <a href="#" class="dropdown-item has-icon"> <i class="fas fa-bolt"></i>
+                            Activities
+                            <!-- </a> <a href="biodata.php?message=setting" class="dropdown-item has-icon"> <i class="fas fa-cog"></i> -->
+                        </a> <a href="biodata.php" class="dropdown-item has-icon"> <i class="fas fa-cog"></i>
+                            Biodata
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="logout.php" class="dropdown-item has-icon text-danger"> <i class="fas fa-sign-out-alt"></i>
+                            Logout
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </nav><div class="main-sidebar sidebar-style-2 bg-primarya d-print-none">
+            <aside id="sidebar-wrapper ">
+                <div class="sidebar-brand bg-warniang" style="
+    border-bottom: 1px solid #eadbdb;
 ">
-            <center>
+                    <a href="index.php"> <img alt="YCNS" src="../assets/img/logo.png" class="header-logo" /> <span
+                                class="logo-name">YCNS</span>
+                        <!-- <hr> -->
+                    </a>
+                </div>
+                <ul class="sidebar-menu ">
+                    <li class="menu-header">Main</li>
+                    <li class="dropdown active">
+                        <a href="index.php" class="nav-link"><i class="
 
-                <h4 class="aml-5 mt-2 text-muted"><img src="assets/img/logo.png" style="height:50px" class="mr-1"> <br class="break-line-mobile"> YAGONGWO COLLEGE OF NURSING SCIENCES</h4>
+              fas fa-chart-area"></i><span>Dashboard</span></a>
+                    </li>
 
-                <hr class="w-50">
-            </center>
-            <div class="row m-t-25">
+                    <!-- <li class="dropdown">
+                      <a href="#" class="menu-toggle nav-link has-dropdown"><i
+                          data-feather="briefcase"></i><span>Widgets</span></a>
+                      <ul class="dropdown-menu">
+                        <li><a class="nav-link" href="widget-chart.html">Chart Widgets</a></li>
+                        <li><a class="nav-link" href="widget-data.html">Data Widgets</a></li>
+                      </ul>
+                    </li> -->
 
-                <div class="col-12 col-sm-12 col-md-6 col-lg-6  col-xl-6 bg-white">
+
+                    <li><a class="nav-link" href="#"><i class="fas fa-chalkboard"></i><span>My Classroom</span></a></li>
+                    <li><a class="nav-link" href="subject.php"><i class="fas fa-book-reader"></i><span>My Courses</span></a></li>
+
+                    <li><a class="nav-link" href="noticeboard.php"><i class="fas fa-clipboard"></i><span>Notice Board</span></a></li>
+                    <li><a class="nav-link" href="result.php"><i class="fas fa-clipboard"></i><span>Result</span></a></li>
+
+                    <li class="dropdown">
+                        <a href="#" class="menu-toggle nav-link has-dropdown"><i class="
+fas fa-clipboard-list"></i><span>Exam</span></a>
+                        <ul class="dropdown-menu">
+                            <li><a class="nav-link" href="allexam_timetable.php">Time table</a></li>
+                            <!--<li><a class="nav-link" href="enrol.php">Enrol</a></li>-->
+                            <li><a class="nav-link" href="all_enrol.php">Take Exams</a></li>
+
+                        </ul>
+                    </li>
+
+                    <!-- <li class="dropdown">
+                      <a href="#" class="menu-toggle nav-link has-dropdown"><i class="
+                      fas fa-chart-line"></i><span>Performance</span></a>
+                      <ul class="dropdown-menu">
+                        <li><a class="nav-link" href="#">Result</a></li>
+                        <li><a class="nav-link" href="#">Analysis</a></li>
 
 
-                    <div class="image-container">
-                        <span class="overlay-mask"></span>
-                        <img src="../img/e2.jpg" style="heiaght:50px;width: 100%;height: 100%; object-fit: cover;" class="mr-1">
-                        <div class="centered-text"><h2 class="text-white text-center">Start Your Journey to a Rewarding Nursing Career Today!</h2></div>
 
+                      </ul>
+                    </li> -->
+
+                    <li class="dropdown">
+                        <a href="#" class="menu-toggle nav-link has-dropdown"><i class="
+              fas fa-user-graduate "></i><span>My Account</span></a>
+                        <ul class="dropdown-menu">
+                            <li><a class="nav-link" href="biodata.php">Biodata</a></li>
+                            <li><a class="nav-link" href="signature.php">My Signature</a></li>
+                            <li><a class="nav-link" href="changepass.php">Change Password</a></li>
+
+
+
+                        </ul>
+                    </li>
+                </ul>
+            </aside>
+        </div>
+
+
+
+
+
+        <div class="main-content">
+            <section class="section">
+                <div class="section-body">
+                    <div class="row mt-sm-4">
+                        <div class="col-12 col-md-12 col-lg-4" id="userdetails">
+                            <div class="card author-box">
+                                <div class="card-header">
+                                    <h4>Personal Details</h4>
+                                </div>
+                                <div class="card-body">
+
+                                    <div class="author-box-center">
+                                        <img alt="image" src="uploads/12324310a4ca04db55624b73a75276f4d03c9cimg.jpg" class="rounded-circle author-box-picture">
+                                        <div class="clearfix"></div>
+                                        <div class="author-box-name">
+                                            <a href="#"> </a>
+                                        </div>
+                                        <!-- <div class="author-box-job">Change Passport</div> -->
+                                        <a href="#changepassport"  data-toggle="modal" >   <small> <span class="badge badge-primary">Change Passport</span></small></a>
+                                    </div>
+                                    <div class="author-box-description align-center">
+                                        <p>
+                                            Watching movies, Reading
+                                        </p>
+                                    </div>
+                                    <div class="py-4">
+                                        <p class="clearfix">
+                        <span class="float-left">
+                         Full name
+                        </span>
+                                            <span class="float-right text-muted">
+                        OLAIFA RAMOTA OLUWABUKOLA                        </span>
+                                        </p>
+                                        <!-- <p class="clearfix">
+                                            <span class="float-left">
+                                             Payment Status
+                                            </span>
+                                            <span class="float-right text-muted">
+                                            <span class='text-success'>  Paid <i class='fas fa-check-circle'></i> </span>                        </span>
+                                          </p> -->
+                                        <!-- <p class="clearfix">
+                                            <span class="float-left">
+                                             Trainee ID
+                                            </span>
+                                            <span class="float-right text-muted">
+                                            BM/A24/002                        </span>
+                                          </p> -->
+                                        <p class="clearfix">
+                        <span class="float-left">
+                         Department
+                        </span>
+                                            <span class="float-right text-muted">
+                        Basic Midwifery                        </span>
+                                        </p>
+                                        <p class="clearfix">
+                        <span class="float-left">
+                         Gender
+                        </span>
+                                            <span class="float-right text-muted">
+                        Female                        </span>
+                                        </p>
+                                        <p class="clearfix">
+                        <span class="float-left">
+                          Phone
+                        </span>
+                                            <span class="float-right text-muted">
+                        09028602460                        </span>
+                                        </p>
+                                        <p class="clearfix">
+                        <span class="float-left">
+                          Mail
+                        </span>
+                                            <span class="float-right text-muted">
+                        romotolaifa@gmail.com
+                        </span>
+                                        </p>
+                                        <p class="clearfix">
+                        <span class="float-left">
+                          Religion
+                        </span>
+                                            <span class="float-right text-muted">
+                        Islam
+                        </span>
+                                        </p>
+                                        <p class="clearfix">
+
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-12 col-md-12 col-lg-8" id="profilesetup">
+                            <div class="card">
+                                <div class="padding-20">
+
+                                    <button class="btn btn-lg btn-success font-20 mb-2">
+                                        Matric Number: BM/A24/002</button>
+
+                                    <ul class="nav nav-tabs" id="myTab2" role="tablist">
+                                        <li class="nav-item">
+                                            <a class="nav-link active" id="home-tab2" data-toggle="tab" href="#about" role="tab"
+                                               aria-selected="true">Status</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link " id="profile-tab2" data-toggle="tab" href="#settings" role="tab"
+                                               aria-selected="false">Profile</a>
+                                        </li>
+                                    </ul>
+                                    <div class="tab-content tab-bordered" id="myTab3Content">
+                                        <div class="tab-pane fade show active" id="about" role="tabpanel" aria-labelledby="home-tab2">
+                                            <div class="row">
+                                                <div class="col-12 col-md-12 col-lg-12 align-center">
+
+                                                    <div class="author-box-center padding-20">
+                                                        ACTIVE<br>
+                                                        <i class="fas fa-check-circle  font-50 col-green" ></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+
+
+                                        </div>
+
+                                        <div class="tab-pane fade " id="settings" role="tabpanel" aria-labelledby="profile-tab2">
+                                            <form  class="needs-validation" novalidate=""  id="bioform" action="func/biodata.php" method="POST" enctype="multipart/form-data" >
+                                                <div class="card-header">
+                                                    <h4> Update your Biodata</h4>
+                                                </div>
+                                                <div class="card-body">
+
+
+
+
+
+                                                    <div class="row">
+                                                        <div class="form-group col-md-6 col-12">
+                                                            <label>Full Name</label>
+                                                            <input type="text" class="form-control" name="ln"  value="OLAIFA RAMOTA OLUWABUKOLA" disabled>
+                                                            <div class="invalid-feedback">
+                                                                Please fill in your last name
+                                                            </div>
+                                                        </div>
+
+
+                                                        <div class="form-group col-md-6 col-12">
+                                                            <label>Gender</label>
+                                                            <select class="form-control col-12 select2" style="width: 100%;" id="gender" name="gender" required>
+                                                                <option value="">Select your gender</option>
+
+                                                                <option value="1" >Male</option>
+                                                                <option value="2" selected>Female</option>
+
+
+                                                            </select>
+                                                            <div class="invalid-feedback">
+                                                                Please select your gender
+                                                            </div>
+                                                        </div>
+
+
+                                                    </div>
+                                                    <div class="row">
+
+
+                                                        <div class="form-group col-md-6 col-12">
+                                                            <label>Email</label>
+
+                                                            <input type="email" placeholder="Enter your email" class="form-control" id="mail" name="mail" value="romotolaifa@gmail.com" required >
+                                                            <!-- <div class="invalid-feedback">
+                                                              Please fill in your email
+                                                            </div> -->
+                                                        </div>
+                                                        <div class="form-group col-md-6 col-12">
+                                                            <label>Phone Number</label>
+                                                            <input type="number" placeholder="Enter your Phone Number"class="form-control" id="pno" name="pno" value="09028602460" required>
+                                                            <div class="invalid-feedback">
+                                                                Please fill in your contact number
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-md-6 col-12">
+                                                            <label>Religion</label>
+                                                            <select class="form-control col-12 select2" style="width: 100%;" id="religion" name="religion" required>
+                                                                <option value='Islam'>  Islam</option>                      <option value="">Select your religion</option>
+
+                                                                <option value="Christian">Christian</option>
+                                                                <option value="Islam">Islam</option>
+                                                                <option value="Others">Others</option>
+
+
+                                                            </select>
+                                                            <div class="invalid-feedback">
+                                                                Please select your religion
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group col-md-6 col-12">
+                                                            <label>State of Origin</label>
+                                                            <select onchange="toggleLGA(this);"  class="form-control col-12 select2" style="width: 100%;" id="sor" name="sor"  required>
+                                                                <!-- <option value="">.....</option> -->
+                                                                <option value='Ogun'>  Ogun</option>                      <option value=""> Select State </option>
+
+                                                                <option value="Abia">Abia</option>
+                                                                <option value="Adamawa">Adamawa</option>
+                                                                <option value="AkwaIbom">AkwaIbom</option>
+                                                                <option value="Anambra">Anambra</option>
+                                                                <option value="Bauchi">Bauchi</option>
+                                                                <option value="Bayelsa">Bayelsa</option>
+                                                                <option value="Benue">Benue</option>
+                                                                <option value="Borno">Borno</option>
+                                                                <option value="Cross River">Cross River</option>
+                                                                <option value="Delta">Delta</option>
+                                                                <option value="Ebonyi">Ebonyi</option>
+                                                                <option value="Edo">Edo</option>
+                                                                <option value="Ekiti">Ekiti</option>
+                                                                <option value="Enugu">Enugu</option>
+                                                                <option value="FCT">FCT</option>
+                                                                <option value="Gombe">Gombe</option>
+                                                                <option value="Imo">Imo</option>
+                                                                <option value="Jigawa">Jigawa</option>
+                                                                <option value="Kaduna">Kaduna</option>
+                                                                <option value="Kano">Kano</option>
+                                                                <option value="Katsina">Katsina</option>
+                                                                <option value="Kebbi">Kebbi</option>
+                                                                <option value="Kogi">Kogi</option>
+                                                                <option value="Kwara">Kwara</option>
+                                                                <option value="Lagos">Lagos</option>
+                                                                <option value="Nasarawa">Nasarawa</option>
+                                                                <option value="Niger">Niger</option>
+                                                                <option value="Ogun">Ogun</option>
+                                                                <option value="Ondo">Ondo</option>
+                                                                <option value="Osun">Osun</option>
+                                                                <option value="Oyo">Oyo</option>
+                                                                <option value="Plateau">Plateau</option>
+                                                                <option value="Rivers">Rivers</option>
+                                                                <option value="Sokoto">Sokoto</option>
+                                                                <option value="Taraba">Taraba</option>
+                                                                <option value="Yobe">Yobe</option>
+                                                                <option value="Zamfara">Zamafara</option>
+
+
+                                                            </select>
+                                                            <div class="invalid-feedback">
+                                                                Please select your state
+                                                            </div>
+                                                        </div>
+
+
+                                                        <div class="form-group col-md-6 ">
+                                                            <label class="control-label">LGA of Origin</label>
+                                                            <select name="lga" id="lga" class="form-control select2 select-lga" required>
+                                                            </select>
+                                                            <div class="invalid-feedback">
+                                                                Please select your Local Government Area
+                                                            </div>
+                                                        </div>
+
+
+                                                        <div class="form-group col-md-6 col-12">
+                                                            <label>Date Of Birth</label>
+                                                            <input type="date" class="form-control" value="2002-05-26"  name="dob" id="dob">
+
+                                                            <div class="invalid-feedback">
+                                                                Please select your religion
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="form-group col-md-6 col-12">
+                                                            <label>Blood Group</label>
+                                                            <select class="form-control col-12 select2" style="width: 100%;" id="bg" name="bg" required>
+                                                                <option value='A+'>  A+</option>                      <option value="">Select your blood group</option>
+
+                                                                <option value="A+" >A+</option>
+                                                                <option value="A-">A-</option>
+                                                                <option value="B+">B+</option>
+                                                                <option value="B-">B-</option>
+                                                                <option value="AB+">AB+</option>
+                                                                <option value="AB-">AB-</option>
+                                                                <option value="O+">O+</option>
+                                                                <option value="O-">O-</option>
+
+
+                                                            </select>
+                                                            <div class="invalid-feedback">
+                                                                Please select your blood group
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-md-6 col-12">
+                                                            <label>Department</label>
+                                                            <input type="text" class="form-control" value=" Basic Midwifery " id="dept" disabled name="dept">
+
+                                                        </div>
+                                                        <div class="form-group col-md-6 col-12">
+                                                            <label>Matric Number</label>
+                                                            <input type="tel" class="form-control" value="BM/A24/002" disabled name="sid">
+
+
+                                                            <input type="hidden" class="form-control" value="100"  name="ulv">
+                                                            <!--//new-->
+
+                                                        </div>
+                                                        <div class="form-group col-md-6 col-12">
+
+                                                            <label>Bio ( <small>a bit about you</small> )</label>
+                                                            <!-- <textarea
+                                                              class="form-control" >
+
+                                                              </textarea> -->
+                                                            <textarea class="form-control"  id="bio" name="bio"  value="" required >Watching movies, Reading </textarea>
+                                                            <div class="invalid-feedback">
+                                                                Say a bit about yourself?
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <!--  <div class="row">-->
+
+                                                    <input type="hidden" class="form-control" id="profile-img" name="update" value="update" >                           <!--  </div>-->
+
+                                                </div>
+                                                <div class="card-footer text-right">
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="col-12 col-sm-8  col-md-6  col-lg-6 col-xl-5 ">
+            </section>
 
+        </div>
 
-
-                    <div class="carad card-sauccess">
-                        <div class="card-heaader">
-                            <!-- <h4>Login</h4> -->
-                            <!-- <button class="btn btn-primary" id="swal-5a">Launch</button> -->
-                            <h5 class="mt-0 mb-1"></h5>
-                        </div>
-                        <div class="card-body">
-
-
-                            <form method="POST" action="#" class="needs-validation" novalidate="" id="logform">
-
-
-
-                                <center class="m-b-20 col-indaigo text-muted">
-                                    <i class="fas fa-user-graduate font-50 text-success"></i>
-                                    <br><br>
-                                    <b> APPLICANT LOGIN </b>
-
-
-                                    <hr style="width: 40%;">
-                                </center>
-                                <div class="form-group floating-addon">
-                                    <label for="email">Username || Email</label>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <div class="input-group-text">
-                                                <i class="fas fa-user-alt"></i>
-                                                <!-- <i class="material-icons">lock</i> -->
-                                            </div>
-                                        </div>
-                                        <input id="lusername" type="text" class="form-control" name="text" tabindex="1" required autofocus>
-
-                                    </div>
-                                    <!-- <input id="lusername" type="text" class="form-control" name="text" tabindex="1" required autofocus> -->
-                                    <div class="invalid-feedback">
-                                        Please fill in your username or userID
-                                    </div>
-                                </div>
-                                <div class="form-group floating-addon ">
-
-                                    <label for="password" class="control-label">Password</label>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <div class="input-group-text">
-                                                <i class="fas fa-lock"></i>
-                                                <!-- <i class="material-icons">lock</i> -->
-                                            </div>
-                                        </div>
-                                        <input id="lpassword" type="password" class="form-control" name="password" tabindex="2" required>
-
-
-                                    </div>
-
-                                    <!-- <input id="lpassword" type="password" class="form-control" name="password" tabindex="2" required> -->
-                                    <div class="invalid-feedback">
-                                        please fill in your password
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <button type="submit" id="submitlog" class="btn btn-primary btn-lg btn-block" tabindex="4" disabled>
-                                        Login
-                                    </button>
-                                </div>
-
-                                <div class="mb-4 text-muted text-center " style=" border:solid 1px; padding:10px;">
-                                    New Applicant? <a href="login.php" class="text-success" style="cursor: pointer;"> Apply here</a>
-                                </div>
-                                <!-- <div class="input-group">
-                                  <div class="input-group-prepend" style="border-right: none !important;">
-                                    <div class="input-group-text form-control" style="border-right: none !important;">
-                                      <i class="fas fa-phone"></i>
-                                    </div>
-                                  </div>
-                                  <input type="text" class="form-control phone-number" style="border-left: none !important;">
-                                </div> -->
-                            </form>
-
-                            <!-- <div class="mt-5 text-muted text-center" style=" border:solid 1px; padding:10px;"> -->
-                            <!-- Don't have an account? <a id="regswitch" class="text-warning" style="cursor: pointer;">Create One</a> -->
-
-                            <!-- </div> -->
-                        </div>
+        <div class="modal fade" id="changepassport" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" style="display: none;" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Change Passport : <b><span id="userstdidb"></span></b></h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
                     </div>
-
+                    <form id="passportForm" enctype="multipart/form-data"  method="POST">
+                        <div class="modal-body">
+                            <div class="form-group col-md-12 col-12">
+                                <img src="" id="currentimage" height="100px" class="img-responsive m-b-15" style="height: 100px ! important" />
+                                <br>
+                                <label>Select a new passport (<small>Max size: 200kb</small>) </label>
+                                <input type="file" class="form-control" id="profile-imgb" name="image" required>
+                                <img src="" id="profile-img-tagb" height="100px" class="img-responsive" style="height: 100px ! important" />
+                            </div>
+                        </div>
+                        <div class="modal-footer bg-whitesmoke br">
+                            <button type="submit" class="btn btn-primary" id="passportchangeProceed">Update Passport</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </form>
                 </div>
+
             </div>
         </div>
-    </section>
-
+        <footer class="main-footer">
+            <div class="footer-left">
+                kjgvhug
+            </div>
+            <div class="footer-right">
+            </div>
+        </footer>    </div>
 </div>
 <!-- General JS Scripts -->
-<script src="assets/js/app.min.js"></script>
+<script src="../assets/js/app.min.js"></script>
 <!-- JS Libraies -->
+<script src="../assets/bundles/select2/dist/js/select2.full.min.js"></script>
+<script src="../assets/bundles/izitoast/js/iziToast.min.js"></script>
+<script src="../assets/js/page/toastr.js"></script>
 <!-- Page Specific JS File -->
 <!-- Template JS File -->
-<script src="assets/js/scripts.js"></script>
+<script src="../assets/js/scripts.js"></script>
 <!-- Custom JS File -->
-<script src="assets/js/custom.js"></script>
+<script src="../assets/js/custom.js"></script>
+<script src="../assets/js/lga.min.js"></script>
 </body>
 
+<script>
+    $(document).ready(function() {
+            //   jQuery.noConflict();
+            // alert('a');
 
+
+            $("#bioform").on('submit', function(e) {
+                var gender = $("#gender").val();
+                var mail = $("#mail").val();
+                var pno = $("#pno").val();
+                var dob = $("#dob").val();
+                var bg = $("#bg").val();
+                var state = $("#sor").val();
+                var lga = $("#lga").val();
+                var bio = $("#bio").val();
+                var religion = $("#religion").val();
+                var imgup = $("#profile-img").val();
+
+                if (gender == '' || mail == '' || pno == '' || state == '' || bio == '' || religion == '' || imgup == '' || dob == '' || bg == '' || lga == '') {
+                    tryc("error", "ALL FIELDS ARE COMPULSORY");
+                    return false;
+                }
+
+                e.preventDefault();
+                $("#bioform").addClass("was-validated");
+
+                $.ajax({
+                    url: "func/biodata.php",
+                    type: "POST",
+                    data: new FormData(this),
+                    contentType: false,
+                    cache: false,
+                    processData: false,
+                    timeout: 40000,
+                    beforeSend: function() {
+                        $('#subm').attr('disabled', 'disabled');
+                        $('#subm').text('please wait...');
+                        $('#subm').addClass("btn-progress disabled");
+                    },
+                    success: function(data) {
+                        data = data.trim();
+                        if (data == 'go') {
+                            $('#subm').attr('disabled', 'disabled');
+                            $('#subm').text('Biodata saved...');
+                            $('#subm').addClass("btn-success");
+                            $('#subm').removeClass("btn-progress btn-primary");
+                            tryc("success", "BIODATA SAVED", "");
+                            setTimeout(function() {
+                                window.location.href = "index.php?act=bios";
+                            }, 1000);
+                        }
+
+                        else if(data=='emptyfields')
+                        {
+                            $('#subm').attr('disabled', false);
+
+                            $('#subm').removeClass("btn-progress");
+
+                            $('#subm').addClass("btn-primary");
+                            // invalid file format.
+                            $('#subm').text('Retry');
+
+                            tryc("warning","SOME COMPULSORY FIELDS ARE EMPTY", "");
+
+                        }
+                        else if(data=='emailexist')
+                        {
+                            $('#subm').attr('disabled', false);
+                            $('#subm').removeClass("btn-progress");
+
+                            $('#subm').addClass("btn-primary");
+
+                            $('#subm').text('Retry');
+                            $('#subm').attr('disabled', false);
+                            tryc("error","Email  exists, Please enter a different email address", "");
+                            //   alert(data);
+                            //  // invalid file format.
+                            //  $("#err").html("Invalid File !").fadeIn();
+                        }
+                        else if(data=='pnoexist')
+                        {
+                            $('#subm').attr('disabled', false);
+                            $('#subm').removeClass("btn-progress");
+
+                            $('#subm').addClass("btn-primary");
+
+                            $('#subm').text('Retry');
+                            $('#subm').attr('disabled', false);
+                            tryc("error","Phone number exists, Please enter a different phone number", "");
+                            //   alert(data);
+                            //  // invalid file format.
+                            //  $("#err").html("Invalid File !").fadeIn();
+                        }
+                        else if(data=='invalidimage')
+                        {
+                            $('#subm').attr('disabled', false);
+
+                            $('#subm').removeClass("btn-progress");
+
+                            $('#subm').addClass("btn-primary");
+                            // invalid file format.
+                            $('#subm').text('save');
+                            tryc("warning","INVALID PASSPORT", "select a valid image for your passport");
+
+                        }
+                        else if(data=='imagenotuploaded')
+                        {
+                            $('#subm').attr('disabled', false);
+
+                            $('#subm').removeClass("btn-progress");
+
+                            $('#subm').addClass("btn-primary");
+                            $('#subm').text('save');
+                            tryc("error","Passport Error", "your image is not uploaded, pls try again");
+
+                        }
+                        else if(data=='imagesizer')
+                        {
+                            $('#subm').attr('disabled', false);
+
+                            $('#subm').removeClass("btn-progress");
+
+                            $('#subm').addClass("btn-primary");
+                            $('#subm').text('Retry...');
+                            tryc("error","Large Imagesize", "your image is too large,\n select an image of less than 200kb");
+// alert('largeimage');
+                        }
+                        else if(data=='empty')
+                        {
+                            $('#subm').attr('disabled', false);
+                            $('#subm').removeClass("btn-progress");
+
+                            $('#subm').addClass("btn-primary");
+
+                            $('#subm').text('save');
+                            tryc("error","EMPTY DATA", "");
+                            //   alert(data);
+                            //  // invalid file format.
+                            //  $("#err").html("Invalid File !").fadeIn();
+                        }
+
+                        else if (data == 'update') {
+                            $('#subm').attr('disabled', 'disabled');
+                            $('#subm').text('Biodata updated...');
+                            $('#subm').addClass("btn-success");
+                            $('#subm').removeClass("btn-progress btn-primary");
+                            tryc("success", "BIODATA UPDATED", "");
+                        } else {
+                            $('#subm').attr('disabled', false);
+                            $('#subm').removeClass("btn-progress");
+                            $('#subm').addClass("btn-primary");
+                            tryc("error", "ERROR", "");
+                            $('#subm').text('Retry');
+                        }
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        if (textStatus == 'timeout') {
+                            tryc("warning", "Your internet connection seems to be slow, please try again");
+                            $('#subm').attr("disabled", false);
+                            $('#subm').removeClass("btn-progress").addClass("btn-primary").text("Retry");
+                        }
+                        xhr.abort();
+                    }
+                });
+            });
+
+
+            $("#bioformbb").on('submit',(function(e) {
+                // alert('a');return false;
+
+
+
+
+                // var fn=$("#fn").val();
+
+                var gender=$("#gender").val();
+                var mail=$("#mail").val();
+                var pno=$("#pno").val();
+                var dob=$("#dob").val();
+                var bg=$("#bg").val();
+
+                var state=$("#sor").val();
+//  var training=$("#train").val();religion
+                var bio=$("#bio").val();
+                var religion=$("#religion").val();
+                var imgup=$("#profile-img").val();
+
+//  profile-img
+
+//  if ( fn=='' || gender=='' || mail=='' || pno=='' || state=='' || bio=='' || religion=='' || imgup=='' || dob=='' || bg==''){
+//   tryc("error", "ALL FIELDS ARE COMPULSORY");
+//   return false;
+
+// }
+                // exit();
+                console.log(e);
+                // alert('a');
+                $("#bioform").addClass("was-validated");
+                e.preventDefault();
+                xhr = $.ajax({
+                    url: "func/biodata.php",
+                    type: "POST",
+                    data:  new FormData(this),
+                    contentType: false,
+                    cache: false,
+                    processData:false,
+                    timeout:40000,
+                    beforeSend : function()
+                    {
+                        // alert('b');
+                        //$("#preview").fadeOut();
+                        // $("#err").fadeOut();
+                        // $("#bioform").addClass("was-validated");
+                        $('#subm').attr('disabled', 'disabled');
+                        $('#subm').text('please wait...');
+                        $('#subm').addClass("btn-progress", "disabled");
+
+                        // $('.circle-loader').css({"display":"block"});
+                        // break;
+                    },
+                    success: function(data)
+                    {
+                        data = data.trim()
+                        // alert(data);
+                        // data = trim(data);
+                        if(data=='go')
+                        {
+                            //   alert(data);
+                            $('#subm').attr('disabled', 'disabled');
+                            // showToastPosition('imgsuccess');
+                            $('#subm').text('Biodata saved...');
+                            $('#subm').addClass("btn-success");
+
+                            $('#subm').removeClass("btn-progress");
+                            $('#subm').removeClass("btn-primary");
+                            tryc("success","BIODATA SAVED", "");
+
+                            setTimeout(function() {
+
+
+                                window.location.href="index.php?act=bios";
+                            }, 1000);
+
+
+                            // invalid file format.
+                            //  $("#err").html("Invalid File !").fadeIn();
+                        }
+                        else if(data=='emptyfields')
+                        {
+                            $('#subm').attr('disabled', false);
+
+                            $('#subm').removeClass("btn-progress");
+
+                            $('#subm').addClass("btn-primary");
+                            // invalid file format.
+                            $('#subm').text('Retry');
+                            tryc("warning","SOME COMPULSORY FIELDS ARE EMPTY", "");
+
+                        }
+                        else if(data=='invalidimage')
+                        {
+                            $('#subm').attr('disabled', false);
+
+                            $('#subm').removeClass("btn-progress");
+
+                            $('#subm').addClass("btn-primary");
+                            // invalid file format.
+                            $('#subm').text('save');
+                            tryc("warning","INVALID PASSPORT", "select a valid image for your passport");
+
+                        }
+                        else if(data=='imagenotuploaded')
+                        {
+                            $('#subm').attr('disabled', false);
+
+                            $('#subm').removeClass("btn-progress");
+
+                            $('#subm').addClass("btn-primary");
+                            $('#subm').text('save');
+                            tryc("error","Passport Error", "your image is not uploaded, pls try again");
+
+                        }
+                        else if(data=='imagesizer')
+                        {
+                            $('#subm').attr('disabled', false);
+
+                            $('#subm').removeClass("btn-progress");
+
+                            $('#subm').addClass("btn-primary");
+                            $('#subm').text('Retry...');
+                            tryc("error","Large Imagesize", "your image is too large,\n select an image of less than 200kb");
+// alert('largeimage');
+                        }
+                        else if(data=='empty')
+                        {
+                            $('#subm').attr('disabled', false);
+                            $('#subm').removeClass("btn-progress");
+
+                            $('#subm').addClass("btn-primary");
+
+                            $('#subm').text('save');
+                            tryc("error","EMPTY DATA", "");
+                            //   alert(data);
+                            //  // invalid file format.
+                            //  $("#err").html("Invalid File !").fadeIn();
+                        }
+                        else if(data=='update')
+                        {
+                            $('#subm').attr('disabled', 'disabled');
+                            // showToastPosition('imgsuccess');
+                            $('#subm').text('Biodata updated...');
+                            $('#subm').addClass("btn-success");
+
+                            $('#subm').removeClass("btn-progress");
+                            $('#subm').removeClass("btn-primary");
+                            tryc("success","BIODATA UPDATED", "");
+                            //   alert(data);
+                            //  // invalid file format.
+                            //  $("#err").html("Invalid File !").fadeIn();
+                        }
+                        else
+                        {
+                            $('#subm').attr('disabled', false);
+
+                            $('#subm').removeClass("btn-progress");
+
+                            $('#subm').addClass("btn-primary");
+                            //  alert('error');
+                            tryc("error","ERROR", "");
+                            $('#subm').text('Retry');
+                            // exit();
+                            // alert ('cool');
+                            // view uploaded file.
+                            //  $("#preview").html(data).fadeIn(2000);
+                            //  $(".profile-image ").html(data).fadeIn(2000);
+
+                            xhr.abort;
+
+                        }
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+
+                        if (textStatus == 'timeout') {
+                            tryc("warning", "Your internet connection seems to be slow, pls try again");
+                            $('#subm').attr("disabled", false);
+                            $('#subm').removeClass("btn-progress");
+
+
+                            $('#subm').addClass("btn-primary");
+                            $('#subm').text("Retry");
+                        }
+                        xhr.abort;
+                    } ,
+                    //  error: function(e)
+                    //   {
+                    //     alert(e);
+                    //     console.log(e);
+                    // $("#preview").html(e).fadeIn();
+                    //   }
+                });
+            }));
+
+
+        }
+    );
+</script>
+
+
+
+
+<script type="text/javascript">
+    function readURLa(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#profile-img-tag').attr('src', e.target.result);
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+    $("#profile-img").change(function(){
+        readURLa(this);
+    });
+
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#profile-img-tagb').attr('src', e.target.result);
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+    $("#profile-imgb").change(function(){
+        readURL(this);
+    });
+
+
+
+
+
+    // var body = $("body"),
+    //   w = $(window);
+
+    // if (w.outerWidth() <= 1024) {
+    //   body.removeClass("search-show search-gone");
+    //   if (body.hasClass("sidebar-gone")) {
+    //     body.removeClass("sidebar-gone");
+    //     body.addClass("sidebar-show");
+    //   } else {
+    //     body.addClass("sidebar-gone");
+    //     body.removeClass("sidebar-show");
+    //   }
+
+    //   update_sidebar_nicescroll();
+    // } else {
+    //   body.removeClass("search-show search-gone");
+    //   if (body.hasClass("sidebar-mini")) {
+    //     toggle_sidebar_mini(false);
+    //   } else {
+    //     toggle_sidebar_mini(true);
+    //   }
+    // }
+
+    // return false;
+
+</script>
 </html>

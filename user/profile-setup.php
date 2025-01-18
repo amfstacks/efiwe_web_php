@@ -18,98 +18,177 @@ require_once __DIR__ . '/../templates/loggedInc.php';
         <!-- Main Content -->
         <div class="main-content">
             <section class="section">
-                <div class="row d-flex justify-content-between">
+                <div class="section-body">
+                    <div class="row mt-sm-4">
+                        <div class="col-12 col-md-12 col-lg-12" id="profilesetup">
+                            <div class="card">
+                                <div class="padding-20">
 
-                </div>
-                <div class="row ">
+                                    <button class="btn btn-lg btn-success font-20 mb-2">
+                                        Matric Number: BM/A24/002</button>
+
+                                    <form  class="needs-validation" novalidate=""  id="bioform" action="func/biodata.php" method="POST" enctype="multipart/form-data" >
+                                        <div class="card-header">
+                                            <h4> Update your Biodata</h4>
+                                        </div>
+                                        <div class="card-body">
 
 
-                    <form id="profile-form" enctype="multipart/form-data">
-                        <div class="form-group">
-                            <label for="firstname">First Name:</label>
-                            <input type="text" id="firstname" name="firstname" required>
-                        </div>
 
-                        <div class="form-group">
-                            <label for="surname">Surname:</label>
-                            <input type="text" id="surname" name="surname" required>
-                        </div>
 
-                        <div class="form-group">
-                            <label for="email">Email:</label>
-                            <input type="email" id="email" name="email" required>
-                        </div>
 
-                        <div class="form-group">
-                            <label for="dob">Date of Birth:</label>
-                            <input type="date" id="dob" name="dob" required>
-                        </div>
+                                            <div class="row">
+                                                <div class="form-group col-md-6 col-12">
+                                                    <label>First Name:</label>
+                                                    <input type="text" class="form-control" id="firstname" name="firstname" >
+                                                    <div class="invalid-feedback">
+                                                        Please fill in your first name
+                                                    </div>
+                                                </div>
 
-                        <div class="form-group">
-                            <label for="phoneNumber">Phone Number:</label>
-                            <input type="tel" id="phoneNumber" name="phoneNumber" required>
-                        </div>
+                                                <div class="form-group col-md-6 col-12">
+                                                    <label>Surname:</label>
+                                                    <input type="text" class="form-control" id="surname" name="surname" >
+                                                    <div class="invalid-feedback">
+                                                        Please fill in your surname
+                                                    </div>
+                                                </div>
 
-                        <div class="form-group">
-                            <label for="class">Class:</label>
-                            <input type="text" id="class" name="class" required>
-                        </div>
 
-                        <div class="form-group">
-                            <label for="exam">Exam ID:</label>
-                            <input type="text" id="exam" name="exam" required>
-                        </div>
+                                                <div class="form-group col-md-6 col-12">
+                                                    <label>Gender</label>
+                                                    <select class="form-control col-12 select2" style="width: 100%;" id="gender" name="gender" required>
+                                                        <option value="">Select your gender</option>
 
-                        <div class="form-group">
-                            <label for="state">State:</label>
-                            <input type="text" id="state" name="state" required>
-                        </div>
+                                                        <option value="1" >Male</option>
+                                                        <option value="2" selected>Female</option>
 
-                        <div class="form-group">
-                            <label for="city">City:</label>
-                            <input type="text" id="city" name="city" required>
-                        </div>
 
-                        <div class="form-group">
-                            <label for="homeaddress">Home Address:</label>
-                            <textarea id="homeaddress" name="homeaddress" required></textarea>
-                        </div>
+                                                    </select>
+                                                    <div class="invalid-feedback">
+                                                        Please select your gender
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-6 col-12">
+                                                    <label>Phone Number</label>
+                                                    <input type="number" placeholder="Enter your Phone Number"class="form-control" id="phoneNumber" name="phoneNumber"  required>
+                                                    <div class="invalid-feedback">
+                                                        Please fill in your contact number
+                                                    </div>
+                                                </div>
 
-                        <div class="form-group">
-                            <label for="profile">Profile Image:</label>
-                            <input type="file" id="profile" name="profile" accept="image/*">
-                        </div>
+                                            </div>
+                                            <div class="row">
 
-                        <!-- Subjects Selection -->
-                        <div class="form-group">
-                            <label>Select 4 Subjects:</label>
-                            <div id="subjects-grid" class="subjects-grid">
-                                <!-- Subjects will be dynamically inserted here -->
+
+
+                                                <div class="form-group col-md-6 col-12">
+                                                    <label>State of Origin</label>
+                                                    <select onchange="toggleLGA(this);"  class="form-control col-12 select2" style="width: 100%;" id="state" name="state"  required>
+                                                                           <option value=""> Select State </option>
+
+                                                        <option value="Abia">Abia</option>
+                                                        <option value="Adamawa">Adamawa</option>
+                                                        <option value="AkwaIbom">AkwaIbom</option>
+                                                        <option value="Anambra">Anambra</option>
+                                                        <option value="Bauchi">Bauchi</option>
+                                                        <option value="Bayelsa">Bayelsa</option>
+                                                        <option value="Benue">Benue</option>
+                                                        <option value="Borno">Borno</option>
+                                                        <option value="Cross River">Cross River</option>
+                                                        <option value="Delta">Delta</option>
+                                                        <option value="Ebonyi">Ebonyi</option>
+                                                        <option value="Edo">Edo</option>
+                                                        <option value="Ekiti">Ekiti</option>
+                                                        <option value="Enugu">Enugu</option>
+                                                        <option value="FCT">FCT</option>
+                                                        <option value="Gombe">Gombe</option>
+                                                        <option value="Imo">Imo</option>
+                                                        <option value="Jigawa">Jigawa</option>
+                                                        <option value="Kaduna">Kaduna</option>
+                                                        <option value="Kano">Kano</option>
+                                                        <option value="Katsina">Katsina</option>
+                                                        <option value="Kebbi">Kebbi</option>
+                                                        <option value="Kogi">Kogi</option>
+                                                        <option value="Kwara">Kwara</option>
+                                                        <option value="Lagos">Lagos</option>
+                                                        <option value="Nasarawa">Nasarawa</option>
+                                                        <option value="Niger">Niger</option>
+                                                        <option value="Ogun">Ogun</option>
+                                                        <option value="Ondo">Ondo</option>
+                                                        <option value="Osun">Osun</option>
+                                                        <option value="Oyo">Oyo</option>
+                                                        <option value="Plateau">Plateau</option>
+                                                        <option value="Rivers">Rivers</option>
+                                                        <option value="Sokoto">Sokoto</option>
+                                                        <option value="Taraba">Taraba</option>
+                                                        <option value="Yobe">Yobe</option>
+                                                        <option value="Zamfara">Zamafara</option>
+
+
+                                                    </select>
+                                                    <div class="invalid-feedback">
+                                                        Please select your state
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="form-group col-md-6 ">
+                                                    <label class="control-label">LGA of Origin</label>
+                                                    <select name="lga" id="lga" class="form-control select2 select-lga" required>
+                                                    </select>
+                                                    <div class="invalid-feedback">
+                                                        Please select your Local Government Area
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="form-group col-md-6 col-12">
+                                                    <label>Date Of Birth</label>
+                                                    <input type="date" class="form-control" value="2002-05-26"  name="dob" id="dob">
+
+                                                    <div class="invalid-feedback">
+                                                        Please select your Date Of Birth
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-6 col-12">
+
+                                                    <label>Home Address:</label>
+                                                    <textarea class="form-control"  id="homeaddress" name="homeaddress"  value="" required ></textarea>
+                                                    <div class="invalid-feedback">
+
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                            <hr>
+                                            <div class="row">
+                                                <div class="form-group">
+                                                    <label>Select 4 Subjects:</label>
+                                                    <div id="subjects-grid" class="subjects-grid">
+                                                        <p id="preload-subject" class="info-message" style="display: none;">loading subjects..</p>
+                                                        <!-- Subjects will be dynamically inserted here -->
+                                                    </div>
+                                                    <p id="subject-error" class="error-message" style="display: none;">Please select exactly 4 subjects.</p>
+                                                </div>
+
+                                            </div>
+
+
+
+                                        </div>
+                                        <div class="card-footer text-right">
+                                        </div>
+                                    </form>
+
+                                </div>
                             </div>
-                            <p id="subject-error" class="error-message" style="display: none;">Please select exactly 4 subjects.</p>
                         </div>
-
-                        <button type="submit" id="submit-button">Save Profile</button>
-                    </form>
-
-                    <!-- Success and Error Messages -->
-                    <div id="form-success" class="success-message" style="display: none;">
-                        Profile saved successfully!
                     </div>
-                    <div id="form-error" class="error-message" style="display: none;">
-                        Failed to save profile. Please try again.
-                    </div>
-
-
-
-
-
-
-
                 </div>
-
-
             </section>
+
         </div>
         <footer class="main-footer">
             <div class="footer-left">
@@ -120,123 +199,13 @@ require_once __DIR__ . '/../templates/loggedInc.php';
         </footer>    </div>
 </div>
 
-<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
-     aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-keyboard="false" data-backdrop="static">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="formModal">Dear <b><?php echo $email; ?></b>,</h5>
-                <hr>
-            </div>
-            <div class="modal-body">
-                <div class="card-body text-center">
-                    <h3 class="mt-0 text-bold">
-                        Welcome to your dashboard.
-                        <!-- <small class="text-muted">Welcome</small>  <small class="text-muted"> to your Dashboard.</small> -->
-
-                        <!-- <small class="text-muted">With faded secondary text</small> -->
-                    </h3>
-                    <p class="lead mt-4">
-                        Take a step forward by  setting up your Biodata.
-                    </p>
-                    <a href="biodata.php">     <button type="button" class="btn btn-primary" >  <i class="fa fa-spin fa-cog"></i> Setup  Biodata
-                        </button></a>
-                </div>
 
 
-            </div>
-
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="setupsubject" tabindex="-1" role="dialog"
-     aria-labelledby="setupsubjectTitle" aria-hidden="true" data-keyboard="false" data-backdrop="static">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <!-- <div class="modal-header">
-                <h5 class="modal-title" id="formModal"></h5>
-
-              </div> -->
-            <div class="modal-body">
-                <h5 class="modal-title" id="formModal">Dear <b> </b>,</h5>
-                <hr class="mb-0">
-                <div class="card-body ">
-                    <!-- <h3 class="text-center"> welcome to your <b>dashboard</b> </h3> -->
-                    <!-- <hr> -->
-                    <!-- <div class="row">
-                        <div class="form-group col-12">
-
-                        </div>
-                      </div> -->
-
-                    <!-- <small class="text-muted">With faded secondary text</small> -->
-
-                    <p class="lead mta-1">
-                        Welcome to your  dashboard,
-                        <br> <small>Check for  assessments Schedule for your dated assessments !</small>
-                    </p>
-                    <button  id="a" type="button" class="btn btn-primary"  data-dismiss="modal" >  <i class="fa fa-spin fa-cog"></i> Go to Dashboard
-                    </button>
-                </div>
-
-
-            </div>
-
-        </div>
-    </div>
-</div>
-
-
-<div class="modal fade" id="changepass" tabindex="-1" role="dialog"
-     aria-labelledby="changepassTitle" aria-hidden="true" data-keyboard="false" data-backdrop="static">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <!-- <div class="modal-header">
-                <h5 class="modal-title" id="formModal"></h5>
-
-              </div> -->
-            <div class="modal-body">
-                <h5 class="modal-title" id="formModal">Dear <b>OLAIFA </b>,</h5>
-                <hr class="mb-0">
-                <div class="card-body ">
-
-                    <p class="lead mta-1">
-                        For safety, it's highly recommended you  achange your password from the default password.
-
-                    </p>
-                    <a href="changepass.php">  <button  id="a" type="button" class="btn btn-primary"  >  <i class="fa fa-spin fa-cog"></i> Click here to change password now
-                        </button></a>
-                </div>
-
-
-            </div>
-
-        </div>
-    </div>
-</div>
-
-<!-- General JS Scripts -->
-<script src="assets/js/app.min.js"></script>
-
-<script src="assets/bundles/select2/dist/js/select2.full.min.js"></script>
-
-<script src="assets/bundles/datatables/datatables.min.js"></script>
-<script src="assets/bundles/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
-<script src="assets/bundles/jquery-ui/jquery-ui.min.js"></script>
-<!-- Page Specific JS File -->
-<script src="assets/js/page/datatables.js"></script>
-<!-- JS Libraies -->
-<script src="assets/bundles/izitoast/js/iziToast.min.js"></script>
-<script src="assets/js/page/toastr.js"></script>
-
-<!-- Page Specific JS File -->
-<script src="assets/js/page/index.js"></script>
-<!-- Page Specific JS File -->
-<!-- Template JS File -->
-<script src="assets/js/scripts.js"></script>
-<!-- Custom JS File -->
-<script src="assets/js/custom.js"></script></body>
+ <?php
+include 'includes/footerjs.php';
+?>
+<script src="assets/js/lga.min.js"></script>
+</body>
 <script>
     $(document).ready(function() {
         let selectedSubjects = [];
@@ -301,6 +270,7 @@ require_once __DIR__ . '/../templates/loggedInc.php';
                     }
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
+                    subjectsGrid.append('<p>Failed to load subjects. Please reload page.</p>');
                     alert('Failed to load subjects. Please try again later.');
                     console.error('AJAX Error:', textStatus, errorThrown);
                 }
