@@ -192,35 +192,9 @@ require_once __DIR__ . '/../templates/loggedInc.php';
                             <h4>My Subjects</h4>
                         </div>
                         <div class="card-body pb-0">
-                            <div class="row">
-                                <!-- Rectangle 1 -->
-                                <div class="col-6 col-sm-3 col-lg-6 mb-4">
-                                    <div class="rectangle bg-blue">
-                                        <div class="icon">🔵</div>
-                                        <div class="title">Item AB</div>
-                                    </div>
-                                </div>
-                                <!-- Rectangle 2 -->
-                                <div class="col-6 col-sm-3 col-lg-6 mb-4">
-                                    <div class="rectangle bg-green">
-                                        <div class="icon">🟢</div>
-                                        <div class="title">Item AB</div>
-                                    </div>
-                                </div>
-                                <!-- Rectangle 3 -->
-                                <div class="col-6 col-sm-3 col-lg-6 mb-4">
-                                    <div class="rectangle bg-yellow">
-                                        <div class="icon">🟡</div>
-                                        <div class="title">Item AB</div>
-                                    </div>
-                                </div>
-                                <!-- Rectangle 4 -->
-                                <div class="col-6 col-sm-3 col-lg-6 mb-4">
-                                    <div class="rectangle bg-red">
-                                        <div class="icon">🔴</div>
-                                        <div class="title">Item AB</div>
-                                    </div>
-                                </div>
+                            <div id="my-subjects-grid" class="row subjects-grid">
+
+
                             </div>
 
                         </div>
@@ -380,10 +354,108 @@ if ($profileSet == 0){
 }
 ?>
 <script>
+    function convertColor(colorHex) {
+        // Remove '0x' prefix
+        let hex = colorHex.replace(/^0x/, '');
+        // Ensure it's in RRGGBB format
+        if (hex.length === 8) {
+            hex = hex.substring(2);
+        }
+        const bigint = parseInt(hex, 16);
+        const r = (bigint >> 16) & 255;
+        const g = (bigint >> 8) & 255;
+        const b = bigint & 255;
+        return `rgb(${r}, ${g}, ${b})`;
+    }
 
+    function loadMySubjects() {
+        const mySubjectsGrid = $('#my-subjects-grid');
+        mySubjectsGrid.html(`
+        <div class="col-6 col-sm-3 col-lg-6 mb-4 ">
+            <div class="rectangle skeleton-loader">
+                <div class="icon"></div>
+                <div class="title"></div>
+            </div>
+        </div>
+        <div class="col-6 col-sm-3 col-lg-6 mb-4 skeleton-loaader">
+            <div class="rectangle skeleton-loader">
+                <div class="icon"></div>
+                <div class="title"></div>
+            </div>
+        </div>
+        <div class="col-6 col-sm-3 col-lg-6 mb-4 skeleton-loadaer">
+            <div class="rectangle skeleton-loader">
+                <div class="icon"></div>
+                <div class="title"></div>
+            </div>
+        </div>
+        <div class="col-6 col-sm-3 col-lg-6 mb-4 skeletaon-loader">
+            <div class="rectangle skeleton-loader">
+                <div class="icon"></div>
+                <div class="title"></div>
+            </div>
+        </div>
+    `);
+        $.ajax({
+            url: '../api_ajax/get_subjects.php',
+            method: 'GET',
+            dataType: 'json',
+            success: function(response) {
+                if (response.success) {
+                    const subjects = response.subjects || [];
+                    const selectedSubjectIds = mySelectedSubjects || [];
+                    mySubjectsGrid.empty();
+                    if (selectedSubjectIds.length === 0) {
+                        mySubjectsGrid.append('<p>No subjects selected.</p>');
+                    } else {
+                        // Iterate through the selectedSubjectIds and find matching subjects
+                        selectedSubjectIds.forEach(function(subjectId) {
+                            const subject = subjects.find(sub => sub.fid === subjectId);
+                            if (subject) {
+                                const subjectCard = $(`
+                                <div class="col-6 col-sm-3 col-lg-6 mb-4">
+                                    <div class="rectangle">
+                                       <div class="icon"> <img src="${subject.icon}" alt="${subject.name}" class="subject-icon"></div>
+ <div class="title">${subject.name}</div>
+                                    </div>
+                                </div>
+                            `);
+                                subjectCard.find('.rectangle').css('background-color', convertColor(subject.color));
+
+
+
+                                // Append the card to the selected subjects grid
+                                mySubjectsGrid.append(subjectCard);
+                            }
+                        });
+                    }
+
+                    // Optionally, you can remove or mark the selected subjects from the all subjects grid
+                    // to prevent duplication or highlight them as already selected
+                    // This part is optional based on your design preference
+                } else {
+                    alert('Failed to load subjects: ' + response.message);
+                }
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                alert('Failed to load subjects. Please try again later.');
+                console.error('AJAX Error:', textStatus, errorThrown);
+            }
+        });
+    }
     // tryc('success', 'Welcome '+user  );
 
+    $(document).ready(function() {
+        // Call loadMySubjects after the page has finished loading
+        loadMySubjects();
 
+    });
 </script>
+<style>
 
+     .subject-icon {
+        width: 50px;
+        height: 50px;
+    }
+</style>
 </html>

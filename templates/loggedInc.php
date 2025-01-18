@@ -69,9 +69,15 @@ $firstName = isset($userData['firstname']) ? $userData['firstname'] : '-';
 $surname = isset($userData['surname']) ? $userData['surname'] : '-';
 $email = isset($user['email']) ? $user['email'] : '-';
 require_once __DIR__ . '/../config/app_base.php';
+$selectedSubjects = isset($_SESSION['userData']['subjectSelect']) ? $_SESSION['userData']['subjectSelect'] : [];
+//exit;
+
 ?>
 
-
+<script>
+    // Ensure that the selectedSubjects variable is defined before using it
+    var mySelectedSubjects = <?php echo json_encode($selectedSubjects); ?>;
+</script>
 <!DOCTYPE html>
 <html lang="en">
 
