@@ -1,6 +1,7 @@
 <?php
 header("location: user/");
 exit;
+
 //// allsubjects.php
 //
 //// Function to fetch data from the API
