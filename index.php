@@ -1,8 +1,6 @@
 <?php
 header("location: user/");
 exit;
-
-git remote add origin https://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@github.com/amfstacks/efiwe_web_php.git
 //// allsubjects.php
 //
 //// Function to fetch data from the API
