@@ -38,7 +38,7 @@ require_once __DIR__ . '/../templates/loggedInc.php';
 
 
                                             <div class="row">
-                                                <div class="col-12 col-md-4 col-lg-4">
+                                                <div class="col-12 col-md-4 col-lg-4 mx-auto">
                                                     <div class="pricing">
                                                         <div class="pricing-title">
                                                             Spaced Repetition
@@ -55,7 +55,7 @@ require_once __DIR__ . '/../templates/loggedInc.php';
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-12 col-md-4 col-lg-4">
+                                                <div class="col-12 col-md-4 col-lg-4 mx-auto">
                                                     <div class="pricing pricing-highlight">
                                                         <div class="pricing-title">
                                                            Jamb Mock
@@ -67,8 +67,8 @@ require_once __DIR__ . '/../templates/loggedInc.php';
                                                             <div class="pricing-details">
                                                             </div>
                                                         </div>
-                                                        <div class="pricing-cta bg-primary">
-                                                            <a href="#" class="bg-primaary text-white">Start <i class="fas fa-arrow-right"></i></a>
+                                                        <div class="pricing-cta bg-primary" id="jmock">
+                                                            <span  class="bg-primary text-white" >Start <i class="fas fa-arrow-right"></i></span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -80,19 +80,6 @@ require_once __DIR__ . '/../templates/loggedInc.php';
                                         </div>
 
                                     </form>
-                                    <div id="form-success" class="success-message" style="display: none;">
-                                        Profile saved successfully!
-                                    </div>
-<!--                                    <div id="form-error" class="error-message" style="display: none;">-->
-<!--                                        Failed to save profile. Please try again.-->
-<!--                                    </div>-->
-                                    <div id="form-error" class="alert alert-danger alert-has-icon col-lg-6 col-sm-12" style="display: none;">
-                                        <div class="alert-icon"><i class="fas fa-exclamation-triangle"></i></div>
-                                        <div class="alert-body">
-                                            <div class="alert-title">Error</div>
-                                            <span id="form-error-text">Failed to save profile. Please try again.</span>
-                                        </div>
-                                    </div>
 
                                 </div>
                             </div>
@@ -102,15 +89,41 @@ require_once __DIR__ . '/../templates/loggedInc.php';
             </section>
 
         </div>
-        <footer class="main-footer">
-            <div class="footer-left">
-                kjgvhug
-            </div>
-            <div class="footer-right">
-            </div>
-        </footer>    </div>
+
+        <?php
+       include 'includes/footer.php';
+       ?>
+
+    </div>
 </div>
 
+
+<!-- Modal -->
+<div class="modal fade" id="mockExamModal" tabindex="-1" aria-labelledby="mockExamModalLabel" aria-hidden="true" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="mockExamModalLabel">Jamb Mock Exams</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Loader Section -->
+                <div id="modal-loader" class="text-center">
+                    <div class="loader"></div>
+                    <p>Loading data...</p>
+                </div>
+                <!-- Mock Exams List Section -->
+                <div id="mockExamsList" style="display: none;">
+                    <ul id="mockExams" class="list-group">
+                        <!-- Populated List will appear here -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 
  <?php
@@ -119,8 +132,58 @@ include 'includes/footerjs.php';
 </body>
 <script>
     $(document).ready(function() {
-        let selectedSubjects = [];
+        // alert('aa');
 
+        let selectedSubjects = [];
+        // $("#jmock").on("click", function(event) {
+            $(document).on('click', '#jmock', function() {
+            // event.preventDefault();
+            alert('aa');
+                $("#mockExamModal").modal('show');
+                $("#modal-loader").show();
+                $("#mockExamsList").hide(); // Hide the list initially
+
+                // Fetch mock exams from the endpoint
+                $.ajax({
+                    url: '/your-endpoint',  // Replace with your actual endpoint
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.data && response.data.length > 0) {
+                            // Hide the loader and show the mock exams list
+                            $("#modal-loader").hide();
+                            $("#mockExamsList").show();
+
+                            // Clear any previous data in the list
+                            $("#mockExams").empty();
+
+                            // Populate the list with mock exam data
+                            response.data.forEach(function(mockExam) {
+                                var examHTML = `
+                                <li class="list-group-item">
+                                    <h5>Week: ${mockExam.week}</h5>
+                                    <p><strong>Instruction:</strong> ${mockExam.instruction}</p>
+                                    <p><strong>Total Questions:</strong> ${mockExam.totalquestions}</p>
+                                    <p><strong>Duration:</strong> ${mockExam.duration} minutes</p>
+                                    <button class="btn btn-primary start-exam" data-exam-id="${mockExam.id}">Start Exam</button>
+                                </li>
+                            `;
+                                $("#mockExams").append(examHTML);
+                            });
+                        } else {
+                            // In case no data is returned
+                            $("#modal-loader").hide();
+                            $("#mockExamsList").html("<p>No mock exams available.</p>").show();
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        // In case of error, hide the loader and show an error message
+                        $("#modal-loader").hide();
+                        $("#mockExamsList").html("<p>Error fetching data. Please try again later.</p>").show();
+                    }
+                });
+
+        })
 
     });
 </script>
@@ -132,4 +195,17 @@ include 'includes/footerjs.php';
 
 
 </script>
+<style>
+    .pricing .pricing-cta span {
+        display: block;
+        padding: 20px 40px;
+        background-color: #f3f6f8;
+        text-transform: uppercase;
+        letter-spacing: 2.5px;
+        font-size: 14px;
+        font-weight: 700;
+        text-decoration: none;
+        border-radius: 0 0 3px 3px;
+    }
+</style>
 </html>
