@@ -32,7 +32,7 @@
 
             <li class="menu-header"></li>
             <li class="dropdown ">
-                <a href="#" class="nav-link"><i class="
+                <a href="mytest" class="nav-link"><i class="
 
               fas fa-chart-area"></i><span>Test</span></a>
             </li>
