@@ -23,7 +23,8 @@ if (empty($uid)) {
     ]);
     exit();
 }
-
+//echo $uid;
+//exit;
 if(!$profileSet) {
     $queryParams = [
         'uid' => $uid,

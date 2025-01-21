@@ -100,7 +100,7 @@ require_once __DIR__ . '/../templates/loggedInc.php';
 
 <!-- Modal -->
 <div class="modal fade" id="mockExamModal" tabindex="-1" aria-labelledby="mockExamModalLabel" aria-hidden="true" data-keyboard="false" data-backdrop="static">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="mockExamModalLabel">Jamb Mock Exams</h5>
@@ -116,9 +116,12 @@ require_once __DIR__ . '/../templates/loggedInc.php';
                 </div>
                 <!-- Mock Exams List Section -->
                 <div id="mockExamsList" style="display: none;">
-                    <ul id="mockExams" class="list-group">
+                    <div class="row" id="mockExams">
                         <!-- Populated List will appear here -->
-                    </ul>
+                    </div>
+<!--                    <ul id="mockExams" class="list-group">-->
+                        <!-- Populated List will appear here -->
+<!--                    </ul>-->
                 </div>
             </div>
         </div>
@@ -138,17 +141,18 @@ include 'includes/footerjs.php';
         // $("#jmock").on("click", function(event) {
             $(document).on('click', '#jmock', function() {
             // event.preventDefault();
-            alert('aa');
+            // alert('aa');
                 $("#mockExamModal").modal('show');
                 $("#modal-loader").show();
                 $("#mockExamsList").hide(); // Hide the list initially
 
                 // Fetch mock exams from the endpoint
                 $.ajax({
-                    url: '/your-endpoint',  // Replace with your actual endpoint
+                    url: '../api_ajax/get_mockList.php', // Replace with your actual endpoint
                     type: 'GET',
                     dataType: 'json',
                     success: function(response) {
+                        // console.log(response);
                         if (response.data && response.data.length > 0) {
                             // Hide the loader and show the mock exams list
                             $("#modal-loader").hide();
@@ -159,15 +163,37 @@ include 'includes/footerjs.php';
 
                             // Populate the list with mock exam data
                             response.data.forEach(function(mockExam) {
+                                var buttonHTML = '';
+                                if (mockExam.hasTaken) {
+                                    buttonHTML = `
+                        <button class="btn btn-secondary" disabled>Exam Completed</button>
+                    `;
+                                } else {
+                                    buttonHTML = `
+                        <button class="btn btn-primary start-exam" data-exam-id="${mockExam.id}">Start Exam</button>
+                    `;
+                                }
+
+                            //     var examHTML = `
+                            //     <li class="list-group-item">
+                            //         <h5>Week: ${mockExam.week}</h5>
+                            //         <p><strong>Instruction:</strong> ${mockExam.instruction}</p>
+                            //         <p><strong>Total Questions:</strong> ${mockExam.totalquestions}</p>
+                            //         <p><strong>Duration:</strong> ${mockExam.duration} minutes</p>
+                            //        ${buttonHTML}
+                            //     </li>
+                            // `;
                                 var examHTML = `
-                                <li class="list-group-item">
-                                    <h5>Week: ${mockExam.week}</h5>
-                                    <p><strong>Instruction:</strong> ${mockExam.instruction}</p>
-                                    <p><strong>Total Questions:</strong> ${mockExam.totalquestions}</p>
-                                    <p><strong>Duration:</strong> ${mockExam.duration} minutes</p>
-                                    <button class="btn btn-primary start-exam" data-exam-id="${mockExam.id}">Start Exam</button>
-                                </li>
-                            `;
+                    <div class="col-md-6">
+                        <div class="list-group-item">
+                            <h5>Week: ${mockExam.week}</h5>
+                            <p><strong>Instruction:</strong> ${mockExam.instruction}</p>
+                            <p><strong>Total Questions:</strong> ${mockExam.totalquestions}</p>
+                            <p><strong>Duration:</strong> ${mockExam.duration} minutes</p>
+                            ${buttonHTML}
+                        </div>
+                    </div>
+                `;
                                 $("#mockExams").append(examHTML);
                             });
                         } else {

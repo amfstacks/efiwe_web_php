@@ -272,6 +272,15 @@ function fetch_subject_topics($uid,$subjectId, $refreshToken, $accessToken) {
     return api_request_get('subjecttopics', $data, 'GET', $accessToken,$refreshToken);
 }
 
+function fetch_JambMockList($uid, $refreshToken, $accessToken) {
+    $data = [
+        'uid' => $uid,
+        'refreshToken' => $refreshToken
+    ];
+
+    return api_request_get('getMocksList', $data, 'GET', $accessToken,$refreshToken);
+}
+
 function api_request_post_($endpoint, $data = null, $method = 'POST', $accessToken = null,$refreshToken=null) {
     $url = API_BASE_URL . $endpoint;
 
