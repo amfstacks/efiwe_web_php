@@ -112,7 +112,7 @@ require_once __DIR__ . '/../templates/loggedInc.php';
                 <!-- Loader Section -->
                 <div id="modal-loader" class="text-center">
                     <div class="loader"></div>
-                    <p>Loading data...</p>
+                    <p>Loading data....</p>
                 </div>
                 <!-- Mock Exams List Section -->
                 <div id="mockExamsList" style="display: none;">
