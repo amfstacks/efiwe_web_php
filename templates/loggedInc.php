@@ -24,6 +24,11 @@ if (empty($uid)) {
     exit();
 }
 //echo $uid;
+//echo "<br>";
+//echo $accessToken;
+//echo "<br>";
+//echo $refreshToken;
+//var_dump($userData['subjectSelect']);
 //exit;
 if(!$profileSet) {
     $queryParams = [
