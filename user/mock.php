@@ -24,7 +24,9 @@
         <!-- Questions will be dynamically loaded here -->
     </div>
 </div>
-
+<?php
+include 'includes/footerjs.php';
+?>
 <script >
 
     // Function to fetch and display mock questions based on the selected week
@@ -57,16 +59,18 @@
             const questionElement = document.createElement('div');
             questionElement.classList.add('question-item');
             questionElement.innerHTML = `
+<div class="question" id="${question.questionid}">
             <h5>Question ${index + 1}: ${question.text}</h5>
             <ul class="options-list">
                 ${question.options.map((option, i) => `
                     <li>
-                        <input type="radio" name="question_${index}" value="${i}" id="question_${index}_option_${i}" />
+                        <input type="radio" name="question_${index}" value="${i}" id="question_${index}_option_${i}" data-answer="${i}" data-question-id="${question.questionid}" data-w="${question.answer}" class="option" />
                         <label for="question_${index}_option_${i}">${option}</label>
                     </li>
                 `).join('')}
             </ul>
             <p><strong>Explanation:</strong> ${question.explanation || 'No explanation provided.'}</p>
+</div>
         `;
             questionsContainer.appendChild(questionElement);
         });
@@ -82,15 +86,15 @@
             questionId: questionId,
             userAnswer: userAnswer,
             rightOrWrong: rightOrWrong,
-            userId: 'USER_ID_HERE', // Replace with actual user ID
         };
 
         $.ajax({
-            url: '/saveUserAnswer',
+            url: '../api_ajax/saveUserAnswer.php',
             method: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(data),
             success: function(responseData) {
+                console.log(responseData);
                 if (responseData.success) {
                     console.log('Answer saved successfully!');
                 } else {
@@ -104,8 +108,22 @@
     }
 
     // Example: User selecting an answer for a question
-    $('#question_1_option_1').on('click', function() {
-        saveAnswer('questionId_12345', 1, 2); // Save answer (userAnswer = 1, correctAnswer = 2)
+
+
+    $(document).on('click', '.option', function() {
+        // Get the question ID and the user's selected answer
+        var questionId = $(this).data('question-id');
+        var userAnswer = $(this).data('answer'); // The selected answer (1, 2, 3, 4, etc.)
+        var correctAnswer = $(this).data('w'); // The selected answer (1, 2, 3, 4, etc.)
+// alert(questionId);
+// alert(userAnswer);
+        // Assume the correct answer is available (e.g., stored in a data attribute or variable)
+        // var finalAnswer = userAnswer==correctAnswer;
+        // alert(finalAnswer);
+        // This function should return the correct answer for the question
+        //
+        // // Save the answer (dynamically calls saveAnswer)
+        saveAnswer(questionId, userAnswer, correctAnswer);
     });
 
 </script>
