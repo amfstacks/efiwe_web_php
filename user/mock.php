@@ -35,10 +35,13 @@ include 'includes/footerjs.php';
         fetch(`../api_ajax/get_mock_Questions.php`)
         // url: '../api_ajax/get_mockList.php',
             .then(response => response.json())
-            .then(data => {
+            .then(async data => {
                 // Check if the response is successful
                 if (data.success) {
                     displayMockQuestions(data.data);
+                    const userAnswers = await fetchUserAnswers();
+                    console.log(userAnswers);
+                    updateQuestionsWithAnswers(data.data, userAnswers);
                 } else {
                     alert('Failed to fetch questions');
                 }
@@ -109,6 +112,28 @@ include 'includes/footerjs.php';
 
     // Example: User selecting an answer for a question
 
+    async function fetchUserAnswers() {
+        const response = await fetch(`../api_ajax/get_mock_Answers.php`);
+
+        const data = await response.json();
+// console.log(data.data);
+        return data.data; // Adjust based on your actual response structure
+    }
+    function updateQuestionsWithAnswers(questions, userAnswers) {
+        questions.forEach((question) => {
+            // alert(userAnswers);
+            const userAnswer = userAnswers.find(answer => answer.questionId.stringValue == question.questionid);
+// alert(userAnswer);
+            // If the user has answered this question, pre-fill the selected answer
+            if (userAnswer) {
+                const userAnswerValue = userAnswer.userAnswer.integerValue;
+                const selectedOption = document.querySelector(`#question_${questions.indexOf(question)}_option_${userAnswerValue}`);
+                if (selectedOption) {
+                    selectedOption.checked = true;
+                }
+            }
+        });
+    }
 
     $(document).on('click', '.option', function() {
         // Get the question ID and the user's selected answer

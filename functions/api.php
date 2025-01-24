@@ -279,7 +279,9 @@ function fetch_JambMockList($uid, $refreshToken, $accessToken) {
     ];
 
     return api_request_get('getMocksList', $data, 'GET', $accessToken,$refreshToken);
-}function fetch_Mock_Questions($uid, $refreshToken, $accessToken,$mockWeek) {
+}
+
+function fetch_Mock_Questions($uid, $refreshToken, $accessToken,$mockWeek) {
     $data = [
         'uid' => $uid,
         'refreshToken' => $refreshToken,
@@ -287,6 +289,15 @@ function fetch_JambMockList($uid, $refreshToken, $accessToken) {
     ];
 
     return api_request_get('fetchActualQuestions', $data, 'GET', $accessToken,$refreshToken);
+}
+function fetch_Mock_Answers($uid, $refreshToken, $accessToken,$mockWeek) {
+    $data = [
+        'uid' => $uid,
+        'refreshToken' => $refreshToken,
+        'mockWeek' => $mockWeek
+    ];
+
+    return api_request_get('fetchAnswers', $data, 'GET', $accessToken,$refreshToken);
 }
 
 function api_request_post_($endpoint, $data = null, $method = 'POST', $accessToken = null,$refreshToken=null) {
