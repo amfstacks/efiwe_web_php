@@ -37,6 +37,7 @@ $mockWeek = 1;
 // Fetch all subjects from the API
 $result = fetch_Mock_Questions($uid, $refreshToken, $accessToken,$mockWeek);
 
+
 // Return the result as JSON
 header('Content-Type: application/json');
 echo json_encode($result);
