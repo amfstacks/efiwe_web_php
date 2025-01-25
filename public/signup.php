@@ -51,7 +51,7 @@ require_once __DIR__ . '/../functions/auth.php';
 
 // If the user is already logged in, redirect to dashboard
 if (is_logged_in()) {
-    header('Location: dashboard.php');
+    header('Location: user/index');
     exit();
 }
 
