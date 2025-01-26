@@ -1,28 +1,42 @@
 <?php
-// Decode the Base64 data
+$encodedData = '';
 if (isset($_GET['data'])) {
     $encodedData = $_GET['data'];
-//    $decodedData = base64_decode($encodedData);
-
-    // Use the decoded data
-//    echo "Decoded Week: " . htmlspecialchars($decodedData);
-//    echo "Decoded Week: " .$encodedData;
-} else {
-//    echo "No data provided!";
 }
-//exit;
+
+$page_title = $encodedData .'|| My Tests';
+
+require_once __DIR__ . '/../templates/loggedInc.php';
+
+if(empty($encodedData)){
+    exit('an error occurred');
+}
+
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mock Exam</title>
-    <link rel="stylesheet" href="style.css">
-</head>
+
 <body>
 
-<div class="container">
+<div class="loader"></div>
+<div id="app">
+
+    <div class="main-wrapper main-wrapper-1">
+
+
+    <div class="navbar-bg d-print-none"></div>
+    <?php
+    include 'includes/navbar.php';
+    include 'includes/sidebar.php';
+    ?>
+
+        <div class="main-content">
+            <section class="section">
+                <div class="section-body">
+                    <div class="row mt-sm-4">
+                        <div class="col-12 col-md-12 col-lg-12" id="profilesetup">
+                            <div class="card">
+                                <div class="padding-20">
+
+                                <div class="container">
     <!-- Container to hold the exam details and questions -->
     <div id="exam-details">
         <h2>Week: <?php echo $encodedData ?></h2>
@@ -40,9 +54,22 @@ if (isset($_GET['data'])) {
         <!-- Questions will be dynamically loaded here -->
     </div>
 </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
+</div>
 <?php
 include 'includes/footerjs.php';
 ?>
+</div>
 <script >
 week = <?php echo $encodedData ?>;
     // Function to fetch and display mock questions based on the selected week
@@ -211,4 +238,3 @@ week = <?php echo $encodedData ?>;
 
 </script>
 </body>
-</html>
