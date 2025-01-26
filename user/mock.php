@@ -1,3 +1,17 @@
+<?php
+// Decode the Base64 data
+if (isset($_GET['data'])) {
+    $encodedData = $_GET['data'];
+//    $decodedData = base64_decode($encodedData);
+
+    // Use the decoded data
+//    echo "Decoded Week: " . htmlspecialchars($decodedData);
+//    echo "Decoded Week: " .$encodedData;
+} else {
+//    echo "No data provided!";
+}
+//exit;
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,13 +25,13 @@
 <div class="container">
     <!-- Container to hold the exam details and questions -->
     <div id="exam-details">
-        <h2>Week: 1</h2>
+        <h2>Week: <?php echo $encodedData ?></h2>
         <p><strong>Instruction:</strong> Prior to starting the exam, it is imperative to thoroughly read and comprehend all provided instructions...</p>
         <p><strong>Total Questions:</strong> 120</p>
         <p><strong>Duration:</strong> 120 minutes</p>
 
         <!-- Start Exam button that triggers question fetching -->
-        <button class="btn btn-primary start-exam" onclick="fetchMockQuestions(1)">Start Exam</button>
+        <button class="btn btn-primary start-exam" onclick="fetchMockQuestions(<?php echo $encodedData ?>)">Start Exam</button>
     </div>
     <button id="preloadQuestions" onclick="preloadMockQuestions()">Preload Questions</button>
     <button id="startMock" onclick="startMock()" disabled>Start Mock</button>
@@ -30,11 +44,11 @@
 include 'includes/footerjs.php';
 ?>
 <script >
-
+week = <?php echo $encodedData ?>;
     // Function to fetch and display mock questions based on the selected week
     function fetchMockQuestions(week) {
         // Fetch data from the API endpoint, passing the week as a parameter
-        fetch(`../api_ajax/get_mock_Questions.php`)
+        fetch(`../api_ajax/get_mock_Questions.php?week=${encodeURIComponent(week)}`)
         // url: '../api_ajax/get_mockList.php',
             .then(response => response.json())
             .then(async data => {
@@ -44,6 +58,7 @@ include 'includes/footerjs.php';
                     const userAnswers = await fetchUserAnswers();
                     console.log(userAnswers);
                     updateQuestionsWithAnswers(data.data, userAnswers);
+                    saveMockData();
                 } else {
                     alert('Failed to fetch questions');
                 }
@@ -61,6 +76,7 @@ include 'includes/footerjs.php';
         $.ajax({
             url: "../api_ajax/load_mock_Questions.php",
             method: "GET",
+            data: { week: week },
             success: function (data) {
                 if (data.success) {
                     statusDiv.text("Questions preloaded successfully. You can now start the mock.");
@@ -75,7 +91,24 @@ include 'includes/footerjs.php';
             },
         });
     }
+    function saveMockData() {
 
+
+        $.ajax({
+            url: "../api_ajax/saveMockdata.php",
+            method: "POST",
+            success: function (data) {
+                console.log(data)
+                if (data.success) {
+                } else {
+
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("Error preloading questions:", error);
+            },
+        });
+    }
 
     // Function to display the fetched questions dynamically
     function displayMockQuestions(questions) {

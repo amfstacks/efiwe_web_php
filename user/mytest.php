@@ -163,14 +163,16 @@ include 'includes/footerjs.php';
 
                             // Populate the list with mock exam data
                             response.data.forEach(function(mockExam) {
+                                // const encryptedWeek = btoa(mockExam.week);
+                                const encryptedWeek = mockExam.week;
                                 var buttonHTML = '';
-                                if (mockExam.hasTaken) {
+                                if (!mockExam.canContinue) {
                                     buttonHTML = `
                         <button class="btn btn-secondary" disabled>Exam Completed</button>
                     `;
                                 } else {
                                     buttonHTML = `
-                        <button class="btn btn-primary start-exam" data-exam-id="${mockExam.id}">Start Exam</button>
+                        <a class="btn btn-primary start-exam text-white" data-exam-id="${mockExam.id}" href="mock.php?data=${encodeURIComponent(encryptedWeek)}">Start Exam</a>
                     `;
                                 }
 

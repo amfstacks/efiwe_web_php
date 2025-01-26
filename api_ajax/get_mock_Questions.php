@@ -33,7 +33,18 @@ $accessToken = isset($user['idToken']) ? $user['idToken'] : '';
 
 // Define your examId
 $examId = "X2j9hFD6O7RGAER6bn3b";
-$mockWeek = 1;
+$mockWeek = 0;
+if (isset($_GET['week'])) {
+    $mockWeek = $_GET['week'];
+}
+
+if(!$mockWeek){
+    echo json_encode([
+        "success" => false,
+        "message" => "missing week"
+    ]);
+    exit();
+}
 // Fetch all subjects from the API
 $result = fetch_Mock_Questions($uid, $refreshToken, $accessToken,$mockWeek);
 
