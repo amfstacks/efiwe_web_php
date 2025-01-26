@@ -19,7 +19,9 @@
         <!-- Start Exam button that triggers question fetching -->
         <button class="btn btn-primary start-exam" onclick="fetchMockQuestions(1)">Start Exam</button>
     </div>
-
+    <button id="preloadQuestions" onclick="preloadMockQuestions()">Preload Questions</button>
+    <button id="startMock" onclick="startMock()" disabled>Start Mock</button>
+    <div id="status"></div>
     <div id="questions-container">
         <!-- Questions will be dynamically loaded here -->
     </div>
@@ -51,6 +53,29 @@ include 'includes/footerjs.php';
                 alert('An error occurred while fetching the questions');
             });
     }
+
+    function preloadMockQuestions() {
+        const statusDiv = $("#status");
+        statusDiv.text("Preloading questions...");
+
+        $.ajax({
+            url: "../api_ajax/load_mock_Questions.php",
+            method: "GET",
+            success: function (data) {
+                if (data.success) {
+                    statusDiv.text("Questions preloaded successfully. You can now start the mock.");
+                    $("#startMock").prop("disabled", false);
+                } else {
+                    statusDiv.text(`Failed to preload questions: ${data.message}`);
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("Error preloading questions:", error);
+                statusDiv.text("An error occurred while preloading questions.");
+            },
+        });
+    }
+
 
     // Function to display the fetched questions dynamically
     function displayMockQuestions(questions) {

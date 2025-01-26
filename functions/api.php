@@ -290,6 +290,17 @@ function fetch_Mock_Questions($uid, $refreshToken, $accessToken,$mockWeek) {
 
     return api_request_get('fetchActualQuestions', $data, 'GET', $accessToken,$refreshToken);
 }
+
+function load_Mock_Questions($uid, $refreshToken, $accessToken,$mockWeek,$selectedSubjects) {
+    $data = [
+        'uid' => $uid,
+        'refreshToken' => $refreshToken,
+        'mockWeek' => $mockWeek,
+        'mySubject' => $selectedSubjects
+    ];
+
+    return api_request_get('fetchMockQuestions', $data, 'GET', $accessToken,$refreshToken);
+}
 function fetch_Mock_Answers($uid, $refreshToken, $accessToken,$mockWeek) {
     $data = [
         'uid' => $uid,
