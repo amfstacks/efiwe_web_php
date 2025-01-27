@@ -143,21 +143,10 @@ if(empty($encodedData)){
                                     <div class="alert alert-light col-lg-6" id="status" style="display: none; ">
 
                                     </div>
-                                    <div id="questions-container" class="question-wrapper">
-                                        <!-- Questions will be dynamically loaded here -->
-                                    </div>
+    <div id="questions-container">
+        <!-- Questions will be dynamically loaded here -->
+    </div>
 
-                                    <!-- Navigation Buttons -->
-<!--                                    <div id="navigation-buttons" class="text-center mt-4">-->
-                                        <!-- Buttons will be dynamically added here -->
-<!--                                    </div>-->
-                                    <div class="navigation-section text-center mt-4">
-                                        <button id="prev-button" class="btn btn-secondary mx-2" disabled>Previous</button>
-                                        <div id="navigation-buttons" class="d-inline-block">
-                                            <!-- Navigation number buttons will be dynamically added here -->
-                                        </div>
-                                        <button id="next-button" class="btn btn-secondary mx-2" disabled>Next</button>
-                                    </div>
 
 
 
@@ -268,114 +257,33 @@ tryc('info','Loading Questions','', 'bottomCenter');
     }
 
     // Function to display the fetched questions dynamically
-let currentQuestionIndex = 0;
-function displayMockQuestions(questions) {
-    const questionsContainer = document.getElementById('questions-container');
-    const navigationButtons = document.getElementById('navigation-buttons');
-    questionsContainer.innerHTML = ''; // Clear existing questions
-    navigationButtons.innerHTML = ''; // Clear existing navigation buttons
+    function displayMockQuestions(questions) {
+        const questionsContainer = document.getElementById('questions-container');
+        questionsContainer.innerHTML = ''; // Clear existing questions
 
-    // Loop through questions to create question elements
-    questions.forEach((question, index) => {
-        const questionElement = document.createElement('div');
-        questionElement.classList.add('question-item');
-        questionElement.setAttribute('data-question-index', index);
-        questionElement.style.display = index === 0 ? 'block' : 'none'; // Show only the first question initially
-        questionElement.innerHTML = `
-            <div class="question question-container">
-                <span class="float-left font-weight-bold">Question ${index + 1}:</span><br>
-                <h5 class="bg-dark-gray">${question.text}</h5>
-                <ul class="options-list">
-                    ${question.options.map((option, i) => `
-                        <li>
-                            <input type="radio" name="question_${index}" value="${i}" id="question_${index}_option_${i}" data-answer="${i}" data-question-id="${question.questionid}" class="option" />
-                            <label for="question_${index}_option_${i}">${option}</label>
-                        </li>
-                    `).join('')}
-                </ul>
-                <p><strong>Explanation:</strong> ${question.explanation || 'No explanation provided.'}</p>
-            </div>
+        // Loop through the questions and display them with their options
+        questions.forEach((question, index) => {
+            const questionElement = document.createElement('div');
+            questionElement.classList.add('question-item');
+            questionElement.innerHTML = `
+<div class="question question-container" id="${question.questionid}">
+ <span class="float-left font-weight-bold">Question ${index + 1}:</span><br>
+            <h5 class="bg-dark-gray"> ${question.text}</h5>
+            <ul class="options-list">
+                ${question.options.map((option, i) => `
+                    <li>
+                        <input type="radio" name="question_${index}" value="${i}" id="question_${index}_option_${i}" data-answer="${i}" data-question-id="${question.questionid}" data-w="${question.answer}" class="option" />
+                        <label for="question_${index}_option_${i}">${option}</label>
+                    </li>
+                `).join('')}
+            </ul>
+            <p><strong>Explanation:</strong> ${question.explanation || 'No explanation provided.'}</p>
+</div>
         `;
-        questionsContainer.appendChild(questionElement);
-
-        // Create navigation button for each question
-        const navButton = document.createElement('button');
-        navButton.classList.add('btn', 'btn-outline-primary', 'mx-1');
-        navButton.innerText = index + 1;
-        navButton.setAttribute('data-nav-index', index);
-        navButton.onclick = () => navigateToQuestion(index);
-        navigationButtons.appendChild(navButton);
-    });
-    updateNavigationControls(questions.length);
-    highlightAnsweredQuestions();
-}
-
-// Function to navigate to a specific question
-function navigateToQuestion(index) {
-    // Hide all questions
-    document.querySelectorAll('.question-item').forEach((question) => {
-        question.style.display = 'none';
-    });
-
-    // Show the selected question
-    const selectedQuestion = document.querySelector(`[data-question-index="${index}"]`);
-    if (selectedQuestion) {
-        selectedQuestion.style.display = 'block';
-    }
-
-    // Highlight the active navigation button
-    document.querySelectorAll('#navigation-buttons button').forEach((button) => {
-        button.classList.remove('btn-primary');
-        button.classList.add('btn-outline-primary');
-    });
-    const activeButton = document.querySelector(`[data-nav-index="${index}"]`);
-    if (activeButton) {
-        activeButton.classList.remove('btn-outline-primary');
-        activeButton.classList.add('btn-primary');
-    }
-    updateNavigationControls(questions.length);
-    highlightAnsweredQuestions();
-}
-
-function updateNavigationControls(totalQuestions) {
-    const prevButton = document.getElementById('prev-button');
-    const nextButton = document.getElementById('next-button');
-
-    prevButton.disabled = currentQuestionIndex === 0;
-    nextButton.disabled = currentQuestionIndex === totalQuestions - 1;
-
-    // Highlight the active navigation button
-    document.querySelectorAll('#navigation-buttons button').forEach((button) => {
-        button.classList.remove('btn-primary');
-        button.classList.add('btn-outline-primary');
-    });
-    const activeButton = document.querySelector(`[data-nav-index="${currentQuestionIndex}"]`);
-    if (activeButton) {
-        activeButton.classList.remove('btn-outline-primary');
-        activeButton.classList.add('btn-primary');
-    }
-}
-
-document.getElementById('next-button').addEventListener('click', () => {
-    navigateToQuestion(currentQuestionIndex + 1, questions); // Move to the next question
-});
-
-// Function to handle Previous button click
-document.getElementById('prev-button').addEventListener('click', () => {
-    navigateToQuestion(currentQuestionIndex - 1, questions); // Move to the previous question
-});
-function highlightAnsweredQuestions() {
-    document.querySelectorAll('.options-list input[type="radio"]').forEach((radioButton) => {
-        radioButton.addEventListener('change', () => {
-            const questionIndex = radioButton.name.split('_')[1]; // Extract the question index from the name
-            const navButton = document.querySelector(`[data-nav-index="${questionIndex}"]`);
-            if (navButton) {
-                navButton.classList.remove('btn-outline-primary');
-                navButton.classList.add('btn-success'); // Highlight as answered
-            }
+            questionsContainer.appendChild(questionElement);
         });
-    });
-}
+    }
+
     // Function to handle answer submission
     function saveAnswer(questionId, userAnswer, correctAnswer) {
         // Determine if the answer is correct
