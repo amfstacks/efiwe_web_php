@@ -50,15 +50,15 @@ if(empty($encodedData)){
         border: 2px solid #ccc;
         border-radius: 6px;
         padding: 15px;
-        text-align: center;
         cursor: pointer;
         transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+        text-align: left;
     }
 
     .options-list label:hover {
-        background-color: #0066cc;
+        background-color: #cdd3d8;
         color: #fff;
-        border-color: #0066cc;
+        border-color: #cdd3d8;
     }
 
     .options-list input[type="radio"] {
@@ -66,9 +66,10 @@ if(empty($encodedData)){
     }
 
     .options-list input[type="radio"]:checked + label {
-        background-color: #0066cc;
+        background-color: #6777ef;
         color: #fff;
-        border-color: #0066cc;
+        border-color: #6777ef;
+        text-align: left;
     }
 
     .explanation {
@@ -79,6 +80,12 @@ if(empty($encodedData)){
 
     .explanation strong {
         color: #333;
+    }
+
+    .options-list label.selected {
+        background-color: #6777ef;
+        color: #fff;
+        border-color: #6777ef;
     }
 </style>
 <body>
@@ -143,9 +150,9 @@ if(empty($encodedData)){
 
                                     <div class="question-item">
 
-                                        <div class="question-container" id="0kqO2oMTIm7MWFOpwtvk">
+                                        <div class="question-container bg-seconadary badge-liaght" id="0kqO2oMTIm7MWFOpwtvk">
                                             <span class="float-left font-weight-bold">Question 2:</span>
-                                            <h5> The man was able to persuade his willful and obstinate daughter to follow the career he chose for her?</h5>
+                                            <h5 class="bg-dark-gray"> The man was able to persuade his willful and obstinate daughter to follow the career he chose for her?</h5>
 
                                            <ul class="options-list">
 
@@ -172,63 +179,8 @@ if(empty($encodedData)){
                                             </ul>
                                             <p><strong>Explanation:</strong> No explanation provided.</p>
                                         </div>
-                                    </div><div class="question-item">
-                                        <div class="question" id="1GqzzQHdHK0q18LLTx1C">
-                                            Question 3: <h5> The governor rejected the bill and withheld his ____________?</h5>
-                                            <ul class="options-list">
-
-                                                <li>
-                                                    <input type="radio" name="question_2" value="0" id="question_2_option_0" data-answer="0" data-question-id="1GqzzQHdHK0q18LLTx1C" data-w="0" class="option">
-                                                    <label for="question_2_option_0">accent</label>
-                                                </li>
-
-                                                <li>
-                                                    <input type="radio" name="question_2" value="1" id="question_2_option_1" data-answer="1" data-question-id="1GqzzQHdHK0q18LLTx1C" data-w="0" class="option">
-                                                    <label for="question_2_option_1">assent</label>
-                                                </li>
-
-                                                <li>
-                                                    <input type="radio" name="question_2" value="2" id="question_2_option_2" data-answer="2" data-question-id="1GqzzQHdHK0q18LLTx1C" data-w="0" class="option">
-                                                    <label for="question_2_option_2">access</label>
-                                                </li>
-
-                                                <li>
-                                                    <input type="radio" name="question_2" value="3" id="question_2_option_3" data-answer="3" data-question-id="1GqzzQHdHK0q18LLTx1C" data-w="0" class="option">
-                                                    <label for="question_2_option_3">ascent</label>
-                                                </li>
-
-                                            </ul>
-                                            <p><strong>Explanation:</strong> No explanation provided.</p>
-                                        </div>
-                                    </div><div class="question-item">
-                                        <div class="question" id="0ikU477aY5uFc2TcbSd6">
-                                            Question 1: <h5> Maimuna wrote to ask if I could put her …. for the night</h5>
-                                            <ul class="options-list">
-
-                                                <li>
-                                                    <input type="radio" name="question_0" value="0" id="question_0_option_0" data-answer="0" data-question-id="0ikU477aY5uFc2TcbSd6" data-w="0" class="option">
-                                                    <label for="question_0_option_0">UP</label>
-                                                </li>
-
-                                                <li>
-                                                    <input type="radio" name="question_0" value="1" id="question_0_option_1" data-answer="1" data-question-id="0ikU477aY5uFc2TcbSd6" data-w="0" class="option">
-                                                    <label for="question_0_option_1">IN</label>
-                                                </li>
-
-                                                <li>
-                                                    <input type="radio" name="question_0" value="2" id="question_0_option_2" data-answer="2" data-question-id="0ikU477aY5uFc2TcbSd6" data-w="0" class="option">
-                                                    <label for="question_0_option_2">OUT</label>
-                                                </li>
-
-                                                <li>
-                                                    <input type="radio" name="question_0" value="3" id="question_0_option_3" data-answer="3" data-question-id="0ikU477aY5uFc2TcbSd6" data-w="0" class="option">
-                                                    <label for="question_0_option_3">OFF</label>
-                                                </li>
-
-                                            </ul>
-                                            <p><strong>Explanation:</strong> No explanation provided.</p>
-                                        </div>
                                     </div>
+
 
 
                                 </div>
@@ -345,8 +297,9 @@ tryc('info','Loading Questions','', 'bottomCenter');
             const questionElement = document.createElement('div');
             questionElement.classList.add('question-item');
             questionElement.innerHTML = `
-<div class="question" id="${question.questionid}">
-           Question ${index + 1}: <h5> ${question.text}</h5>
+<div class="question question-container" id="${question.questionid}">
+ <span class="float-left font-weight-bold">Question ${index + 1}:</span>
+            <h5 class="bg-dark-gray"> ${question.text}</h5>
             <ul class="options-list">
                 ${question.options.map((option, i) => `
                     <li>
@@ -373,7 +326,8 @@ tryc('info','Loading Questions','', 'bottomCenter');
             userAnswer: userAnswer,
             rightOrWrong: rightOrWrong,
         };
-
+// console.log(data);
+// return;
         $.ajax({
             url: '../api_ajax/saveUserAnswer.php',
             method: 'POST',
@@ -396,13 +350,116 @@ tryc('info','Loading Questions','', 'bottomCenter');
     // Example: User selecting an answer for a question
 
     async function fetchUserAnswers() {
-        const response = await fetch(`../api_ajax/get_mock_Answers.php`);
+        const response = await fetch(`../api_ajax/get_mock_Answers.php?week=${encodeURIComponent(week)}`);
 
         const data = await response.json();
 // console.log(data.data);
         return data.data; // Adjust based on your actual response structure
     }
-    function updateQuestionsWithAnswers(questions, userAnswers) {
+
+function updateQuestionsWithAnswers(questions, userAnswers) {
+    questions.forEach((question, index) => {
+        const userAnswer = userAnswers.find(
+            (answer) => answer.questionId.stringValue == question.questionid
+        );
+
+        // If the user has answered this question, pre-fill the selected answer
+        if (userAnswer) {
+            const userAnswerValue = userAnswer.userAnswer.integerValue;
+
+            // Select the radio button
+            const selectedOption = document.querySelector(
+                `#question_${index}_option_${userAnswerValue}`
+            );
+            if (selectedOption) {
+                selectedOption.checked = true; // Mark the radio button as checked
+
+                // Highlight the associated label
+                const labelElement = document.querySelector(
+                    `label[for="question_${index}_option_${userAnswerValue}"]`
+                );
+                if (labelElement) {
+                    labelElement.classList.add("selected");
+                }
+            }
+        }
+    });
+
+    // Add an event listener for handling radio button clicks
+    document.querySelectorAll(".options-list input[type='radio']").forEach((radioButton) => {
+        radioButton.addEventListener("click", (event) => {
+            const questionName = radioButton.name; // e.g., "question_0"
+
+            // Remove 'selected' class from all options of the same question
+            document.querySelectorAll(`input[name="${questionName}"]`).forEach((input) => {
+                const label = document.querySelector(`label[for="${input.id}"]`);
+                if (label) {
+                    label.classList.remove("selected");
+                }
+            });
+
+            // Add 'selected' class to the newly clicked option
+            const label = document.querySelector(`label[for="${radioButton.id}"]`);
+            if (label) {
+                label.classList.add("selected");
+            }
+        });
+    });
+}
+
+
+function updateQuestionsWithAnswers___(questions, userAnswers) {
+    questions.forEach((question, index) => {
+        const userAnswer = userAnswers.find(
+            (answer) => answer.questionId.stringValue == question.questionid
+        );
+
+        // If the user has answered this question, pre-fill the selected answer
+        if (userAnswer) {
+            const userAnswerValue = userAnswer.userAnswer.integerValue;
+
+            // Select the radio button
+            const selectedOption = document.querySelector(
+                `#question_${index}_option_${userAnswerValue}`
+            );
+            if (selectedOption) {
+                selectedOption.checked = true; // Mark the radio button as checked
+
+                // Highlight the associated label
+                const labelElement = document.querySelector(
+                    `label[for="question_${index}_option_${userAnswerValue}"]`
+                );
+                if (labelElement) {
+                    labelElement.classList.add("selected");
+                }
+            }
+        }
+    });
+}
+
+function updateQuestionsWithAnswers__(questions, userAnswers) {
+    questions.forEach((question, index) => {
+        const userAnswer = userAnswers.find(
+            (answer) => answer.questionId.stringValue == question.questionid
+        );
+
+        // If the user has answered this question, pre-fill the selected answer
+        if (userAnswer) {
+            const userAnswerValue = userAnswer.userAnswer.integerValue;
+            const selectedOption = document.querySelector(
+                `#question_${index}_option_${userAnswerValue}`
+            );
+            if (selectedOption) {
+                selectedOption.checked = true; // Mark the radio button as checked
+                const labelElement = selectedOption.nextElementSibling;
+                if (labelElement) {
+                    labelElement.classList.add("selected"); // Add a class to highlight the option if needed
+                }
+            }
+        }
+    });
+}
+    function updateQuestionsWithAnswers_(questions, userAnswers) {
         questions.forEach((question) => {
             // alert(userAnswers);
             const userAnswer = userAnswers.find(answer => answer.questionId.stringValue == question.questionid);
