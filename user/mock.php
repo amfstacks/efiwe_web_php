@@ -34,26 +34,45 @@ if(empty($encodedData)){
                     <div class="row mt-sm-4">
                         <div class="col-12 col-md-12 col-lg-12" id="profilesetup">
                             <div class="card">
-                                <div class="padding-20">
+                                <div class="card-header">
+                                    <h1><span class="badge badge-secondary">Jamb Mock Exam <?php echo $encodedData ?></span></h1>
+                                </div>
+                                <div class="padding-20 p5-padding-left-right">
 
-                                <div class="container">
+
     <!-- Container to hold the exam details and questions -->
-    <div id="exam-details">
-        <h2>Week: <?php echo $encodedData ?></h2>
-        <p><strong>Instruction:</strong> Prior to starting the exam, it is imperative to thoroughly read and comprehend all provided instructions...</p>
-        <p><strong>Total Questions:</strong> 120</p>
-        <p><strong>Duration:</strong> 120 minutes</p>
+    <div id="exam-details" class="col-lg-6">
+        <button type="button" class="btn btn-primary btn-icon icon-left font-15 mb-4">
+            <i class="fas fa-user-graduate font-10"></i> Instruction
+        </button>
 
-        <!-- Start Exam button that triggers question fetching -->
-        <button class="btn btn-primary start-exam" onclick="fetchMockQuestions(<?php echo $encodedData ?>)">Start Exam</button>
+        <blockquote class="blockquote">
+            <p class="mb-0">Prior to starting the exam, it is imperative to thoroughly read and comprehend all provided instructions..</p>
+
+        </blockquote>
+<!--        <br>-->
+        <span class="list-groupa-item d-flex justify-content-between align-items-center mb-1 col-lg-6 p-lr-0i">
+            <h5>Total Questions</h5>
+            <span class="badge badge-dark badge-pill">120</span>
+        </span>
+        <span class="list-groupa-item d-flex justify-content-between align-items-center col-lg-6 p-lr-0i">
+            <h5>Duration</h5>
+            <span class="badge badge-dark badge-pill">120 minutes</span>
+        </span>
+        <button class="btn btn-primary start-exam" onclick="fetchMockQuestions(<?php echo $encodedData ?>)" disabled style="display: none">Start Exam</button>
     </div>
-    <button id="preloadQuestions" onclick="preloadMockQuestions()">Preload Questions</button>
-    <button id="startMock" onclick="startMock()" disabled>Start Mock</button>
-    <div id="status"></div>
+                                    <br>
+    <button id="preloadQuestions" class="btn btn-primary" >Click Here To PROCEED</button>
+<!--    <button id="startMock" onclick="startMock()" disabled>Start Mock</button>-->
+                                 <br>   <i class="fas fa-spinner fa-spin font-30 mb-3 mt-4 " id="loader" style="display: none; maargin: auto !important;"></i>
+
+                                    <div class="alert alert-light col-lg-6" id="status" style="display: none; ">
+                                        This is a light alert.
+                                    </div>
     <div id="questions-container">
         <!-- Questions will be dynamically loaded here -->
     </div>
-</div>
+
 
 
                                 </div>
@@ -66,14 +85,20 @@ if(empty($encodedData)){
         </div>
 
 </div>
-<?php
-include 'includes/footerjs.php';
-?>
+
 </div>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 <script >
+
 week = <?php echo $encodedData ?>;
+
+
+$(document).on('click', '#preloadQuestions', function() {
+    preloadMockQuestions();
+});
     // Function to fetch and display mock questions based on the selected week
     function fetchMockQuestions(week) {
+        $('#loader').show();
         // Fetch data from the API endpoint, passing the week as a parameter
         fetch(`../api_ajax/get_mock_Questions.php?week=${encodeURIComponent(week)}`)
         // url: '../api_ajax/get_mockList.php',
@@ -82,12 +107,18 @@ week = <?php echo $encodedData ?>;
                 // Check if the response is successful
                 if (data.success) {
                     displayMockQuestions(data.data);
+                    $('.start-exam').hide();
+                    $('#loader').hide();
+                    $('#exam-details').hide();
                     const userAnswers = await fetchUserAnswers();
-                    console.log(userAnswers);
+                    // console.log(userAnswers);
                     updateQuestionsWithAnswers(data.data, userAnswers);
                     saveMockData();
+
                 } else {
                     alert('Failed to fetch questions');
+                    $('#loader').hide();
+
                 }
             })
             .catch(error => {
@@ -98,21 +129,32 @@ week = <?php echo $encodedData ?>;
 
     function preloadMockQuestions() {
         const statusDiv = $("#status");
-        statusDiv.text("Preloading questions...");
-
+tryc('info','Loading Questions','', 'bottomCenter');
         $.ajax({
             url: "../api_ajax/load_mock_Questions.php",
             method: "GET",
             data: { week: week },
+            beforeSend:function (){
+                statusDiv.text("Preloading questions...").show();
+                $('#loader').show();
+
+            },
             success: function (data) {
                 if (data.success) {
                     statusDiv.text("Questions preloaded successfully. You can now start the mock.");
                     $("#startMock").prop("disabled", false);
+                    $('#loader').hide();
+                    $('#preloadQuestions').hide();
+                    $('.start-exam').prop("disabled", false).show();
+
                 } else {
                     statusDiv.text(`Failed to preload questions: ${data.message}`);
+                    $('#loader').hide();
+
                 }
             },
             error: function (xhr, status, error) {
+                $('#loader').hide();
                 console.error("Error preloading questions:", error);
                 statusDiv.text("An error occurred while preloading questions.");
             },
@@ -237,4 +279,7 @@ week = <?php echo $encodedData ?>;
     });
 
 </script>
+<?php
+include 'includes/footerjs.php';
+?>
 </body>

@@ -1,65 +1,86 @@
+
 "use strict";
 
-$("#toastr-1").click(function () {
-  iziToast.info({
-    title: 'Hello, world!',
-    message: 'This awesome plugin is made iziToast toastr',
-    position: 'topRight'
-  });
-});
+function tryc(a, b, c, d){
+  if (a  === undefined){
+  a = '';
+}
+if (b  === undefined){
+  b = '';
+}
+if (c  === undefined){
+  c = '';
+}
+// if (d  === undefined){
+//   d = '';
+// }
+  try{
+                showToast(a, b, c, d);
+            }
+            catch(err){
+                // alert(err);
+            }
 
-$("#toastr-2").click(function () {
+}
+function showToast(type, title, message, position) {
+
+
+if (title  === undefined){
+  title = '';
+}
+
+
+if (type  === undefined){
+  type = '';
+}
+if (message  === undefined){
+  message = '';
+}
+
+
+if (position  === undefined){
+  position = 'topCenter';
+}
+
+if (type === 'success'){
+
   iziToast.success({
-    title: 'Hello, world!',
-    message: 'This awesome plugin is made by iziToast',
-    position: 'topRight'
+    title: title,
+    message: message,
+    position: position
   });
-});
 
-$("#toastr-3").click(function () {
+}
+else if (type === 'info'){
+
+  iziToast.info({
+    title: title,
+    message: message,
+    position: position
+  });
+
+}
+else if (type === 'warning'){
+
   iziToast.warning({
-    title: 'Hello, world!',
-    message: 'This awesome plugin is made by iziToast',
-    position: 'topRight'
+    title: title,
+    message: message,
+    position: position
   });
-});
 
-$("#toastr-4").click(function () {
+}
+else if (type === 'error'){
+
   iziToast.error({
-    title: 'Hello, world!',
-    message: 'This awesome plugin is made by iziToast',
-    position: 'topRight'
+    title: title,
+    message: message,
+    position: position
   });
-});
 
-$("#toastr-5").click(function () {
-  iziToast.show({
-    title: 'Hello, world!',
-    message: 'This awesome plugin is made by iziToast',
-    position: 'bottomRight'
-  });
-});
+}
+else{
 
-$("#toastr-6").click(function () {
-  iziToast.show({
-    title: 'Hello, world!',
-    message: 'This awesome plugin is made by iziToast',
-    position: 'bottomCenter'
-  });
-});
+}
+}
 
-$("#toastr-7").click(function () {
-  iziToast.show({
-    title: 'Hello, world!',
-    message: 'This awesome plugin is made by iziToast',
-    position: 'bottomLeft'
-  });
-});
-
-$("#toastr-8").click(function () {
-  iziToast.show({
-    title: 'Hello, world!',
-    message: 'This awesome plugin is made by iziToast',
-    position: 'topCenter'
-  });
-});
+// }
