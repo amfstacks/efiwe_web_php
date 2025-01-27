@@ -17,10 +17,10 @@ if(empty($encodedData)){
     .question-container {
         max-width: 800px;
         margin: 50px auto;
-        padding: 20px;
+        padding: 40px;
         background-color: #ffffff;
         border-radius: 10px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
         text-align: center;
     }
 
