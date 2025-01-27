@@ -13,7 +13,74 @@ if(empty($encodedData)){
 }
 
 ?>
+<style>
+    .question-container {
+        max-width: 800px;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        text-align: center;
+    }
 
+    .question-container h5 {
+        background-color: #0066cc;
+        color: #fff;
+        padding: 15px;
+        border-radius: 8px;
+        /*margin: 20px auto;*/
+        display: inline-block;
+        width: auto;
+    }
+
+    .options-list {
+        list-style: none;
+        padding: 0;
+        margin: 20px 0;
+    }
+
+    .options-list li {
+        margin: 10px 0;
+    }
+
+    .options-list label {
+        display: block;
+        background-color: #f4f4f9;
+        border: 2px solid #ccc;
+        border-radius: 6px;
+        padding: 15px;
+        text-align: center;
+        cursor: pointer;
+        transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+    }
+
+    .options-list label:hover {
+        background-color: #0066cc;
+        color: #fff;
+        border-color: #0066cc;
+    }
+
+    .options-list input[type="radio"] {
+        display: none; /* Hide checkboxes */
+    }
+
+    .options-list input[type="radio"]:checked + label {
+        background-color: #0066cc;
+        color: #fff;
+        border-color: #0066cc;
+    }
+
+    .explanation {
+        margin-top: 20px;
+        font-size: 14px;
+        color: #666;
+    }
+
+    .explanation strong {
+        color: #333;
+    }
+</style>
 <body>
 
 <div class="loader"></div>
@@ -67,12 +134,101 @@ if(empty($encodedData)){
                                  <br>   <i class="fas fa-spinner fa-spin font-30 mb-3 mt-4 " id="loader" style="display: none; maargin: auto !important;"></i>
 
                                     <div class="alert alert-light col-lg-6" id="status" style="display: none; ">
-                                        This is a light alert.
+
                                     </div>
     <div id="questions-container">
         <!-- Questions will be dynamically loaded here -->
     </div>
 
+
+                                    <div class="question-item">
+
+                                        <div class="question-container" id="0kqO2oMTIm7MWFOpwtvk">
+                                            <span class="float-left font-weight-bold">Question 2:</span>
+                                            <h5> The man was able to persuade his willful and obstinate daughter to follow the career he chose for her?</h5>
+
+                                           <ul class="options-list">
+
+                                                <li>
+                                                    <input type="radio" name="question_1" value="0" id="question_1_option_0" data-answer="0" data-question-id="0kqO2oMTIm7MWFOpwtvk" data-w="1" class="option">
+                                                    <label for="question_1_option_0">intelligent but arrogant</label>
+                                                </li>
+
+                                                <li>
+                                                    <input type="radio" name="question_1" value="1" id="question_1_option_1" data-answer="1" data-question-id="0kqO2oMTIm7MWFOpwtvk" data-w="1" class="option">
+                                                    <label for="question_1_option_1">unyielding and obdurate</label>
+                                                </li>
+
+                                                <li>
+                                                    <input type="radio" name="question_1" value="2" id="question_1_option_2" data-answer="2" data-question-id="0kqO2oMTIm7MWFOpwtvk" data-w="1" class="option">
+                                                    <label for="question_1_option_2">secure and odious</label>
+                                                </li>
+
+                                                <li>
+                                                    <input type="radio" name="question_1" value="3" id="question_1_option_3" data-answer="3" data-question-id="0kqO2oMTIm7MWFOpwtvk" data-w="1" class="option">
+                                                    <label for="question_1_option_3">hardworking and intelligent</label>
+                                                </li>
+
+                                            </ul>
+                                            <p><strong>Explanation:</strong> No explanation provided.</p>
+                                        </div>
+                                    </div><div class="question-item">
+                                        <div class="question" id="1GqzzQHdHK0q18LLTx1C">
+                                            Question 3: <h5> The governor rejected the bill and withheld his ____________?</h5>
+                                            <ul class="options-list">
+
+                                                <li>
+                                                    <input type="radio" name="question_2" value="0" id="question_2_option_0" data-answer="0" data-question-id="1GqzzQHdHK0q18LLTx1C" data-w="0" class="option">
+                                                    <label for="question_2_option_0">accent</label>
+                                                </li>
+
+                                                <li>
+                                                    <input type="radio" name="question_2" value="1" id="question_2_option_1" data-answer="1" data-question-id="1GqzzQHdHK0q18LLTx1C" data-w="0" class="option">
+                                                    <label for="question_2_option_1">assent</label>
+                                                </li>
+
+                                                <li>
+                                                    <input type="radio" name="question_2" value="2" id="question_2_option_2" data-answer="2" data-question-id="1GqzzQHdHK0q18LLTx1C" data-w="0" class="option">
+                                                    <label for="question_2_option_2">access</label>
+                                                </li>
+
+                                                <li>
+                                                    <input type="radio" name="question_2" value="3" id="question_2_option_3" data-answer="3" data-question-id="1GqzzQHdHK0q18LLTx1C" data-w="0" class="option">
+                                                    <label for="question_2_option_3">ascent</label>
+                                                </li>
+
+                                            </ul>
+                                            <p><strong>Explanation:</strong> No explanation provided.</p>
+                                        </div>
+                                    </div><div class="question-item">
+                                        <div class="question" id="0ikU477aY5uFc2TcbSd6">
+                                            Question 1: <h5> Maimuna wrote to ask if I could put her …. for the night</h5>
+                                            <ul class="options-list">
+
+                                                <li>
+                                                    <input type="radio" name="question_0" value="0" id="question_0_option_0" data-answer="0" data-question-id="0ikU477aY5uFc2TcbSd6" data-w="0" class="option">
+                                                    <label for="question_0_option_0">UP</label>
+                                                </li>
+
+                                                <li>
+                                                    <input type="radio" name="question_0" value="1" id="question_0_option_1" data-answer="1" data-question-id="0ikU477aY5uFc2TcbSd6" data-w="0" class="option">
+                                                    <label for="question_0_option_1">IN</label>
+                                                </li>
+
+                                                <li>
+                                                    <input type="radio" name="question_0" value="2" id="question_0_option_2" data-answer="2" data-question-id="0ikU477aY5uFc2TcbSd6" data-w="0" class="option">
+                                                    <label for="question_0_option_2">OUT</label>
+                                                </li>
+
+                                                <li>
+                                                    <input type="radio" name="question_0" value="3" id="question_0_option_3" data-answer="3" data-question-id="0ikU477aY5uFc2TcbSd6" data-w="0" class="option">
+                                                    <label for="question_0_option_3">OFF</label>
+                                                </li>
+
+                                            </ul>
+                                            <p><strong>Explanation:</strong> No explanation provided.</p>
+                                        </div>
+                                    </div>
 
 
                                 </div>
@@ -190,7 +346,7 @@ tryc('info','Loading Questions','', 'bottomCenter');
             questionElement.classList.add('question-item');
             questionElement.innerHTML = `
 <div class="question" id="${question.questionid}">
-            <h5>Question ${index + 1}: ${question.text}</h5>
+           Question ${index + 1}: <h5> ${question.text}</h5>
             <ul class="options-list">
                 ${question.options.map((option, i) => `
                     <li>
