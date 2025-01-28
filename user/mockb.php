@@ -189,15 +189,15 @@ if(empty($encodedData)){
         <!-- Questions will be dynamically loaded here -->
     </div>
 
-
+                                    <div class="navigation-buttons d-flex justify-content-center d-nonae no-padding-left-right" style="display: none  !important">
+                                        <button id="prev-btn" class="btn btn-secondary mr-5" disabled>Previous</button>
+                                        <button id="next-btn" class="btn btn-primary ml-5">Next</button>
+                                    </div>
                                     <div id="question-numbers" class="navigation-numbers">
                                         <!-- Buttons will be dynamically generated here -->
                                     </div>
 
-                                    <div class="navigation-buttons">
-                                        <button id="prev-btn" class="btn btn-secondary" disabled>Previous</button>
-                                        <button id="next-btn" class="btn btn-primary">Next</button>
-                                    </div>
+
 
 
 
@@ -245,6 +245,7 @@ function fetchMockQuestions(week) {
                 $('.start-exam').hide();
                 $('#loader').hide();
                 $('#exam-details').hide();
+                $('.navigation-buttons').show();
                 saveMockData();
             } else {
                 alert('Failed to fetch questions');
@@ -268,7 +269,7 @@ async function initializeUserAnswers() {
 function displayQuestion(index) {
     const question = questions[index];
     const questionElement = `
-        <div class="question question-container" id="${question.questionid}">
+        <div class="question question-container no-padding-left-right" id="${question.questionid}">
             <span class="float-left font-weight-bold">Question ${index + 1}:</span><br>
             <h5 class="bg-dark-gray">${question.text}</h5>
             <ul class="options-list">
@@ -277,13 +278,12 @@ function displayQuestion(index) {
             (option, i) => `
                     <li>
                         <input type="radio" name="question_${index}" value="${i}" id="question_${index}_option_${i}" data-answer="${i}" data-question-id="${question.questionid}" data-w="${question.answer}" class="option" />
-                        <label for="question_${index}_option_${i}">${option}</label>
+                        <label for="question_${index}_option_${i}" class="p-x-3i">${option}</label>
                     </li>
                 `
         )
         .join('')}
             </ul>
-            <p><strong>Explanation:</strong> ${question.explanation || 'No explanation provided.'}</p>
         </div>
     `;
 
