@@ -221,7 +221,7 @@ week = <?php echo $encodedData ?>;
 
 
 $(document).on('click', '#preloadQuestions', function() {
-    preloadMockQuestions();
+    // preloadMockQuestions();
 });
 
 let currentQuestionIndex = 0;
