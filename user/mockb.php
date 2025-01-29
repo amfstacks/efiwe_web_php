@@ -377,7 +377,7 @@ function saveMockData() {
 
 
     $.ajax({
-        url: "../api_ajax/saveMockdata.php",
+        url: "../api_ajax/saveMockData.php",
         method: "POST",
         success: function (data) {
             console.log(data)
