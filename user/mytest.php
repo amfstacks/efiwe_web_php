@@ -172,23 +172,15 @@ include 'includes/footerjs.php';
                     `;
                                 } else {
                                     buttonHTML = `
-                        <a class="btn btn-primary start-exam text-white" data-exam-id="${mockExam.id}" href="mock.php?data=${encodeURIComponent(encryptedWeek)}">Start Exam</a>
+                        <button class="btn btn-primary start-exam text-white" data-exam-id="${mockExam.id}" data-week="${encryptedWeek}" >Start Exam</button>
                     `;
                                 }
 
-                            //     var examHTML = `
-                            //     <li class="list-group-item">
-                            //         <h5>Week: ${mockExam.week}</h5>
-                            //         <p><strong>Instruction:</strong> ${mockExam.instruction}</p>
-                            //         <p><strong>Total Questions:</strong> ${mockExam.totalquestions}</p>
-                            //         <p><strong>Duration:</strong> ${mockExam.duration} minutes</p>
-                            //        ${buttonHTML}
-                            //     </li>
-                            // `;
+
                                 var examHTML = `
                     <div class="col-md-6">
                         <div class="list-group-item">
-                            <h5>Week: ${mockExam.week}</h5>
+                            <h5>Mock Exam: ${mockExam.week}</h5>
                             <p><strong>Instruction:</strong> ${mockExam.instruction}</p>
                             <p><strong>Total Questions:</strong> ${mockExam.totalquestions}</p>
                             <p><strong>Duration:</strong> ${mockExam.duration} minutes</p>
@@ -197,6 +189,23 @@ include 'includes/footerjs.php';
                     </div>
                 `;
                                 $("#mockExams").append(examHTML);
+                            });
+                            $(".start-exam").on('click', function() {
+                                var week = $(this).data('week'); // Get the week value from the button
+// alert(week);
+// return;
+                                $.ajax({
+                                    url: '../api_ajax/save_week_session.php', // PHP file to save week in session
+                                    type: 'POST',
+                                    data: { week: week },
+                                    success: function(response) {
+                                        // After saving the session, redirect to mock.php
+                                        window.location.href = 'mockb.php'; // Redirect to mock.php without GET parameters
+                                    },
+                                    error: function() {
+                                        alert('Failed to save week to session.');
+                                    }
+                                });
                             });
                         } else {
                             // In case no data is returned

@@ -1,22 +1,26 @@
 <?php
 $encodedData = '';
-if (isset($_GET['data'])) {
-    $encodedData = $_GET['data'];
-}
 
-$page_title = $encodedData .'|| My Tests';
+
+$page_title = ' My Mock Exam';
 
 require_once __DIR__ . '/../templates/loggedInc.php';
-
+if (isset($_SESSION['activeWeek'] )) {
+    $encodedData = $_SESSION['activeWeek'] ;
+}
 if(empty($encodedData)){
     exit('an error occurred');
 }
 
 ?>
 <style>
+    .main-content{
+        padding-left: 15px !important;
+        padding-top: 15px !important;
+    }
     .question-container {
         max-width: 800px;
-        margin: 50px auto;
+        margin: 1px auto;
         padding: 40px;
         background-color: #ffffff;
         border-radius: 10px;
@@ -93,8 +97,8 @@ if(empty($encodedData)){
     }
 
     .navigation-numbers button {
-        margin: 5px;
-        padding: 10px 15px;
+        margin: 3px;
+        padding: 5px 10px;
         border: 1px solid #ccc;
         border-radius: 5px;
         background-color: #f4f4f9;
@@ -129,7 +133,14 @@ if(empty($encodedData)){
         color: inherit;
         border-color: #ccc;
     }
+    #go-back-btn {
+        /*display: block;      !* Makes the <a> element a block-level element *!*/
+        /*width: 100%;         !* Makes it occupy the full width of the container *!*/
+        /*text-align: center;  !* Centers the text within the <a> element *!*/
+    }
 </style>
+<link rel="stylesheet" href="assets/tstyle/TimeCircles.css" />
+
 <body>
 
 <div class="loader"></div>
@@ -140,8 +151,8 @@ if(empty($encodedData)){
 
     <div class="navbar-bg d-print-none"></div>
     <?php
-    include 'includes/navbar.php';
-    include 'includes/sidebar.php';
+//    include 'includes/navbar.php';
+//    include 'includes/sidebar.php';
     ?>
 
         <div class="main-content">
@@ -150,11 +161,13 @@ if(empty($encodedData)){
                     <div class="row mt-sm-4">
                         <div class="col-12 col-md-12 col-lg-12" id="profilesetup">
                             <div class="card">
-                                <div class="card-header">
+                                <div class="card-header" style="display: flex;
+    flex-direction: column;  /* Stacks the items vertically */
+    align-items: flex-start;">
+                                    <a href="#" class="badge badge-light mb-1" id="go-back-btn">Go Back</a>
                                     <h1><span class="badge badge-secondary">Jamb Mock Exam <?php echo $encodedData ?></span></h1>
                                 </div>
                                 <div class="padding-20 p5-padding-left-right">
-
 
     <!-- Container to hold the exam details and questions -->
     <div id="exam-details" class="col-lg-6">
@@ -185,17 +198,30 @@ if(empty($encodedData)){
                                     <div class="alert alert-light col-lg-6" id="status" style="display: none; ">
 
                                     </div>
-    <div id="questions-container">
-        <!-- Questions will be dynamically loaded here -->
-    </div>
+                                  <center>  <div id="exam_timer" data-timer="0" style="max-width:400px; width: 100%; height: 150px; display: none;"></div> </center>
 
-                                    <div class="navigation-buttons d-flex justify-content-center d-nonae no-padding-left-right" style="display: none  !important">
-                                        <button id="prev-btn" class="btn btn-secondary mr-5" disabled>Previous</button>
-                                        <button id="next-btn" class="btn btn-primary ml-5">Next</button>
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div id="questions-container">
+                                                <!-- Questions will be dynamically loaded here -->
+                                            </div>
+                                            <div class="navigation-buttons d-flex justify-content-center d-nonae no-padding-left-right mt-3" style="display: none  !important">
+                                                <button id="prev-btn" class="btn btn-secondary btn-lg btn-icon icon-left mr-5" disabled>Previous <i class="fas fa-angle-double-left"></i> </button>
+                                                <button id="next-btn" class="btn btn-primary btn-lg btn-icon icon-right ">Next  <i class="fas fa-angle-double-right"></i> </button>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div id="question-numbers" class="navigation-numbers">
+                                                <!-- Buttons will be dynamically generated here -->
+                                            </div>
+                                        </div>
+
                                     </div>
-                                    <div id="question-numbers" class="navigation-numbers">
-                                        <!-- Buttons will be dynamically generated here -->
-                                    </div>
+
+
+
+
+
 
 
 
@@ -220,20 +246,33 @@ if(empty($encodedData)){
 week = <?php echo $encodedData ?>;
 
 
-$(document).on('click', '#preloadQuestions', function() {
-    // preloadMockQuestions();
-});
+$(document).ready(function(){
 
+});
+// saveMockData();
 let currentQuestionIndex = 0;
 let questions = [];
 let userAnswers = {}; // Store user answers locally
 
-
+function enterFullScreen() {
+    if (document.documentElement.requestFullscreen) {
+        document.documentElement.requestFullscreen().catch((err) => {
+            console.error("Failed to enter full-screen mode:", err);
+        });
+    } else if (document.documentElement.mozRequestFullScreen) { // Firefox
+        document.documentElement.mozRequestFullScreen();
+    } else if (document.documentElement.webkitRequestFullscreen) { // Chrome, Safari, and Opera
+        document.documentElement.webkitRequestFullscreen();
+    } else if (document.documentElement.msRequestFullscreen) { // IE/Edge
+        document.documentElement.msRequestFullscreen();
+    }
+}
 // Fetch mock questions
 function fetchMockQuestions(week) {
     $('#loader').show();
+    enterFullScreen();
     $.ajax({
-        url: `../api_ajax/get_mock_Questions.php?week=${encodeURIComponent(week)}`,
+        url: `../api_ajax/get_mock_Questions.php`,
         method: 'GET',
         success: async function (data) {
             if (data.success) {
@@ -245,7 +284,9 @@ function fetchMockQuestions(week) {
                 $('.start-exam').hide();
                 $('#loader').hide();
                 $('#exam-details').hide();
+                $('#status').hide();
                 $('.navigation-buttons').show();
+
                 saveMockData();
             } else {
                 alert('Failed to fetch questions');
@@ -264,6 +305,7 @@ async function initializeUserAnswers() {
     const serverAnswers = await fetchUserAnswers();
     updateUserAnswers(serverAnswers); // Update local userAnswers object
 }
+
 
 // Display a specific question
 function displayQuestion(index) {
@@ -331,10 +373,63 @@ function updateQuestionNumbers() {
     });
 }
 
+function saveMockData() {
+
+
+    $.ajax({
+        url: "../api_ajax/saveMockdata.php",
+        method: "POST",
+        success: function (data) {
+            console.log(data)
+            if (data.success) {
+                const timeDifference = data.data.timeDifference;
+
+                // Ensure the timeDifference is a positive value
+                const timerValue = Math.abs(timeDifference); // Use absolute value
+
+                // Set the timer value to the #exam_timer element
+                $('#exam_timer').attr('data-timer', timerValue);
+
+                // Show the timer (if it was hidden)
+                $('#exam_timer').show();
+
+                $("#exam_timer").TimeCircles({
+                    time:{
+                        Days:{
+                            show: false
+                        },
+                        Hours:{
+                            show: true
+                        }
+                    }
+                });
+
+                setInterval(function(){
+                    var remaining_second = $("#exam_timer").TimeCircles().getTime();
+
+                    if(remaining_second <= 2100){
+
+                    };
+
+                    if(remaining_second < 1)
+                    {
+                        window.history.back();
+                        return;
+                    }
+                }, 1000);
+            } else {
+
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error("Error preloading questions:", error);
+        },
+    });
+}
 // Fetch user answers from the server
 async function fetchUserAnswers() {
     const response = await $.ajax({
-        url: `../api_ajax/get_mock_Answers.php?week=${encodeURIComponent(week)}`,
+        url: `../api_ajax/get_mock_Answers.php`,
         method: 'GET',
     });
     return response.data; // Adjust based on your actual response structure
@@ -387,6 +482,7 @@ function saveAnswer(questionId, userAnswer, correctAnswer) {
             if (responseData.success) {
                 console.log('Answer saved successfully!');
             } else {
+                tryc('error','Error','Answer not saved, kindly ensure you have a good network connection', 'bottomCenter');
                 console.log('Error saving answer:', responseData.error);
             }
         },
@@ -422,13 +518,14 @@ $(document).on('click', '.option', function () {
 // Preload questions
 $('#preloadQuestions').on('click', function () {
     const statusDiv = $('#status');
+    tryc('info','Loading Questions for all of your JAMB subjects','', 'bottomCenter');
     statusDiv.text('Preloading questions...').show();
     $('#loader').show();
 
     $.ajax({
         url: '../api_ajax/load_mock_Questions.php',
         method: 'GET',
-        data: { week: week },
+        data: { week: 0 },
         success: function (data) {
             if (data.success) {
                 statusDiv.text('Questions preloaded successfully. You can now start the mock.');
@@ -453,4 +550,6 @@ $('#preloadQuestions').on('click', function () {
 <?php
 include 'includes/footerjs.php';
 ?>
+<script src="assets/tstyle/TimeCircles.js"></script>
+
 </body>

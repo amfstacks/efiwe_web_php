@@ -46,8 +46,8 @@ if(count($selectedSubjects) <4){
 }
 
 $mockWeek = 0;
-if (isset($_GET['week'])) {
-    $mockWeek = $_GET['week'];
+if (isset($_SESSION['activeWeek'] )) {
+    $mockWeek = $_SESSION['activeWeek'] ;
 }
 
 if(!$mockWeek){

@@ -36,8 +36,8 @@ $examId = "X2j9hFD6O7RGAER6bn3b";
 //$mockWeek = 1;
 
 $mockWeek = 0;
-if (isset($_GET['week'])) {
-    $mockWeek = $_GET['week'];
+if (isset($_SESSION['activeWeek'] )) {
+    $mockWeek = $_SESSION['activeWeek'] ;
 }
 
 if(!$mockWeek){

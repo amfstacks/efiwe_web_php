@@ -609,6 +609,9 @@ function api_request_post($endpoint, $data = null, $method = 'POST', $accessToke
     if (curl_errno($ch)) {
         $error_msg = curl_error($ch);
         curl_close($ch);
+        if(strpos($error_msg, 'resolve host') !== false){
+            $error_msg = 'Kindly check your network connection ' ;
+        }
         return [
             "success" => false,
             "message" => "cURL Error: {$error_msg}",

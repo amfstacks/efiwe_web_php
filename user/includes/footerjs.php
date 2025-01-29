@@ -39,7 +39,11 @@
             } else {
                 // If no previous page, redirect to a default page
                 goBackButton.on('click', function() {
-                    window.location.href = '/';  // Replace with your desired fallback URL (like homepage)
+                    var rootUrl = window.location.origin;
+
+                    // Redirect to the root URL + /user/
+                    window.location.href = rootUrl + '/user/';
+                    // window.location.href = '/index';  // Replace with your desired fallback URL (like homepage)
                 });
             }
 

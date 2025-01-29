@@ -64,9 +64,21 @@ $accessToken = isset($user['idToken']) ? $user['idToken'] : '';
 $refreshToken = isset($user['refreshToken']) ? $user['refreshToken'] : '';
 //echo $rightOrWrong;
 //exit;
-// Prepare data for the API
+// Prepare data for the API $_SESSION['activeWeek']
+$mockWeek = 0;
+if (isset($_SESSION['activeWeek'] )) {
+    $mockWeek = $_SESSION['activeWeek'] ;
+}
+
+if(!$mockWeek){
+    echo json_encode([
+        "success" => false,
+        "message" => "missing week"
+    ]);
+    exit();
+}
 $profileData = [
-    "mockWeek" => 1,
+    "mockWeek" => $mockWeek,
     "uid" => $uid,
     "refreshtoken" => $refreshToken
 ];
