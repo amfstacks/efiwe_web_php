@@ -374,8 +374,6 @@ function updateQuestionNumbers() {
 }
 
 function saveMockData() {
-
-
     $.ajax({
         url: "../api_ajax/saveMockData.php",
         method: "POST",
