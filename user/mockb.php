@@ -198,7 +198,10 @@ if(empty($encodedData)){
                                     <div class="alert alert-light col-lg-6" id="status" style="display: none; ">
 
                                     </div>
-                                  <center>  <div id="exam_timer" data-timer="0" style="max-width:400px; width: 100%; height: 150px; display: none;"></div> </center>
+                                  <center>  <div id="exam_timer" data-timer="0" style="max-width:400px; width: 100%; height: 150px; display: none;"></div>
+                                      <button type="button" name="complete" class="float-right btn btn-success btn-lg consubmit"  id="subbutn">Submit</button>
+
+                                  </center>
 
                                     <div class="row">
                                         <div class="col-lg-6">
@@ -238,7 +241,38 @@ if(empty($encodedData)){
         </div>
 
 </div>
+    <div class="modal fade" id="submission">
+        <div class="modal-dialog ">
 
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title" id="question_modal_title">Confirm Submission</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+
+                    <h5 align="center">
+                        Are you sure you are done with this mock ?<br>
+                        This action is not reversible !.
+                    </h5>
+
+
+                </div>
+                <div class="modal-footer bg-whitesmoke br">
+                    <button type="button" class="btn btn-primary btn-sm delete" id="ok_submit" name="ok_submit">YES <i class="fas fa-check-circle"></i> </button>
+
+                    <button type="button" class="btn btn-danger btn-sm " data-dismiss="modal">NOT YET <i class="fas fa-check-times"></i></button>
+
+
+                </div>
+            </div>
+
+
+        </div>
+    </div>
 </div>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 <script >
@@ -542,6 +576,49 @@ $('#preloadQuestions').on('click', function () {
             statusDiv.text('An error occurred while preloading questions.');
         },
     });
+});
+
+
+$(document).on('click', '.consubmit', function(){
+    question_id = $(this).attr('id');
+    // reset_question_form();
+    $('#submission').modal('show');
+
+    $('#ok_submit').click(function(){
+        // alert('listening');
+        // exit;
+        $.ajax({
+            url:"submit_exam.php",
+            method:"POST",
+            data:{action:'finalsub', exam_id:exam_id},
+            dataType:"json",
+            beforeSend:function(){
+                // $('#button_action').attr('disabled', 'disabled');
+                // $('#button_action').val('Validate...');
+                // alert('a');
+                $('#ok_submit').addClass('btn-progress');
+            },
+            success:function(data)
+            {
+                $('#ok_submit').removeClass('btn-progress');
+
+                // $('#message_operation').html('<div class="alert alert-success">'+data.success+'</div>');
+
+                // $('#deleteModal').modal('hide');
+                // dataTable.ajax.reload();
+                // alert (data.success);
+                // window.location.href="all_enrol.php";
+            },
+// 			complete: function(response, textStatus) {
+//     return alert("Hey: " + textStatus);
+//   }
+
+
+
+        })
+    });
+
+
 });
 
 </script>
