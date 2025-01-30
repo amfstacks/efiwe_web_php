@@ -153,7 +153,7 @@ include 'includes/footerjs.php';
                     dataType: 'json',
                     success: function(response) {
                         // console.log(response);
-                        if (response.data && response.data.length > 0) {
+                        if (response.data && response.data.length > 0 && response.success) {
                             // Hide the loader and show the mock exams list
                             $("#modal-loader").hide();
                             $("#mockExamsList").show();
@@ -172,7 +172,7 @@ include 'includes/footerjs.php';
                     `;
                                 } else {
                                     buttonHTML = `
-                        <button class="btn btn-primary start-exam text-white" data-exam-id="${mockExam.id}" data-week="${encryptedWeek}" >Start Exam</button>
+                        <button class="btn btn-primary start-exam text-white" data-exam-id="${mockExam.id}" data-week="${encryptedWeek}" data-instruction="${mockExam.instruction}" data-duration="${mockExam.duration}" data-totalquestions="${mockExam.totalquestions}" >Start Exam</button>
                     `;
                                 }
 
@@ -192,12 +192,15 @@ include 'includes/footerjs.php';
                             });
                             $(".start-exam").on('click', function() {
                                 var week = $(this).data('week'); // Get the week value from the button
+                                var instruction = $(this).data('instruction');
+                                var duration = $(this).data('duration');
+                                var totalQuestions = $(this).data('totalquestions');
 // alert(week);
 // return;
                                 $.ajax({
                                     url: '../api_ajax/save_week_session.php', // PHP file to save week in session
                                     type: 'POST',
-                                    data: { week: week },
+                                    data: { week: week, instruction:instruction, duration:duration,totalQuestions:totalQuestions },
                                     success: function(response) {
                                         // After saving the session, redirect to mock.php
                                         window.location.href = 'mockb.php'; // Redirect to mock.php without GET parameters
@@ -209,8 +212,12 @@ include 'includes/footerjs.php';
                             });
                         } else {
                             // In case no data is returned
+                            var feedback = response.message ?? 'No mock exams available.';
                             $("#modal-loader").hide();
-                            $("#mockExamsList").html("<p>No mock exams available.</p>").show();
+                            // $("#mockExamsList").html("<p>"+ feedback +"</p>").show();
+                            $("#mockExamsList").html('<div class="alert alert-danger col-lg-6 col-md-12" id="status" style="diasplay: none; ">'+ feedback +"</div>").show();
+                            tryc('error','',feedback, 'bottomCenter');
+
                         }
                     },
                     error: function(xhr, status, error) {

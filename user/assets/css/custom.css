@@ -207,6 +207,13 @@ li.parsley-required {
     .options-list li {
         margin: 5px 0;
     }
+    .question-container{
+        padding-top: 10px !important;
+    }
+    h1 .badge {
+        font-size: 14px !important;
+        padding: 10px 15px !important;
+    }
 }
 
 @media (min-width: 768px) {

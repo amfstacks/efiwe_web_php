@@ -113,6 +113,9 @@ function api_request_get($endpoint, $data = null, $method = 'GET', $accessToken 
     // Check for cURL errors
     if (curl_errno($ch)) {
         $error_msg = curl_error($ch);
+        if(strpos($error_msg, 'resolve host') !== false){
+            $error_msg = 'Kindly check your network connection ' ;
+        }
         curl_close($ch);
         return [
             "success" => false,

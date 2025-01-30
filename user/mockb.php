@@ -7,6 +7,10 @@ $page_title = ' My Mock Exam';
 require_once __DIR__ . '/../templates/loggedInc.php';
 if (isset($_SESSION['activeWeek'] )) {
     $encodedData = $_SESSION['activeWeek'] ;
+    $activeInstruction = $_SESSION['activeInstruction'] ;
+    $activeDuration = $_SESSION['activeDuration'] ;
+    $activeTotalQuestions = $_SESSION['activeTotalQuestions'] ;
+//   exit;
 }
 if(empty($encodedData)){
     exit('an error occurred');
@@ -176,17 +180,17 @@ if(empty($encodedData)){
         </button>
 
         <blockquote class="blockquote">
-            <p class="mb-0">Prior to starting the exam, it is imperative to thoroughly read and comprehend all provided instructions..</p>
+            <p class="mb-0"><?php echo $activeInstruction ?> </p>
 
         </blockquote>
 <!--        <br>-->
         <span class="list-groupa-item d-flex justify-content-between align-items-center mb-1 col-lg-6 p-lr-0i">
             <h5>Total Questions</h5>
-            <span class="badge badge-dark badge-pill">120</span>
+            <span class="badge badge-dark badge-pill"><?php echo $activeTotalQuestions ?> </span>
         </span>
         <span class="list-groupa-item d-flex justify-content-between align-items-center col-lg-6 p-lr-0i">
             <h5>Duration</h5>
-            <span class="badge badge-dark badge-pill">120 minutes</span>
+            <span class="badge badge-dark badge-pill"><?php echo $activeDuration ?> minutes</span>
         </span>
         <button class="btn btn-primary start-exam" onclick="fetchMockQuestions(<?php echo $encodedData ?>)" disabled style="display: none">Start Exam</button>
     </div>
@@ -199,7 +203,7 @@ if(empty($encodedData)){
 
                                     </div>
                                   <center>  <div id="exam_timer" data-timer="0" style="max-width:400px; width: 100%; height: 150px; display: none;"></div>
-                                      <button type="button" name="complete" class="float-right btn btn-success btn-lg consubmit"  id="subbutn">Submit</button>
+                                      <button type="button" name="complete" class="float-rigaht btn btn-success btn-lg consubmit " style="display: none"  id="subbutn">Finish Exam</button>
 
                                   </center>
 
@@ -425,6 +429,7 @@ function saveMockData() {
                 // Show the timer (if it was hidden)
                 $('#exam_timer').show();
 
+
                 $("#exam_timer").TimeCircles({
                     time:{
                         Days:{
@@ -435,7 +440,7 @@ function saveMockData() {
                         }
                     }
                 });
-
+                $('.consubmit').show();
                 setInterval(function(){
                     var remaining_second = $("#exam_timer").TimeCircles().getTime();
 
@@ -445,10 +450,30 @@ function saveMockData() {
 
                     if(remaining_second < 1)
                     {
+                        endMockData();
                         window.history.back();
                         return;
                     }
                 }, 1000);
+            } else {
+
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error("Error preloading questions:", error);
+        },
+    });
+}
+function endMockData() {
+    $.ajax({
+        url: "../api_ajax/finishMock.php",
+        method: "POST",
+        success: function (data) {
+            console.log(data)
+            if (data.success) {
+                window.history.back();
+                return;
+
             } else {
 
             }
@@ -585,37 +610,7 @@ $(document).on('click', '.consubmit', function(){
     $('#submission').modal('show');
 
     $('#ok_submit').click(function(){
-        // alert('listening');
-        // exit;
-        $.ajax({
-            url:"submit_exam.php",
-            method:"POST",
-            data:{action:'finalsub', exam_id:exam_id},
-            dataType:"json",
-            beforeSend:function(){
-                // $('#button_action').attr('disabled', 'disabled');
-                // $('#button_action').val('Validate...');
-                // alert('a');
-                $('#ok_submit').addClass('btn-progress');
-            },
-            success:function(data)
-            {
-                $('#ok_submit').removeClass('btn-progress');
-
-                // $('#message_operation').html('<div class="alert alert-success">'+data.success+'</div>');
-
-                // $('#deleteModal').modal('hide');
-                // dataTable.ajax.reload();
-                // alert (data.success);
-                // window.location.href="all_enrol.php";
-            },
-// 			complete: function(response, textStatus) {
-//     return alert("Hey: " + textStatus);
-//   }
-
-
-
-        })
+        endMockData();
     });
 
 
