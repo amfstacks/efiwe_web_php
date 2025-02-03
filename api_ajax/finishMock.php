@@ -77,10 +77,13 @@ if(!$mockWeek){
     ]);
     exit();
 }
+$questionCount = isset($_POST['questionCount']) ? (int)$_POST['questionCount'] : 0;  // Retrieve questionCount from POST request
+
+ $_SESSION['questionCount'] =$questionCount;
 $profileData = [
     "mockWeek" => $mockWeek,
     "uid" => $uid,
-    "refreshtoken" => $refreshToken
+    "refreshtoken" => $refreshToken,
 ];
 
 //var_dump($profileData);

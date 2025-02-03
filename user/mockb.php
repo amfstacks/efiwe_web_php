@@ -348,10 +348,16 @@ async function initializeUserAnswers() {
 // Display a specific question
 function displayQuestion(index) {
     const question = questions[index];
+    let imageElement = '';
+
+    if (question.image != null && question.image !== '') {
+        imageElement = `<h5 class="bg-dark-gray"><img src="${question.image}" alt="Question Image" class="question-image" /></h5>`;
+    }
     const questionElement = `
         <div class="question question-container no-padding-left-right" id="${question.questionid}">
             <span class="float-left font-weight-bold">Question ${index + 1}:</span><br>
             <h5 class="bg-dark-gray">${question.text}</h5>
+${imageElement}
             <ul class="options-list">
                 ${question.options
         .map(
@@ -451,7 +457,7 @@ function saveMockData() {
                     if(remaining_second < 1)
                     {
                         endMockData();
-                        window.history.back();
+                        // window.history.back();
                         return;
                     }
                 }, 1000);
@@ -465,20 +471,27 @@ function saveMockData() {
     });
 }
 function endMockData() {
+    $('#ok_submit').addClass('btn-progress');
     $.ajax({
         url: "../api_ajax/finishMock.php",
         method: "POST",
+        data:{questionCount:questions.length},
         success: function (data) {
             console.log(data)
+            $('#ok_submit').removeClass('btn-progress');
             if (data.success) {
-                window.history.back();
+                window.location.href = 'mockResult.php';
+
                 return;
 
             } else {
+                window.history.back();
+                return;
 
             }
         },
         error: function (xhr, status, error) {
+            $('#ok_submit').removeClass('btn-progress');
             console.error("Error preloading questions:", error);
         },
     });
@@ -610,6 +623,7 @@ $(document).on('click', '.consubmit', function(){
     $('#submission').modal('show');
 
     $('#ok_submit').click(function(){
+
         endMockData();
     });
 

@@ -117,7 +117,7 @@ require_once __DIR__ . '/../templates/loggedInc.php';
                                 <div class="card-icon card-icon-large"><i class="fa fa-award"></i></div>
                                 <div class="card-content">
                                     <h4 class="card-title">Total Points</h4>
-                                    <span class="font-50">524</span>
+                                    <span class="font-50" id="mytotalpoints"> ... </span>
                                    <br>
                                     <p class="mb-0 text-sm">
 
@@ -430,7 +430,25 @@ if ($profileSet == 0){
     }
     // tryc('success', 'Welcome '+user  );
 
-
+function getMyTotalPoints(){
+    $.ajax({
+        url: '../api_ajax/getTotalPoints.php', // API endpoint
+        method: 'GET', // Using GET method, can be POST if needed
+        success: function(response) {
+            // Parse the response JSON if it's in JSON format
+            const dataResponse = response;
+            if (dataResponse.success && dataResponse.data.totalPointsFetched !== undefined) {
+                // Update the total points in the HTML
+                $('#mytotalpoints').text(dataResponse.data.totalPointsFetched);
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error("Error fetching total points:", error);
+            // Optionally, handle the error, e.g., show a message or default value
+            $('#mytotalpoints').text('Error');
+        }
+    });
+}
 
     $(document).ready(function() {
         // Call loadMySubjects after the page has finished loading
@@ -454,6 +472,7 @@ if ($profileSet == 0){
                 }
             });
         });
+        getMyTotalPoints();
 
     });
 </script>

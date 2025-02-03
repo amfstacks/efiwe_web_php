@@ -275,6 +275,15 @@ function fetch_subject_topics($uid,$subjectId, $refreshToken, $accessToken) {
     return api_request_get('subjecttopics', $data, 'GET', $accessToken,$refreshToken);
 }
 
+function fetch_total_points($uid, $refreshToken, $accessToken) {
+    $data = [
+        'uid' => $uid,
+        'refreshToken' => $refreshToken,
+    ];
+
+    return api_request_get('getTotalPoints', $data, 'GET', $accessToken,$refreshToken);
+}
+
 function fetch_JambMockList($uid, $refreshToken, $accessToken) {
     $data = [
         'uid' => $uid,
