@@ -80,6 +80,7 @@ if(!$mockWeek){
 $profileData = [
     "mockWeek" => $mockWeek,
     "uid" => $uid,
+    "status" => 'started',
     "refreshtoken" => $refreshToken
 ];
 
