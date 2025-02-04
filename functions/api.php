@@ -157,8 +157,6 @@ function api_request_old($endpoint, $data = null, $method = 'GET', $accessToken 
         $url .= '?' . http_build_query($data);
     }
     $payload = http_build_query($data);
-
-
     $ch = curl_init();
     if ($method === 'POST' && !empty($data)) {
         curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
