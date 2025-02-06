@@ -30,6 +30,8 @@ if (empty($uid)) {
 //echo $refreshToken;
 //var_dump($userData['subjectSelect']);
 //exit;
+
+
 if(!$profileSet) {
     $queryParams = [
         'uid' => $uid,
