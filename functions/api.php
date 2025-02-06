@@ -300,6 +300,14 @@ function fetch_Mock_Questions($uid, $refreshToken, $accessToken,$mockWeek) {
 
     return api_request_get('fetchActualQuestions', $data, 'GET', $accessToken,$refreshToken);
 }
+function fetch_Spaced_Questions($uid, $refreshToken, $accessToken,$mockWeek) {
+    $data = [
+        'uid' => $uid,
+        'refreshToken' => $refreshToken,
+    ];
+
+    return api_request_get('spacedActualQuestions', $data, 'GET', $accessToken,$refreshToken);
+}
 
 function load_Mock_Questions($uid, $refreshToken, $accessToken,$mockWeek,$selectedSubjects) {
     $data = [

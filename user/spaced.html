@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz App</title>
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+
+        .quiz-container {
+            position: relative;
+            width: 80%;
+            max-width: 600px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        .swiper-container {
+            width: 100%;
+            height: 400px;
+        }
+
+        .timer-container {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+
+    </style>
+</head>
+<body>
+<div class="quiz-container">
+    <div class="swiper-container">
+        <div class="swiper-wrapper" id="questionSlides">
+            <!-- Questions will be dynamically inserted here -->
+        </div>
+    </div>
+
+    <div class="timer-container">
+        <span id="timer">60</span> seconds remaining
+    </div>
+
+    <!-- Feedback Modal -->
+    <div class="modal" id="feedbackModal">
+        <div class="modal-content">
+            <h3 id="feedbackMessage"></h3>
+            <p id="explanation"></p>
+            <button id="closeModalBtn">Close</button>
+        </div>
+    </div>
+</div>
+
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+<script src="scripts.js"></script>
+
+<script>
+    const API_URL = 'https://your-api-endpoint.com/spacedActualQuestions'; // Replace with your actual API URL
+    let currentIndex = 0;
+    let timer;
+    let timeRemaining = 60;
+    let isAnswered = false;
+    let questions = [];
+
+    // Initialize Swiper.js
+    const swiper = new Swiper('.swiper-container', {
+        direction: 'horizontal',
+        loop: false,
+        pagination: { el: '.swiper-pagination' },
+        navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
+        on: {
+            slideChange: function () {
+                if (currentIndex >= questions.length) return;
+                resetTimer();
+            }
+        }
+    });
+
+    // Fetch questions from API
+    function loadQuestionsFromAPI() {
+        $.ajax({
+            url: `../api_ajax/get_spaced_Questions.php`,// Your API URL
+            method: 'GET',
+            success: function (response) {
+                if (response.success && response.data) {
+                    questions = response.data;
+                    loadQuestions();
+                    startTimer();
+                } else {
+                    alert("Error loading questions: " + response.message);
+                }
+            },
+            error: function (err) {
+                console.error('API request failed:', err);
+                alert("Failed to load questions.");
+            }
+        });
+    }
+
+    // Dynamically load the questions into the swiper
+    function loadQuestions() {
+        const questionSlides = document.getElementById('questionSlides');
+        questions.forEach((question, index) => {
+            const slide = document.createElement('div');
+            slide.classList.add('swiper-slide');
+            slide.innerHTML = `
+            <div class="question">
+                <h2>${question.text}</h2>
+                <div class="options">
+                    ${question.options.map((option, i) => `
+                        <button class="option-btn" onclick="selectAnswer('${question.answer}', '${option}', ${index})">${option}</button>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+            questionSlides.appendChild(slide);
+        });
+    }
+
+    // Handle answer selection
+    function selectAnswer(correctAnswer, selectedAnswer, index) {
+        if (isAnswered) return; // Prevent multiple answers for the same question
+
+        isAnswered = true;
+        const feedbackMessage = document.getElementById('feedbackMessage');
+        const explanation = document.getElementById('explanation');
+        const modal = document.getElementById('feedbackModal');
+
+        if (selectedAnswer === correctAnswer) {
+            feedbackMessage.textContent = "Correct Answer!";
+            explanation.textContent = questions[index].explanation;
+        } else {
+            feedbackMessage.textContent = "Incorrect Answer!";
+            explanation.textContent = `Correct Answer: ${correctAnswer}\nExplanation: ${questions[index].explanation}`;
+        }
+
+        modal.style.display = 'flex';
+    }
+
+    // Close the feedback modal
+    document.getElementById('closeModalBtn').addEventListener('click', () => {
+        const modal = document.getElementById('feedbackModal');
+        modal.style.display = 'none';
+        isAnswered = false;
+        currentIndex++;
+        if (currentIndex < questions.length) {
+            swiper.slideTo(currentIndex);
+            resetTimer();
+        }
+    });
+
+    // Timer logic
+    function startTimer() {
+        timer = setInterval(() => {
+            if (timeRemaining <= 0) {
+                clearInterval(timer);
+                selectAnswer(questions[currentIndex].answer, '', currentIndex); // Automatically move to next question if time is up
+            } else {
+                document.getElementById('timer').textContent = timeRemaining;
+                timeRemaining--;
+            }
+        }, 1000);
+    }
+
+    function resetTimer() {
+        timeRemaining = 60;
+        startTimer();
+    }
+
+    // Initialize the quiz on load
+    loadQuestionsFromAPI();
+
+
+</script>
+</body>
+</html>
