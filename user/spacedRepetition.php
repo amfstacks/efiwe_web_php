@@ -1,141 +1,163 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz App</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-        }
+<?php
+$encodedData = '';
 
-        .quiz-container {
-            position: relative;
-            max-width: 800px;
-            margin: 50px auto;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-        }
 
-        .question {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 15px;
-            text-align: center;
-        }
+$page_title = ' Spaced Repetition';
 
-        .options {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            width: 100%;
-        }
+require_once __DIR__ . '/../templates/loggedInc.php';
 
-        .option-btn {
-            padding: 10px;
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            text-align: left;
-            font-size: 16px;
-        }
 
-        .option-btn:hover {
-            background-color: #0056b3;
-        }
+?>
 
-        .timer-container {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 20px;
-            font-weight: bold;
-        }
+<style>
+    .main-content{
+        padding-left: 15px !important;
+        padding-top: 15px !important;
+    }
+    .question-container {
+        max-width: 800px;
+        margin: 1px auto;
+        padding: 40px;
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        text-align: center;
+    }
 
-        /*.modal {*/
-        /*    display: none;*/
-        /*    position: fixed;*/
-        /*    top: 0;*/
-        /*    left: 0;*/
-        /*    right: 0;*/
-        /*    bottom: 0;*/
-        /*    background-color: rgba(0, 0, 0, 0.5);*/
-        /*    justify-content: center;*/
-        /*    align-items: center;*/
-        /*}*/
+    .question-container h5 {
+        background-color: #0066cc;
+        color: #fff;
+        padding: 15px;
+        border-radius: 8px;
+        /*margin: 20px auto;*/
+        display: block;
+        width: auto;
+    }
 
-        /*.modal-content {*/
-        /*    background-color: #ffffff;*/
-        /*    padding: 40px;*/
-        /*    border-radius: 8px;*/
-        /*    max-width: 450px;*/
-        /*    width: 100%;*/
-        /*    text-align: center;*/
-        /*    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);*/
-        /*}*/
+    .options-list {
+        list-style: none;
+        padding: 0;
+        margin: 20px 0;
+    }
 
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0, 0, 0, 0.5);
-            justify-content: center;
-            align-items: center;
-            z-index: 9999; /* Ensures modal is above other content */
-            overflow: hidden; /* Ensures the modal doesn't spill over the screen */
-        }
+    .options-list li {
+        margin: 10px 0;
+    }
 
-        .modal-content {
-            background-color: white;
-            padding: 30px;
-            border-radius: 8px;
-            max-width: 500px;
-            width: 90%; /* Ensures the modal is responsive */
-            text-align: center;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
+    .options-list label {
+        display: block;
+        background-color: #f4f4f9;
+        border: 2px solid #ccc;
+        border-radius: 6px;
+        padding: 15px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+        text-align: left;
+    }
 
-        .modal h3 {
-            margin-bottom: 20px;
-            font-size: 22px;
-            color: #333;
-        }
+    .options-list label:hover {
+        background-color: #cdd3d8;
+        color: #fff;
+        border-color: #cdd3d8;
+    }
 
-        .modal p {
-            font-size: 16px;
-            margin-bottom: 20px;
-            color: #555;
-        }
+    .options-list input[type="radio"] {
+        display: none; /* Hide checkboxes */
+    }
 
-        button {
-            padding: 12px 20px;
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-        }
+    .options-list input[type="radio"]:checked + label {
+        background-color: #6777ef;
+        color: #fff;
+        border-color: #6777ef;
+        text-align: left;
+    }
 
-        button:hover {
-            background-color: #0056b3;
-        }
+    .explanation {
+        margin-top: 20px;
+        font-size: 14px;
+        color: #666;
+    }
 
-        .question-container {
-            display: none;
-        }
-    </style>
-</head>
+    .explanation strong {
+        color: #333;
+    }
+
+    .options-list label.selected {
+        background-color: #6777ef;
+        color: #fff;
+        border-color: #6777ef;
+    }
+    .navigation-numbers {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .navigation-numbers button {
+        margin: 3px;
+        padding: 5px 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #f4f4f9;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .navigation-numbers button:hover {
+        background-color: #cdd3d8;
+    }
+
+    .navigation-numbers button.active {
+        background-color: #6777ef;
+        color: #fff;
+        border-color: #6777ef;
+    }
+    .navigation-numbers button.answered {
+        background-color: #6777ef;
+        color: #fff;
+        border-color: #6777ef;
+    }
+
+    /* Remove highlighting for unselected options */
+    .options-list label.selected {
+        background-color: #6777ef;
+        color: #fff;
+        border-color: #6777ef;
+    }
+
+    .options-list label:not(.selected) {
+        background-color: #f4f4f9;
+        color: inherit;
+        border-color: #ccc;
+    }
+    #go-back-btn {
+        /*display: block;      !* Makes the <a> element a block-level element *!*/
+        /*width: 100%;         !* Makes it occupy the full width of the container *!*/
+        /*text-align: center;  !* Centers the text within the <a> element *!*/
+    }
+</style>
+<link rel="stylesheet" href="assets/tstyle/TimeCircles.css" />
+
 <body>
+<div class="loader"></div>
+
+<div id="app">
+
+    <div class="main-wrapper main-wrapper-1">
+
+
+        <div class="navbar-bg d-print-none"></div>
+        <div class="main-content">
+            <section class="section">
+                <div class="section-body">
+                    <div class="row mt-sm-4">
+                        <div class="col-12 col-md-12 col-lg-12" id="profilesetup">
+                            <div class="card">
+                                <div class="card-header" style="display: flex;
+    flex-direction: column;  /* Stacks the items vertically */
+    align-items: flex-start;">
+                                    <a href="#" class="badge badge-light mb-1" id="go-back-btn">Go Back</a>
+                                    <h1><span class="badge badge-secondary">Spaced Repetition </span></h1>
+                                </div>
 
 <div class="container quiz-container">
     <div id="questionSlides">
@@ -155,6 +177,14 @@
         </div>
     </div>
 </div>
+
+                            </div>
+                        </div>
+                    </div></div>
+            </section>
+        </div>
+    </div>
+
 
 <!-- Bootstrap JS and Popper.js -->
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
@@ -1959,12 +1989,17 @@
         const questionSlides = $('#questionSlides');
         questions.forEach((question, index) => {
             const slide = $(`
-                <div class="question-container" id="question${index}">
+                <div class="question question-container no-padding-left-right" id="question${index}">
                     <div class="question">
-                        <h2>${question.text}</h2>
-                        <div class="options">
+
+                        <h5 class="bg-dark-gray">${question.text}</h5>
+                        <div class="options options-list">
                             ${question.options.map((option, i) => `
-                                <button class="option-btn" onclick="selectAnswer('${question.answer}', '${i}', ${index})">${option}</button>
+ <li>
+                        <input type="radio" name="question_${index}" value="${i}" id="question_${index}_option_${i}" onclick="selectAnswer('${question.answer}', '${i}', ${index})" data-answer="${i}" data-question-id="${question.questionid}" data-w="${question.answer}" class="option" />
+                        <label for="question_${index}_option_${i}" class="p-x-3i">${option}</label>
+                    </li>
+<!--                                <button class="option-btn btn" onclick="selectAnswer('${question.answer}', '${i}', ${index})">${option}</button><br>-->
                             `).join('')}
                         </div>
                     </div>
@@ -1989,7 +2024,7 @@
         const feedbackMessage = $('#feedbackMessage');
         const explanation = $('#explanation');
         const modal = $('#feedbackModal');
-        // alert(selectedAnswer);
+        alert(selectedAnswer);
 
         if (selectedAnswer === correctAnswer) {
             feedbackMessage.text("Correct Answer!");
@@ -2036,5 +2071,11 @@
     // Initialize the quiz on load
     loadQuestionsFromAPI();
 </script>
+
+<?php
+include 'includes/footerjs.php';
+?>
+<script src="assets/tstyle/TimeCircles.js"></script>
+
 </body>
 </html>
