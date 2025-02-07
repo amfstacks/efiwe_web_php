@@ -33,20 +33,8 @@ $accessToken = isset($user['idToken']) ? $user['idToken'] : '';
 
 // Define your examId
 $examId = "X2j9hFD6O7RGAER6bn3b";
-$mockWeek = 0;
-if (isset($_SESSION['activeWeek'] )) {
-    $mockWeek = $_SESSION['activeWeek'] ;
-}
-
-if(!$mockWeek){
-    echo json_encode([
-        "success" => false,
-        "message" => "missing week"
-    ]);
-    exit();
-}
 // Fetch all subjects from the API
-$result = fetch_Spaced_Questions($uid, $refreshToken, $accessToken,$mockWeek);
+$result = fetch_Spaced_Questions($uid, $refreshToken, $accessToken);
 
 
 // Return the result as JSON

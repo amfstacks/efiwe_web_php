@@ -128,12 +128,15 @@ function api_request_get($endpoint, $data = null, $method = 'GET', $accessToken 
 
     // Decode and return the response as an associative array
     $decoded = json_decode($response, true);
-    if (json_last_error() !== JSON_ERROR_NONE) {
-        return [
-            "success" => false,
-            "message" => "Invalid JSON response.",
-        ];
-    }
+//    if (json_last_error() !== JSON_ERROR_NONE) {
+//        return [
+//            "success" => false,
+//            "message" => "Invalid JSON response.",
+//        ];
+//    }
+
+
+
 
     if (isset($decoded['error'])) {
         return [
@@ -300,7 +303,7 @@ function fetch_Mock_Questions($uid, $refreshToken, $accessToken,$mockWeek) {
 
     return api_request_get('fetchActualQuestions', $data, 'GET', $accessToken,$refreshToken);
 }
-function fetch_Spaced_Questions($uid, $refreshToken, $accessToken,$mockWeek) {
+function fetch_Spaced_Questions($uid, $refreshToken, $accessToken) {
     $data = [
         'uid' => $uid,
         'refreshToken' => $refreshToken,
