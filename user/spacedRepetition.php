@@ -158,24 +158,21 @@ require_once __DIR__ . '/../templates/loggedInc.php';
                                     <a href="#" class="badge badge-light mb-1" id="go-back-btn">Go Back</a>
                                     <h1><span class="badge badge-secondary">Spaced Repetition </span></h1>
                                 </div>
+<!--                                <div id="exam_timer" data-timer="0" style="max-width:400px; width: 100%; height: 150px; display: none;"></div>-->
 
-<div class="container quiz-container">
+                             <center>   <div class="timer-container">
+                                    <span id="timer" class="btn  btn-primary btn-lg font-15">60</span> seconds remaining
+                                </div>
+                             </center>
+                                <div class="container quiz-container">
     <div id="questionSlides">
         <!-- Questions will be dynamically inserted here -->
     </div>
 
-    <div class="timer-container">
-        <span id="timer">60</span> seconds remaining
-    </div>
+
 
     <!-- Feedback Modal -->
-    <div class="modal" id="feedbackModal">
-        <div class="modal-content">
-            <h3 id="feedbackMessage"></h3>
-            <p id="explanation"></p>
-            <button id="closeModalBtn">Close</button>
-        </div>
-    </div>
+
 </div>
 
                             </div>
@@ -183,1812 +180,1835 @@ require_once __DIR__ . '/../templates/loggedInc.php';
                     </div></div>
             </section>
         </div>
+<!--        data-bs-backdrop="static" data-bs-keyboard="false"-->
+        <div class="modal fade" id="feedbackModal" >
+            <div class="modal-dialog modal-dialog-centered ">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <h3 id="feedbackMessage"></h3>
+                        <br>
+                        <p id="explanation"></p>
+                        <!--            <button  class="btn btn-success btn-lg w-100">Continue</button>-->
+                    </div>
+                    <div class="modal-footer bg-whitesmoke br">
+                        <button type="button" class="btn btn-primary btn-lg  w-100 font-15" id="closeModalBtn" >Continue <i class="fas fa-check-circle"></i> </button>
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
 
 <!-- Bootstrap JS and Popper.js -->
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
+<!--<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>-->
 <!-- jQuery -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<script>
-    const API_URL = 'https://your-api-endpoint.com/spacedActualQuestions'; // Replace with your actual API URL
-    let currentIndex = 0;
-    let timer;
-    let timeRemaining = 60;
-    let isAnswered = false;
-    let questions = [];
 
 
-    let dataQ =  [
-        {
-            "selectedSubjectId": "1oJlwLsfeG2JoQsOT5tP",
-            "questionid": "0qnui9pAr3HK4qWv3aZr",
-            "week": "2",
-            "answer": 3,
-            "options": [
-                "A. elastic supply",
-                "B. joint demand",
-                "C. excess supply",
-                "D. none of the above"
-            ],
-            "text": "7. When the price of a commodity is below the equilibrium price the quantity demanded will exceed the quantity supplied. Such a situation is referred to as",
-            "type": "mock",
-            "timestamp": "2024-09-17T09:03:58.738Z",
-            "explanation": "This is a shortage, meaning demand exceeds supply at a given price."
-        },
-        {
-            "selectedSubjectId": "1oJlwLsfeG2JoQsOT5tP",
-            "questionid": "11pGVAh83ZT73QBXbzCt",
-            "week": "2",
-            "answer": 0,
-            "options": [
-                "A. gross national income minus depreciation",
-                "B. gross domestic product plus net income from abroad",
-                "C. nominal national income deflated by the price level",
-                "D. gross national income divided by the total population"
-            ],
-            "text": "25. Net national income is",
-            "type": "mock",
-            "timestamp": "2024-09-17T09:26:46.198Z",
-            "explanation": "Net national income accounts for the depreciation of capital assets."
-        },
-        {
-            "selectedSubjectId": "BRUici1R3kf9w4OhTkTT",
-            "questionid": "1Ab3qA2ww5uBgJeD2uOJ",
-            "week": "2",
-            "answer": 2,
-            "options": [
-                "A. 0.85 PN-m-2",
-                "B. 0.86 PN-m-2",
-                "C. 1.16 PN-m-2",
-                "D. 1.18 PN-m-2"
-            ],
-            "text": "A gas at pressure PNm−2\n and temperature 27°C is heated to 77°C at constant volume. The new pressure is",
-            "explanation": "At constant volume,\n\nP1T1\n = P2T2\n\n\nP27+273\n = P277+273\n300P2=350P\n\n\nP2 = 1.16 PNm−2",
-            "type": "mock",
-            "timestamp": "2024-10-03T21:42:27.576Z"
-        },
-        {
-            "selectedSubjectId": "QRu4n3IlJ9Ss4pRgSNl5",
-            "questionid": "1B4bDG31ynEjKtAVdh9V",
-            "week": "1",
-            "answer": 1,
-            "options": [
-                "Daniel",
-                "Esau",
-                "Jacob",
-                "Nathaniel"
-            ],
-            "text": "Who sold his birthright for a plate of pottage?",
-            "explanation": "Esau sold his birthright for a plate of pottage. This incident is recorded in Genesis 25:29-34, where Esau, coming in from the field hungry, exchanges his birthright, which entitled him to the privileges of the firstborn, for a plate of pottage that Jacob, his brother, had prepared.",
-            "type": "mock",
-            "timestamp": "2024-09-07T12:41:58.339Z"
-        },
-        {
-            "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
-            "questionid": "1GqzzQHdHK0q18LLTx1C",
-            "week": "1",
-            "answer": 0,
-            "options": [
-                "accent",
-                "assent",
-                "access",
-                "ascent"
-            ],
-            "text": "The governor rejected the bill and withheld his ____________?",
-            "explanation": "",
-            "type": "mock",
-            "timestamp": "2024-02-07T15:07:10.935Z",
-            "users": [
-                "lALqIGowQPfyEvt55QSSQHY8mwS2",
-                "BsB92FedbdYYgE7nUjp1sggWWFV2",
-                "Cfg4lYumf9eN48g4awccYqdq1zC2",
-                "UaSQMQzLCGbZW3T95B8IKjZQPXb2",
-                "4b3QRTJRL5eU3OwkPFq72owtaRv2"
-            ]
-        },
-        {
-            "selectedSubjectId": "1oJlwLsfeG2JoQsOT5tP",
-            "questionid": "1L5xFXDER8hF3uX9zwNB",
-            "week": "1",
-            "answer": 3,
-            "options": [
-                "A. manufactured goods",
-                "B. processed and semi-processed commodities",
-                "C. invisible items",
-                "D. primary products"
-            ],
-            "text": "38. Less developed countries obtain foreign exchange reserves mainly from the export of",
-            "type": "mock",
-            "timestamp": "2024-09-15T15:55:01.190Z",
-            "explanation": "Explanation: Many less developed countries (LDCs) rely heavily on exporting raw materials, such as agricultural products, minerals, and crude oil, as their primary source of foreign exchange. These products are often exported to more industrialized nations that process them into finished goods."
-        },
-        {
-            "selectedSubjectId": "QRu4n3IlJ9Ss4pRgSNl5",
-            "questionid": "1TCSfl4rn827TOlwuMtT",
-            "week": "2",
-            "answer": 1,
-            "options": [
-                "Simeon",
-                "Reuben",
-                "Benjamin",
-                "Ishmael"
-            ],
-            "text": "The one who saved Joseph's life when his brothers wanted to kill him was",
-            "type": "mock",
-            "timestamp": "2024-09-08T16:13:58.537Z",
-            "explanation": "The one who saved Joseph's life when his brothers wanted to kill him was Reuben (Genesis 37:21-22).\n\nReuben, the oldest of Jacob's sons, persuaded his brothers not to kill Joseph but instead to throw him into a pit, intending to later rescue him. However, while Reuben was away, the brothers sold Joseph to a caravan of Ishmaelites, who took him to Egypt."
-        },
-        {
-            "selectedSubjectId": "1oJlwLsfeG2JoQsOT5tP",
-            "questionid": "1huGPnGDZIyZKWbOn639",
-            "week": "2",
-            "answer": 3,
-            "options": [
-                "A. composite demand",
-                "B. elastic demand",
-                "C. derived demand",
-                "D. competitive demand"
-            ],
-            "text": "4. If two commodities are good substitutes for one another, e.g. butter and margarine, an increase in the demand for one will reduce the demand for the other.\n This type of demand is called",
-            "type": "mock",
-            "timestamp": "2024-09-17T09:00:49.675Z",
-            "explanation": "Competitive demand occurs when two products can replace each other, like butter and margarine."
-        },
-        {
-            "selectedSubjectId": "1oJlwLsfeG2JoQsOT5tP",
-            "questionid": "1yRW0lDjOJEmgoiAh43o",
-            "week": "2",
-            "answer": 1,
-            "options": [
-                "A. the interest rate fixed by the Central Bank",
-                "B. the price, of one national currency In terms of another",
-                "C. the rate at which the Central Bank issues money",
-                "D. the rate of interest on government bonds"
-            ],
-            "text": "37. The foreign exchange rate of a country is",
-            "type": "mock",
-            "timestamp": "2024-09-17T09:41:22.916Z",
-            "explanation": "The foreign exchange rate is the value of one currency against another.\n"
-        },
-        {
-            "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
-            "questionid": "2ILrHzi4AhSZDr9pFSw7",
-            "week": "1",
-            "answer": 1,
-            "options": [
-                "A. fly out",
-                "B. take off",
-                "C. start out",
-                "D. shoot off"
-            ],
-            "type": "mock",
-            "timestamp": "2024-09-10T10:38:06.013Z",
-            "text": "Complete each of the following sentences by choosing the option that most suitably fills the space;\nOur plane was scheduled to .... at 10.00 hrs but it was delayed because of the bad weather",
-            "explanation": "The complete question is: \"Our plane was scheduled to take off at 10.00 hrs but it was delayed because of the bad weather.\"\n'Take off' is an instance of becoming airborne. Planes take off into the air"
-        },
-        {
-            "selectedSubjectId": "1oJlwLsfeG2JoQsOT5tP",
-            "questionid": "2MHL2KvQli7IY1Xw7N0h",
-            "week": "2",
-            "answer": 3,
-            "options": [
-                "A. Transport",
-                "B. Storage",
-                "C. Advertising",
-                "D. Branding"
-            ],
-            "text": "24. Which of the following is not usually the function of \nwholesaler?",
-            "type": "mock",
-            "timestamp": "2024-09-17T09:25:38.069Z",
-            "explanation": "Branding is typically done by manufacturers or retailers, not wholesalers."
-        },
-        {
-            "selectedSubjectId": "QRu4n3IlJ9Ss4pRgSNl5",
-            "questionid": "2USMVn9LE6uSRnKqZoEZ",
-            "week": "2",
-            "answer": 2,
-            "options": [
-                "He was angry",
-                "He was hungry",
-                "He found nothing on it but leaves",
-                "The tree was by the wayside"
-            ],
-            "text": "Why did Jesus cursed a fig tree",
-            "type": "mock",
-            "timestamp": "2024-09-08T17:07:45.492Z",
-            "explanation": "The correct answer is: He found nothing on it but leaves.\n\n   In Mark 11:12-14 and Matthew 21:18-22, Jesus cursed the fig tree because when He approached it looking for fruit, He found nothing but leaves, even though it was not the season for figs. Jesus used this as a lesson, symbolizing how Israel, despite having the appearance of spiritual fruitfulness, was not producing the kind of faith and righteousness that God desired. The cursing of the fig tree was a symbolic act, showing the judgment on those who outwardly appear faithful but lack true fruitfulness in their lives."
-        },
-        {
-            "selectedSubjectId": "QRu4n3IlJ9Ss4pRgSNl5",
-            "questionid": "2jQV4el7tAjKPVToy2Yu",
-            "week": "1",
-            "answer": 2,
-            "options": [
-                "Isreal's sin",
-                "The true worship of God",
-                "Invasion from the North",
-                "Repentance"
-            ],
-            "text": "Jeremiah's vision of boiling pot represented",
-            "type": "mock",
-            "timestamp": "2024-09-07T13:02:17.613Z",
-            "explanation": "In Jeremiah's vision of the boiling pot, the correct interpretation is that it represented invasion from the north.\n\n   In Jeremiah 1:13-15, the prophet sees a boiling pot tilting away from the north.  God explains that this symbolizes an impending disaster from the north, specifically the Babylonian invasion. The boiling pot signifies the wrath and judgment that will be poured out upon Judah due to their disobedience."
-        },
-        {
-            "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
-            "questionid": "2ncCpwebuTh4Exao23Hb",
-            "week": "1",
-            "answer": 2,
-            "options": [
-                "A. shall return",
-                "B. am returning",
-                "C. would return",
-                "D. had return"
-            ],
-            "explanation": "The complete sentence is: \"If I went to the cinema, I would return early.\"",
-            "type": "mock",
-            "timestamp": "2024-09-10T10:34:27.734Z",
-            "text": "Complete each of the following sentences by choosing the option that most suitably fills the space;\nIf I went to the cinema I .... early"
-        },
-        {
-            "selectedSubjectId": "BRUici1R3kf9w4OhTkTT",
-            "questionid": "2rRYMNnI4xI3xdDnJXEr",
-            "week": "2",
-            "answer": 2,
-            "options": [
-                "A. 0.5 msec-1",
-                "B. 1.5 msec-1",
-                "C. 1 msec-1",
-                "D. 2 msec-1"
-            ],
-            "text": "A machine gun with a mass of 5kg fires a 50g bullet at speed of 100ms-1. The recoil speed of the machine gun is",
-            "explanation": "Gun momentum = bullet momentum\n\n5 x v = 0.05 x 100\n\nv = 1 msec-1",
-            "type": "mock",
-            "timestamp": "2024-10-03T21:18:25.877Z"
-        },
-        {
-            "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
-            "questionid": "2xdjt1dMO8cOI82gp7e3",
-            "week": "1",
-            "answer": 3,
-            "type": "mock",
-            "timestamp": "2024-10-02T03:01:30.585Z",
-            "options": [
-                "A. jags",
-                "B. jabs",
-                "C. jams",
-                "D. jars"
-            ],
-            "text": "Complete each of the following sentences by choosing the option that most suitably fills the space;\nHis horrible high-pitched laugh .... my nerves",
-            "explanation": "The complete sentence is: \"His horrible high-pitched laugh jars my nerves.\"\nThe sentence expresses that the speaker finds the person's laugh very annoying."
-        },
-        {
-            "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
-            "questionid": "3O4Z9d89NSdbJyGTnpCZ",
-            "week": "1",
-            "answer": 2,
-            "options": [
-                "rite",
-                "rights",
-                "rites",
-                "right"
-            ],
-            "text": "He did not attend the final burial...........",
-            "explanation": "",
-            "type": "mock",
-            "timestamp": "2024-02-07T15:07:10.932Z",
-            "users": [
-                "lALqIGowQPfyEvt55QSSQHY8mwS2",
-                "BsB92FedbdYYgE7nUjp1sggWWFV2",
-                "Cfg4lYumf9eN48g4awccYqdq1zC2",
-                "UaSQMQzLCGbZW3T95B8IKjZQPXb2",
-                "4b3QRTJRL5eU3OwkPFq72owtaRv2"
-            ]
-        },
-        {
-            "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
-            "questionid": "3VNskSHOIbKF4jMKiqR7",
-            "week": "1",
-            "answer": 3,
-            "options": [
-                "A. didn't he",
-                "B. had he not",
-                "C. is not it",
-                "D. did he"
-            ],
-            "explanation": "The complete sentence is: \"The managing director did not pay his staff last month, did he?\"",
-            "type": "mock",
-            "timestamp": "2024-09-10T10:47:03.060Z",
-            "text": "Complete each of the following sentences by choosing the option that most suitably fills the space;\nThe managing director did not pay his staff last month ....?"
-        },
-        {
-            "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
-            "questionid": "3eikoGGxc5WgqFbfwymJ",
-            "week": "2",
-            "answer": 0,
-            "options": [
-                "A. speak in support",
-                "B. explained the part played",
-                "C. act like a representative of",
-                "D. emphasize the progress made by"
-            ],
-            "text": "Choose the option nearest in meaning to the quoted words:\nGood citizens should \"take the part\" of a good government when it is being attacked by the foreign press",
-            "explanation": "The option nearest in meaning to \"take the part of a good government\" is:\n\nA. speak in support.",
-            "type": "mock",
-            "timestamp": "2024-09-12T12:47:29.567Z"
-        },
-        {
-            "selectedSubjectId": "BRUici1R3kf9w4OhTkTT",
-            "questionid": "3hEFKSBxrYQI0lChwD94",
-            "week": "1",
-            "answer": 1,
-            "options": [
-                "20m",
-                "80m",
-                "160m",
-                "320m"
-            ],
-            "text": "An object is projected with velocity of 80m/s at an angle of 30 degrees to the horizontal. The maximum height which it attains is",
-            "explanation": "",
-            "type": "mock",
-            "timestamp": "2024-02-07T14:52:01.894Z",
-            "users": [
-                "lALqIGowQPfyEvt55QSSQHY8mwS2",
-                "BsB92FedbdYYgE7nUjp1sggWWFV2",
-                "Cfg4lYumf9eN48g4awccYqdq1zC2",
-                "UaSQMQzLCGbZW3T95B8IKjZQPXb2",
-                "4b3QRTJRL5eU3OwkPFq72owtaRv2"
-            ]
-        },
-        {
-            "selectedSubjectId": "1oJlwLsfeG2JoQsOT5tP",
-            "questionid": "3j7O9UyUaUcztGrF8vht",
-            "week": "2",
-            "answer": 3,
-            "options": [
-                "A. a fall in income",
-                "B. a rise in the price of a complement",
-                "C. a fall in the price of a substitute",
-                "D. none of the above"
-            ],
-            "text": "6.When the demand curve shifts to the right, it indicates that a larger quantity is demanded at each price. This is caused by one of the following:",
-            "type": "mock",
-            "timestamp": "2024-09-17T09:02:41.332Z",
-            "explanation": "It is usually caused by increased income, a rise in the price of a substitute, or a fall in the price of a complement."
-        },
-        {
-            "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
-            "questionid": "3reL9taI4uvYQoeavVpp",
-            "week": "1",
-            "answer": 0,
-            "options": [
-                "A. investigate",
-                "B. search",
-                "C. look for",
-                "D. account for"
-            ],
-            "explanation": "\"Go into\" in this context means to examine or investigate the community's complaints carefully and without bias.",
-            "type": "mock",
-            "timestamp": "2024-09-09T19:50:18.395Z",
-            "text": "Choose the option that best conveys the meaning of the underlined portion in the following sentence;\nThe state government appointed a commission of inquiry to \"go into\" the community's complaints carefully and without prejudice"
-        },
-        {
-            "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
-            "questionid": "40Ut7z6RVWCcdtCc6KmI",
-            "week": "1",
-            "answer": 2,
-            "options": [
-                "A. he attacked the policemen boldly",
-                "B. he walked up to the policemen",
-                "C. he faced the situation with apparent boldness",
-                "D. he bravely attempted to give them a present"
-            ],
-            "explanation": "This means the man tried to appear confident or unafraid when caught by the police, even if he may not have actually felt that way.",
-            "type": "mock",
-            "timestamp": "2024-09-09T20:09:45.955Z",
-            "text": "Choose the option that best conveys the meaning of the quoted portion in the following sentence;\nWhen the man was caught by the police, he \"presented a bold front\""
-        },
-        {
-            "selectedSubjectId": "1oJlwLsfeG2JoQsOT5tP",
-            "questionid": "4BkrEYgc6mPiuPgzLAa4",
-            "week": "1",
-            "options": [
-                "A. makes loans available to private people and businessmen",
-                "B. accepts deposits",
-                "C. can store people's valuables",
-                "D. can transfer money from one place to another for its customers"
-            ],
-            "text": "8. A commercial Bank is unique in that it is the only institution that",
-            "type": "mock",
-            "timestamp": "2024-09-15T15:07:36.400Z",
-            "answer": 1,
-            "explanation": "Commercial banks accept deposits and provide financial services."
-        },
-        {
-            "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
-            "questionid": "4C4iDrK6LAXWxtd6h6u7",
-            "week": "2",
-            "answer": 2,
-            "options": [
-                "A. will go",
-                "B. will be going",
-                "C. would have gone",
-                "D. may be going"
-            ],
-            "text": "Choose the word/expression which best completes each sentence:\nHad he known he .... away",
-            "explanation": "",
-            "type": "mock",
-            "timestamp": "2024-09-12T19:00:35.284Z"
-        },
-        {
-            "selectedSubjectId": "1oJlwLsfeG2JoQsOT5tP",
-            "questionid": "4GQuw6TpjurvHjkJWGoh",
-            "week": "2",
-            "answer": 2,
-            "options": [
-                "A. bankers to the government",
-                "B. bankers to commercial banks",
-                "C. merchant banks",
-                "D. controllers and regulators of the money supply"
-            ],
-            "text": "9. Which of these alternatives is wrong? Central banks are",
-            "type": "mock",
-            "timestamp": "2024-09-17T09:06:19.821Z",
-            "explanation": "Central banks are not merchant banks; they regulate money supply and serve as a lender of last resort."
-        },
-        {
-            "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
-            "questionid": "4VjIyx5jg1xnEyB2xY0R",
-            "week": "1",
-            "answer": 0,
-            "options": [
-                "UP",
-                "IN",
-                "OUT",
-                "OFF"
-            ],
-            "text": "Maimuna wrote to ask if I could put her …. for the night",
-            "explanation": "",
-            "type": "mock",
-            "timestamp": "2024-02-07T15:07:10.936Z",
-            "users": [
-                "lALqIGowQPfyEvt55QSSQHY8mwS2",
-                "BsB92FedbdYYgE7nUjp1sggWWFV2",
-                "Cfg4lYumf9eN48g4awccYqdq1zC2",
-                "UaSQMQzLCGbZW3T95B8IKjZQPXb2",
-                "4b3QRTJRL5eU3OwkPFq72owtaRv2"
-            ]
-        },
-        {
-            "selectedSubjectId": "BRUici1R3kf9w4OhTkTT",
-            "questionid": "4YU3UVF9DW83RRAVPhEt",
-            "week": "2",
-            "answer": 0,
-            "options": [
-                "A. a low resistance shunt is connected in parallel",
-                "B. a low resistance shunt is connected in series",
-                "C. a medium resistance shunt is connected in series",
-                "D. a high resistance shunt is connected in parallel"
-            ],
-            "text": "In order to convert a galvanometer into an ammeter",
-            "explanation": "",
-            "type": "mock",
-            "timestamp": "2024-10-03T21:57:53.684Z"
-        },
-        {
-            "selectedSubjectId": "1oJlwLsfeG2JoQsOT5tP",
-            "questionid": "4pjbz99vpCzwyKWbdLiO",
-            "week": "2",
-            "answer": 1,
-            "options": [
-                "A. total amount of an income tax",
-                "B. a certain percentage tax on the value of a commodity",
-                "C. a certain percentage tax on the volume of a commodity",
-                "D. a tax on capital gains"
-            ],
-            "text": "36. An ad valorem tax means",
-            "type": "mock",
-            "timestamp": "2024-09-17T09:40:31.376Z",
-            "explanation": "Ad valorem tax is levied based on the value of the item."
-        },
-        {
-            "selectedSubjectId": "1oJlwLsfeG2JoQsOT5tP",
-            "questionid": "4xgdwvLYg0GX6r07brgx",
-            "week": "1",
-            "answer": 1,
-            "options": [
-                "A. an increase in price and quantity offered",
-                "B. an increase in quantity but price will remain the same",
-                "C. a reduction in price and quantity-offered",
-                "D. an increase in price but a reduction in quantity offered for sale"
-            ],
-            "text": "31. If the demand for a product with a perfectly elastic supply\nincreases, there will be",
-            "type": "mock",
-            "timestamp": "2024-09-15T15:45:02.037Z",
-            "explanation": "With perfectly elastic supply, firms can supply any amount at the same price."
-        },
-        {
-            "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
-            "questionid": "502mz7UGNwhGfhq6GGnL",
-            "week": "1",
-            "answer": 0,
-            "options": [
-                "sheer",
-                "cheer",
-                "share",
-                "shear"
-            ],
-            "text": "the man rose to an important position as a result of __ hardwork",
-            "explanation": "",
-            "type": "mock",
-            "timestamp": "2024-02-07T15:07:10.930Z",
-            "users": [
-                "lALqIGowQPfyEvt55QSSQHY8mwS2",
-                "BsB92FedbdYYgE7nUjp1sggWWFV2",
-                "Cfg4lYumf9eN48g4awccYqdq1zC2",
-                "UaSQMQzLCGbZW3T95B8IKjZQPXb2",
-                "4b3QRTJRL5eU3OwkPFq72owtaRv2"
-            ]
-        },
-        {
-            "selectedSubjectId": "1oJlwLsfeG2JoQsOT5tP",
-            "questionid": "565fBLN16pQqYCXEn0v8",
-            "week": "1",
-            "answer": 1,
-            "options": [
-                "A. P2",
-                "B. P0",
-                "C. P1",
-                "D. indeterminate"
-            ],
-            "text": "3. In the diagram equilibrium price is:",
-            "type": "mock",
-            "timestamp": "2024-09-15T14:59:44.390Z",
-            "image": "https://drive.google.com/file/d/10ZcwQLdhVRUZ4enAI-MTv985RasUFJLN/view?usp=drivesdk",
-            "explanation": "Equilibrium price is where demand and supply intersect.\n"
-        },
-        {
-            "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
-            "questionid": "588KMfOrl2PbDE8HDMEA",
-            "week": "1",
-            "answer": 0,
-            "options": [
-                "coarse",
-                "causal",
-                "coerce",
-                "course"
-            ],
-            "text": "The sergeant spoke to me in a...... manner?",
-            "explanation": "",
-            "type": "mock",
-            "timestamp": "2024-02-07T15:07:10.940Z",
-            "users": [
-                "lALqIGowQPfyEvt55QSSQHY8mwS2",
-                "BsB92FedbdYYgE7nUjp1sggWWFV2",
-                "Cfg4lYumf9eN48g4awccYqdq1zC2",
-                "UaSQMQzLCGbZW3T95B8IKjZQPXb2",
-                "4b3QRTJRL5eU3OwkPFq72owtaRv2"
-            ]
-        },
-        {
-            "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
-            "questionid": "5AJ6wfP55vEOG0dZ6AEF",
-            "week": "1",
-            "answer": 3,
-            "options": [
-                "my headmaster is strong",
-                "my headmaster is cheerful",
-                "my headmaster is friendly",
-                "my headmaster is enthusiastic about his job"
-            ],
-            "text": "My Headmaster is getting old. His mates have been retired. But because of his zeal for work, he has been retained.",
-            "explanation": "",
-            "type": "mock",
-            "timestamp": "2024-02-07T15:07:10.936Z",
-            "users": [
-                "lALqIGowQPfyEvt55QSSQHY8mwS2",
-                "BsB92FedbdYYgE7nUjp1sggWWFV2",
-                "Cfg4lYumf9eN48g4awccYqdq1zC2",
-                "UaSQMQzLCGbZW3T95B8IKjZQPXb2",
-                "4b3QRTJRL5eU3OwkPFq72owtaRv2"
-            ]
-        },
-        {
-            "selectedSubjectId": "QRu4n3IlJ9Ss4pRgSNl5",
-            "questionid": "5Pl2mRuvOA6qQyhE89Td",
-            "week": "2",
-            "answer": 0,
-            "options": [
-                "He would make nations of him",
-                "He would live long",
-                "He would give him flocks",
-                "He would give him crops"
-            ],
-            "text": "The promise of God made with Abraham was that",
-            "type": "mock",
-            "timestamp": "2024-09-08T16:03:48.699Z",
-            "explanation": "The correct answer is: \"He would make nations of him.\"\n\n  God’s promise to Abraham, known as the Abrahamic Covenant, is found in Genesis 12:1-3, Genesis 15:5, and Genesis 17:4-6. In these passages, God promises Abraham:\n\nA great nation: \"I will make you into a great nation, and I will bless you.\" (Genesis 12:2)\nMany descendants: \"Look up at the sky and count the stars—if indeed you can count them. So shall your offspring be.\" (Genesis 15:5)\nHe would be the father of many nations: \"You will be the father of many nations. I will make you very fruitful; I will make nations of you, and kings will come from you.\" (Genesis 17:4-6)."
-        },
-        {
-            "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
-            "questionid": "5v4coKj8SqU1JN3nW03J",
-            "week": "2",
-            "answer": 1,
-            "options": [
-                "A. I employed her",
-                "B. I did not employ him",
-                "C. I did not employ her",
-                "D. I employed him"
-            ],
-            "text": "Choose the option nearest in meaning to the quoted statement or words:\n\"Had she asked me earlier, I might have been able to employ him\"",
-            "explanation": "The original sentence implies that the speaker did not employ him because the request came too late. Therefore, the nearest meaning is that \"I did not employ him.\"",
-            "type": "mock",
-            "timestamp": "2024-09-11T12:06:17.928Z"
-        },
-        {
-            "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
-            "questionid": "62MmxFufdOABgDcdHgLx",
-            "week": "1",
-            "answer": 0,
-            "options": [
-                "A. to have broken",
-                "B. to be breaking",
-                "C. to break",
-                "D. to break in"
-            ],
-            "explanation": "The complete sentence is: \"I would not have condescended to appease the traffic policeman, but I happened to have broken traffic regulation.\"",
-            "type": "mock",
-            "timestamp": "2024-09-10T10:45:55.869Z",
-            "text": "Complete each of the following sentences by choosing the option that most suitably fills the space;\nI would not have condescended to appease the traffic policeman but i happened .... traffic regulation"
-        },
-        {
-            "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
-            "questionid": "67Wn42MwppgL0u9BiY0h",
-            "week": "1",
-            "answer": 3,
-            "options": [
-                "Commitee/ accommondation",
-                "Comittee/ acommodation",
-                "committe/accommodasion",
-                "committee/ accommodation"
-            ],
-            "text": "The ------------------- in an attempt to please the workers promised to provide for them an..........as soon as possible.",
-            "explanation": "",
-            "type": "mock",
-            "timestamp": "2024-02-07T15:07:10.932Z",
-            "users": [
-                "lALqIGowQPfyEvt55QSSQHY8mwS2",
-                "BsB92FedbdYYgE7nUjp1sggWWFV2",
-                "Cfg4lYumf9eN48g4awccYqdq1zC2",
-                "UaSQMQzLCGbZW3T95B8IKjZQPXb2",
-                "4b3QRTJRL5eU3OwkPFq72owtaRv2"
-            ]
-        },
-        {
-            "selectedSubjectId": "QRu4n3IlJ9Ss4pRgSNl5",
-            "questionid": "69k4Kz8kyajVjOU9HiYl",
-            "week": "1",
-            "answer": 2,
-            "options": [
-                "James",
-                "Phillip",
-                "Stephen",
-                "John"
-            ],
-            "text": "Who was the first Christian Martyr?",
-            "type": "mock",
-            "timestamp": "2024-09-07T13:39:55.787Z",
-            "explanation": "Stephen is recognized as the first Christian martyr. According to the New Testament, he was a deacon in the early church who was arrested and brought before the Sanhedrin on charges of blasphemy. In his defense, Stephen delivered a speech recounting Israel's history and accusing the Jewish leaders of resisting the Holy Spirit. This enraged the council, leading them to drag him out of the city and stone him to death. Stephen's martyrdom is detailed in Acts 6:8–7:60."
-        },
-        {
-            "selectedSubjectId": "BRUici1R3kf9w4OhTkTT",
-            "questionid": "6Ih1dAEgFwe2Y8YWwyb0",
-            "week": "1",
-            "answer": 2,
-            "options": [
-                "10ms-2",
-                "15ms-2",
-                "20ms-2",
-                "60ms-2"
-            ],
-            "text": "The velocity V of a particle in a time t is given by the equation V = 10+2t2 . Find the instantaneous acceleration after 5s.",
-            "explanation": "",
-            "type": "mock",
-            "timestamp": "2024-02-07T14:52:01.906Z",
-            "users": [
-                "lALqIGowQPfyEvt55QSSQHY8mwS2",
-                "BsB92FedbdYYgE7nUjp1sggWWFV2",
-                "Cfg4lYumf9eN48g4awccYqdq1zC2",
-                "UaSQMQzLCGbZW3T95B8IKjZQPXb2",
-                "4b3QRTJRL5eU3OwkPFq72owtaRv2"
-            ]
-        },
-        {
-            "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
-            "questionid": "6PK3JeoiyAhN1dwmjYuD",
-            "week": "1",
-            "answer": 1,
-            "options": [
-                "A. small boys",
-                "B. unimportant people",
-                "C. frightened people",
-                "D. frivolous people"
-            ],
-            "explanation": "The expression \"small fry\" in this context is used as a metaphor to refer to unimportant or insignificant people. So, the sentence is saying that only the unimportant or insignificant individuals get punished for such social misdemeanors.\n\nOption B, \"unimportant people,\" is the best fit because it conveys the idea that those who are not considered significant or influential in the situation are the ones facing punishment. The term \"small fry\" is often used to describe individuals of little importance or influence in a particular context.",
-            "type": "mock",
-            "timestamp": "2024-09-09T19:27:18.755Z",
-            "text": "Choose the option that best conveys the meaning of the quoted portion in the following sentence:\n\nOnly the \"small fry\" gets punished for such social misdemeanours."
-        },
-        {
-            "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
-            "questionid": "6VKhWbZbndpXE0fP52qr",
-            "week": "2",
-            "answer": 2,
-            "options": [
-                "A. The part of the problem that has just surfaced",
-                "B. The result of the matter",
-                "C. The most important aspect of the problem",
-                "D. The ways to solved the problem"
-            ],
-            "text": "Choose the option nearest in meaning to the quoted words:\nThe \"crux of the matter\" is that the president has just become aware of the mismanagement",
-            "explanation": "The option nearest in meaning to \"The crux of the matter\" is:\n\nC. The most important aspect of the problem.",
-            "type": "mock",
-            "timestamp": "2024-09-12T12:35:38.798Z"
-        },
-        {
-            "selectedSubjectId": "QRu4n3IlJ9Ss4pRgSNl5",
-            "questionid": "6VdwwGU6rC0vFtIWLmhf",
-            "week": "1",
-            "answer": 3,
-            "options": [
-                "Jerusalem",
-                "Samaria",
-                "Cyrene",
-                "Antioch"
-            ],
-            "text": "Paul's First Missionary Journey started from",
-            "type": "mock",
-            "timestamp": "2024-09-07T13:40:57.883Z",
-            "explanation": "Paul's first missionary journey began in Antioch. According to the Bible, the church in Antioch was instrumental in sending Paul and Barnabas on their mission. In Acts 13:2-3, it is written:\n\n\"While they were worshiping the Lord and fasting, the Holy Spirit said, 'Set apart for me Barnabas and Saul for the work to which I have called them.' So after they had fasted and prayed, they placed their hands on them and sent them off.\"\n\nThis passage indicates that the church in Antioch commissioned Paul and Barnabas for their missionary work."
-        },
-        {
-            "selectedSubjectId": "BRUici1R3kf9w4OhTkTT",
-            "questionid": "6ghnMccf6gI87tlYyipv",
-            "week": "1",
-            "answer": 1,
-            "options": [
-                "5ms-2",
-                "9ms-2",
-                "10ms-2",
-                "18ms-2"
-            ],
-            "text": "A motorcyclist traveling at 30ms-1 start to apply his brakes when he is 50m from the trafic light that has just turned red. If he just reached the trafic light, his deceleration is",
-            "explanation": "",
-            "type": "mock",
-            "timestamp": "2024-02-07T14:52:01.907Z",
-            "users": [
-                "lALqIGowQPfyEvt55QSSQHY8mwS2",
-                "BsB92FedbdYYgE7nUjp1sggWWFV2",
-                "Cfg4lYumf9eN48g4awccYqdq1zC2",
-                "UaSQMQzLCGbZW3T95B8IKjZQPXb2",
-                "4b3QRTJRL5eU3OwkPFq72owtaRv2"
-            ]
-        },
-        {
-            "selectedSubjectId": "1oJlwLsfeG2JoQsOT5tP",
-            "questionid": "6kkcUKwhyDSBdLOaQAIu",
-            "week": "2",
-            "options": [
-                "A. progressive",
-                "B. indirect",
-                "C. regressive",
-                "D. none of the above"
-            ],
-            "text": "26. If Mr. A earns N2000 a year while Mr. B earns N8000 a year but Mr. A pays N200 per annum in tax while Mr. B pays N400, such a tax is",
-            "type": "mock",
-            "timestamp": "2024-09-17T09:28:31.970Z",
-            "answer": 2,
-            "explanation": "The tax is regressive because the tax rate decreases as income increases."
-        },
-        {
-            "selectedSubjectId": "1oJlwLsfeG2JoQsOT5tP",
-            "questionid": "6lXLeBV1AT56MdfK0ljP",
-            "week": "1",
-            "answer": 2,
-            "options": [
-                "A. whose quality is low",
-                "B. consumed by very poor people",
-                "C. whose consumption falls when consumers' income rises",
-                "D. which satisfy only the basic needs"
-            ],
-            "text": "6. Inferior goods are defined in Economics as goods",
-            "type": "mock",
-            "timestamp": "2024-09-15T15:05:37.275Z",
-            "explanation": "Inferior goods are replaced by better alternatives as income increases."
-        },
-        {
-            "selectedSubjectId": "1oJlwLsfeG2JoQsOT5tP",
-            "questionid": "6oioxb4zOeNtxm3E0fen",
-            "week": "1",
-            "answer": 1,
-            "options": [
-                "A. Advances",
-                "B. Deposits",
-                "C. Treasury bills",
-                "D. Overdrafts"
-            ],
-            "text": "17. Which of the following can be regarded as a liability of a commercial bank?",
-            "type": "mock",
-            "timestamp": "2024-09-15T15:22:50.505Z",
-            "explanation": "Deposits are customer funds that banks owe."
-        },
-        {
-            "selectedSubjectId": "BRUici1R3kf9w4OhTkTT",
-            "questionid": "6wEGOolZIhPB6Azi96vL",
-            "week": "2",
-            "answer": 3,
-            "options": [
-                "A. 9s",
-                "B. 4.5s",
-                "C. 6s",
-                "D. 3s"
-            ],
-            "text": "A palm fruit dropped to the ground from the top of a tree 45m tall. How long does it take to reach the ground? (g = 10ms-2)",
-            "explanation": "Using the equation of motion\n\nS = ut + 12\nat2\n\n45 = (0 x t) + (12\n x 10 x t2)\n\nt = 3s",
-            "type": "mock",
-            "timestamp": "2024-10-03T21:07:22.783Z"
-        },
-        {
-            "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
-            "questionid": "7KKI6C3nSUVrVzZ3Nytq",
-            "week": "1",
-            "answer": 3,
-            "options": [
-                "the loud music soon helped John to fall asleep",
-                "John soon fell asleep as a result of the loud music",
-                "the loud music made John despise sleep",
-                "John soon fell asleep even though the music was loud"
-            ],
-            "text": "In spite of the loud music, John soon managed to fall asleep",
-            "explanation": "",
-            "type": "mock",
-            "timestamp": "2024-02-07T15:07:10.936Z",
-            "users": [
-                "lALqIGowQPfyEvt55QSSQHY8mwS2",
-                "BsB92FedbdYYgE7nUjp1sggWWFV2",
-                "Cfg4lYumf9eN48g4awccYqdq1zC2",
-                "UaSQMQzLCGbZW3T95B8IKjZQPXb2",
-                "4b3QRTJRL5eU3OwkPFq72owtaRv2"
-            ]
-        },
-        {
-            "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
-            "questionid": "7Tk3VuRWoi6HrKrE5n9J",
-            "week": "1",
-            "answer": 0,
-            "options": [
-                "accent",
-                "assent",
-                "access",
-                "ascent"
-            ],
-            "text": "The governor rejected the bill and withheld his ____________?",
-            "explanation": "",
-            "type": "mock",
-            "timestamp": "2024-02-07T15:07:10.939Z",
-            "users": [
-                "lALqIGowQPfyEvt55QSSQHY8mwS2",
-                "BsB92FedbdYYgE7nUjp1sggWWFV2",
-                "Cfg4lYumf9eN48g4awccYqdq1zC2",
-                "UaSQMQzLCGbZW3T95B8IKjZQPXb2",
-                "4b3QRTJRL5eU3OwkPFq72owtaRv2"
-            ]
-        },
-        {
-            "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
-            "questionid": "7XCXB3juRt0K2zfzsKrg",
-            "week": "1",
-            "answer": 0,
-            "options": [
-                "A. mastery",
-                "B. mastering",
-                "C. speaking",
-                "D. ideas"
-            ],
-            "explanation": "The complete sentence is: \"Although he is in all respects a poor student, he has managed to buy a tape recorder to improve his mastery of French.\"",
-            "type": "mock",
-            "timestamp": "2024-09-10T10:48:13.213Z",
-            "text": "Complete each of the following sentences by choosing the option that most suitably fills the space;\nAlthough he is in all respects a poor student, he has managed to buy a tape recorder to improve his .... of french"
-        },
-        {
-            "selectedSubjectId": "QRu4n3IlJ9Ss4pRgSNl5",
-            "questionid": "7eCyTZ9mHw35VW0OBmWC",
-            "week": "2",
-            "answer": 3,
-            "options": [
-                "buy more food from the land of Canaan",
-                "fight the Jebusites",
-                "smite the Amorites",
-                "to make a sacrifice to the Lord in the wilderness"
-            ],
-            "text": "Moses asked Pharaoh to allow the Hebrews to depart from Egypt to",
-            "explanation": "Moses asked Pharaoh to allow the Hebrews to depart from Egypt specifically so that they could make a sacrifice to the Lord in the wilderness. This can be found in Exodus 3:18. Moses requested permission from Pharaoh to let the people go into the wilderness to worship and offer sacrifices to their God.",
-            "type": "mock",
-            "timestamp": "2024-09-08T16:08:18.704Z"
-        },
-        {
-            "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
-            "questionid": "7laA3mxO4xPu5HG8RUFs",
-            "week": "2",
-            "answer": 2,
-            "options": [
-                "A. shows anxiety when making a serious point",
-                "B. breaks down when talking seriously",
-                "C. uses is hands and arms as a sign",
-                "D. bows his head in humility to the crowd"
-            ],
-            "text": "Choose the option nearest in meaning to the quoted words:\nThe politicians have a number of peculiarities. The most \"conspicuous is the way he gesticulates\" when making a serious point",
-            "explanation": "The option nearest in meaning to \"gesticulates when making a serious point\" is:\n\nC. uses his hands and arms as a sign.",
-            "type": "mock",
-            "timestamp": "2024-09-12T12:48:59.908Z"
-        },
-        {
-            "selectedSubjectId": "QRu4n3IlJ9Ss4pRgSNl5",
-            "questionid": "7rIricsqLV3iXW4ny0PR",
-            "week": "1",
-            "answer": 1,
-            "options": [
-                "Darius",
-                "Cyrus",
-                "Zechariah",
-                "Zerubbabel"
-            ],
-            "text": "The King of Persia who made it possible for the return of the exiles from Babylon was",
-            "type": "mock",
-            "timestamp": "2024-09-07T14:02:10.088Z",
-            "explanation": "Cyrus the Great, the king of Persia, made it possible for the exiles to return from Babylon. According to Ezra 1:1-4, after conquering Babylon in 539 BCE, Cyrus issued a decree allowing the Jewish people to return to Jerusalem and rebuild the Temple. This event marked the end of the Babylonian Captivity, which had lasted about 70 years.\n\nCyrus' policy of religious tolerance and restoration of displaced peoples was part of his broader strategy to stabilize his newly acquired empire. The Cyrus Cylinder, an ancient Persian artifact, also confirms his approach to allowing exiled groups to return to their homelands."
-        },
-        {
-            "selectedSubjectId": "BRUici1R3kf9w4OhTkTT",
-            "questionid": "8Lev7zhRnRpmd4pP0EjT",
-            "week": "2",
-            "answer": 1,
-            "options": [
-                "A. field magnet",
-                "B. commutator",
-                "C. armature",
-                "D. slip rings"
-            ],
-            "text": "On an a.c generator, which of the following does not apply?",
-            "explanation": "An AC generator consists of the following parts:\n\nField Magnet: It is a horseshoe-shaped permanent magnet that produces a strong magnetic field in the space between its two poles.\nArmature: It is a rectangular coil with a huge number of insulated copper wire that turns on a cylindrical core of soft iron. \nSlip Rings: The two ends of the armature are connected with the help of slip rings. \nBrushes: Two brushes, made up of graphite or a flexible metal rod, are pressed against the two slip rings. These brushes are responsible for feeding the current produced in the armature coil to the external circuit via wires. \nEnergy Source: The armature coil is rotated about its axis with the help of a turbine. The rotational kinetic energy of the turbine is the factor that helps an AC generator produce electricity.",
-            "type": "mock",
-            "timestamp": "2024-10-03T22:00:31.146Z"
-        },
-        {
-            "selectedSubjectId": "QRu4n3IlJ9Ss4pRgSNl5",
-            "questionid": "8XbESf3aR8tqIeGZqZNK",
-            "week": "1",
-            "answer": 0,
-            "options": [
-                "Solomon",
-                "Josiah",
-                "Saul",
-                "David"
-            ],
-            "text": "He was a king remembered for his erecting a mighty temple for the worship of God:",
-            "type": "mock",
-            "timestamp": "2024-09-07T12:43:27.988Z",
-            "explanation": "The correct answer is Solomon.\n\n  King Solomon is remembered for building the magnificent Temple in Jerusalem, often referred to as Solomon's Temple. This temple was dedicated to the worship of God and became the central place of worship for the Israelites. The construction of the temple is described in great detail in 1 Kings 6-7, and it was a significant achievement in Israel's history, marking a high point of prosperity and peace under Solomon's reign."
-        },
-        {
-            "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
-            "questionid": "8hfm0VZYY9VDJTxji2g9",
-            "week": "2",
-            "answer": 3,
-            "options": [
-                "A. away",
-                "B. against",
-                "C. out",
-                "D. off"
-            ],
-            "text": "Choose the expression or word which best complete each sentences:\nThere is an obvious need to ward .... enemy attacks",
-            "explanation": "The full sentence is: \"There is an obvious need to ward off enemy attacks.\"",
-            "type": "mock",
-            "timestamp": "2024-09-11T10:51:57.718Z"
-        },
-        {
-            "selectedSubjectId": "BRUici1R3kf9w4OhTkTT",
-            "questionid": "8jbar35hns8U0fwUZ62w",
-            "week": "1",
-            "answer": 1,
-            "options": [
-                "Force, Mass and Moment",
-                "Acceleration, Velocity and Moment",
-                "Mass, Weigth and Density",
-                "Mass, Volume and Density"
-            ],
-            "text": "Which of the following is a state of vectors?",
-            "explanation": "",
-            "type": "mock",
-            "timestamp": "2024-02-07T14:52:01.829Z",
-            "users": [
-                "lALqIGowQPfyEvt55QSSQHY8mwS2",
-                "BsB92FedbdYYgE7nUjp1sggWWFV2",
-                "Cfg4lYumf9eN48g4awccYqdq1zC2",
-                "UaSQMQzLCGbZW3T95B8IKjZQPXb2",
-                "4b3QRTJRL5eU3OwkPFq72owtaRv2"
-            ]
-        },
-        {
-            "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
-            "questionid": "9TLomWIqZKEvJDppy2U0",
-            "week": "2",
-            "answer": 3,
-            "options": [
-                "A. so masterly",
-                "B. very masterly",
-                "C. in such a masterly way",
-                "D. in a masterly way"
-            ],
-            "text": "Choose the expression or word which best complete each sentences:\nThis writer analyses the evil society ....",
-            "explanation": "The full sentence is: \"This writer analyses the evil society in a masterly way.\"",
-            "type": "mock",
-            "timestamp": "2024-09-11T11:54:38.462Z"
-        },
-        {
-            "selectedSubjectId": "QRu4n3IlJ9Ss4pRgSNl5",
-            "questionid": "9WWzQYKg7fRENPhOugTF",
-            "week": "2",
-            "answer": 2,
-            "options": [
-                "the Birth of Jesus",
-                "the Temptation of Jesus",
-                "the Baptism",
-                "the Transfiguration of Jesus"
-            ],
-            "text": "The statement,'This is my beloved son with whom i am well pleased'was said during",
-            "type": "mock",
-            "timestamp": "2024-09-08T16:54:19.439Z",
-            "explanation": "The correct answer is: \"The Baptism'''.\n\n   The statement, \"This is my beloved Son, with whom I am well pleased,\" was spoken by God the Father during the Baptism of Jesus. This event is recorded in Matthew 3:16-17: \"And when Jesus was baptized, immediately he went up from the water, and behold, the heavens were opened to him, and he saw the Spirit of God descending like a dove and coming to rest on him; and behold, a voice from heaven said, 'This is my beloved Son, with whom I am well pleased.'” (Matthew 3:16-17, ESV)\n\nThis moment marked the beginning of Jesus' public ministry, and the presence of the Father (voice from heaven), the Son (Jesus), and the Holy Spirit (dove) signifies the Trinity."
-        },
-        {
-            "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
-            "questionid": "9Wl95LVRst2Tu3AFsHdY",
-            "week": "2",
-            "answer": 3,
-            "options": [
-                "A. the loud music soon helped John to fall asleep",
-                "B. John soon fell asleep as a result of the loud music",
-                "C. the loud music made John despise sleep",
-                "D. John soon fell asleep even though the music was loud"
-            ],
-            "text": "Choose the option nearest in meaning to the quoted words:\n\"In spite of the loud music, John soon managed to fall asleep\"",
-            "explanation": "The option nearest in meaning to \"In spite of the loud music, John soon managed to fall asleep\" is:\n\nD. John soon fell asleep even though the music was loud.",
-            "type": "mock",
-            "timestamp": "2024-09-12T12:50:28.016Z"
-        },
-        {
-            "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
-            "questionid": "9b49w1ETM8YP7FWfPsCT",
-            "week": "2",
-            "answer": 1,
-            "options": [
-                "A. forgery",
-                "B. perjury",
-                "C. libel",
-                "D. slander"
-            ],
-            "text": "Choose the option nearest in meaning to the quoted words:\nThe witness was guilty of \"swearing to a statement he knew to be false\"",
-            "explanation": "The option nearest in meaning to \"swearing to a statement he knew to be false\" is:\n\nB. perjury.",
-            "type": "mock",
-            "timestamp": "2024-09-12T12:37:13.167Z"
-        },
-        {
-            "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
-            "questionid": "9bkj1yXg2Di88m1Q4fsk",
-            "week": "1",
-            "answer": 1,
-            "options": [
-                "guerrilas",
-                "guerrillas",
-                "geurrilas",
-                "geurrillas"
-            ],
-            "text": "The army officer said that more ...... would be needed to prosecute the war?",
-            "explanation": "",
-            "type": "mock",
-            "timestamp": "2024-02-07T15:07:10.934Z",
-            "users": [
-                "lALqIGowQPfyEvt55QSSQHY8mwS2",
-                "BsB92FedbdYYgE7nUjp1sggWWFV2",
-                "Cfg4lYumf9eN48g4awccYqdq1zC2",
-                "UaSQMQzLCGbZW3T95B8IKjZQPXb2",
-                "4b3QRTJRL5eU3OwkPFq72owtaRv2"
-            ]
-        },
-        {
-            "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
-            "questionid": "9qpMAQ4gQ5rfYiLckTn3",
-            "week": "2",
-            "answer": 2,
-            "options": [
-                "A. is arrived",
-                "B. will be arriving",
-                "C. has arrived",
-                "D. had arrived"
-            ],
-            "text": "Choose the word/expression which best completes each sentence:\nDo you know if the new teacher .... yet?",
-            "explanation": "",
-            "type": "mock",
-            "timestamp": "2024-09-12T18:54:40.526Z"
-        },
-        {
-            "selectedSubjectId": "QRu4n3IlJ9Ss4pRgSNl5",
-            "questionid": "9wmV0Y3u9VRuLwG3yua0",
-            "week": "2",
-            "answer": 0,
-            "options": [
-                "Amos",
-                "Elijah",
-                "Hosea",
-                "Jeremiah"
-            ],
-            "text": "One of the following said: \"The lion hath roared,who will not fear?The Lord has spoken,who can but prophesy?\"",
-            "type": "mock",
-            "timestamp": "2024-09-08T16:28:53.904Z",
-            "explanation": "The phrase, \"The lion hath roared, who will not fear? The Lord has spoken, who can but prophesy?\" was said by Amos (Amos 3:8).\n\nAmos was a prophet from Judah who was called to deliver God's message to the northern kingdom of Israel. This particular statement emphasizes the inevitability of prophecy when God speaks, likening it to a lion's roar that demands attention and fear."
-        },
-        {
-            "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
-            "questionid": "A3bp4kXdkMr4ZpPfGiAP",
-            "week": "2",
-            "answer": 1,
-            "options": [
-                "A. yes, I mind",
-                "B. no, I don't",
-                "C. no, I do",
-                "D. yes, I don't mind"
-            ],
-            "text": "Complete the following with the appropriate answer to the question:\n\nJohn would you mind lifting this box?",
-            "explanation": "In response to the question \"John, would you mind lifting this box?\" the appropriate and polite response is typically \"No, I don't mind.\" This implies that John is willing to lift the box and does not have an objection or reluctance to doing so.",
-            "type": "mock",
-            "timestamp": "2024-09-11T12:04:01.695Z"
-        },
-        {
-            "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
-            "questionid": "A4aUV9EvFwf4IiXlQV82",
-            "week": "1",
-            "answer": 1,
-            "options": [
-                "disappointed",
-                "embarassed",
-                "equipped",
-                "rythm"
-            ],
-            "text": "chose the wrongly spelt word",
-            "explanation": "",
-            "type": "mock",
-            "timestamp": "2024-02-07T15:07:10.929Z",
-            "users": [
-                "lALqIGowQPfyEvt55QSSQHY8mwS2",
-                "BsB92FedbdYYgE7nUjp1sggWWFV2",
-                "Cfg4lYumf9eN48g4awccYqdq1zC2",
-                "UaSQMQzLCGbZW3T95B8IKjZQPXb2",
-                "4b3QRTJRL5eU3OwkPFq72owtaRv2"
-            ]
-        },
-        {
-            "selectedSubjectId": "QRu4n3IlJ9Ss4pRgSNl5",
-            "questionid": "AOBsmHP2vsDujUkFXb85",
-            "week": "2",
-            "answer": 1,
-            "options": [
-                "some written codes",
-                "circumcision",
-                "promise of wealth",
-                "promise of long life"
-            ],
-            "text": "God's covenant with Abraham took the form of",
-            "type": "mock",
-            "timestamp": "2024-09-08T16:11:34.158Z",
-            "explanation": "God's covenant with Abraham took the form of circumcision (Genesis 17:10-14).\n\nGod instructed Abraham to circumcise himself and his descendants as a sign of the covenant between them. This was a physical and lasting symbol of their special relationship with God. The covenant also included promises of land, descendants, and blessings, but circumcision was the primary outward sign."
-        },
-        {
-            "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
-            "questionid": "AQJdpBE8gybIqFWJbBYT",
-            "week": "1",
-            "answer": 1,
-            "options": [
-                "A. illegal",
-                "B. illegitimate",
-                "C. illicit",
-                "D. unlawful"
-            ],
-            "explanation": "\"illegitimate\" is used to describe a child born outside of marriage.",
-            "type": "mock",
-            "timestamp": "2024-09-09T20:38:01.665Z",
-            "text": "Complete each of the following sentences by choosing the option that most suitably fills the space;\nThe boy was born before his parents actually got married and so the court has declared him ...."
-        },
-        {
-            "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
-            "questionid": "AVKvjqJMpF5l9xgZfBkR",
-            "week": "1",
-            "answer": 2,
-            "options": [
-                "A. played most brilliantly",
-                "B. played below their usual form",
-                "C. won unexpectedly",
-                "D. lost as expected"
-            ],
-            "explanation": "The term \"dark horse\" is an idiomatic expression that refers to a little-known or less-favoured contender in a competition who unexpectedly achieves success. In the context of the sentence, describing the sub mariners as \"the dark horse\" suggests that they were not widely expected to win, but they surprised everyone by emerging victorious in the match against the uplanders team.\n\nTherefore, option C, \"won unexpectedly,\" accurately conveys the meaning of the underlined portion in the sentence.",
-            "type": "mock",
-            "timestamp": "2024-09-09T19:25:49.914Z",
-            "text": "Choose the option that best conveys the meaning of the quoted portion in the following sentence:\nIn the match against the uplanders team, the sub mariners turned out to be the \"dark horse\""
-        },
-        {
-            "selectedSubjectId": "QRu4n3IlJ9Ss4pRgSNl5",
-            "questionid": "Agp7aFKIWSQfpGuOXQxa",
-            "week": "1",
-            "answer": 0,
-            "options": [
-                "Jebusites",
-                "The philistines",
-                "The Ammonites",
-                "The Edomites"
-            ],
-            "text": "David took Jerusalem from",
-            "type": "mock",
-            "timestamp": "2024-09-07T12:58:16.404Z",
-            "explanation": "David took Jerusalem from the Jebusites.\n\n   In 2 Samuel 5:6-7, it is recorded that David and his men went to Jerusalem against the Jebusites, the inhabitants of the land. The Jebusites, confident in the city's strong defenses, mocked David, saying, \"You shall not come in here; but the blind and the lame will repel you.\" Despite their confidence, David captured the stronghold of Zion, which became known as the City of David."
-        },
-        {
-            "selectedSubjectId": "1oJlwLsfeG2JoQsOT5tP",
-            "questionid": "BTv8K5QORWgkzqiju0Hz",
-            "week": "1",
-            "answer": 1,
-            "options": [
-                "A. a branch of the social studies",
-                "B. a study of the ways man wants from limited resources",
-                "C. a dismal science in the malthusian sense",
-                "D. governed by scientific laws"
-            ],
-            "text": "33. Economics is called a social science because it is",
-            "type": "mock",
-            "timestamp": "2024-09-15T15:48:53.449Z",
-            "explanation": "Economics deals with resource allocation and decision-making.\n"
-        },
-        {
-            "selectedSubjectId": "BRUici1R3kf9w4OhTkTT",
-            "questionid": "BV7s0f8PY5mU7iWvfzsr",
-            "week": "2",
-            "answer": 3,
-            "options": [
-                "A. insulation",
-                "B. precipitation",
-                "C. conduction",
-                "D. radiation"
-            ],
-            "text": "The heat from the sun reaches the earth by the process",
-            "explanation": "",
-            "type": "mock",
-            "timestamp": "2024-10-03T21:45:41.638Z"
-        },
-        {
-            "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
-            "questionid": "BayWVKNawVpWtBFwogmI",
-            "week": "1",
-            "answer": 3,
-            "options": [
-                "hipoppotemus",
-                "hippoppotemus",
-                "hipoppotamus",
-                "hippopotamus"
-            ],
-            "text": "A nursery rhyme is used to teach pupils how to spell the word ...... ?",
-            "explanation": "",
-            "type": "mock",
-            "timestamp": "2024-02-07T15:07:10.935Z",
-            "users": [
-                "lALqIGowQPfyEvt55QSSQHY8mwS2",
-                "BsB92FedbdYYgE7nUjp1sggWWFV2",
-                "Cfg4lYumf9eN48g4awccYqdq1zC2",
-                "UaSQMQzLCGbZW3T95B8IKjZQPXb2",
-                "4b3QRTJRL5eU3OwkPFq72owtaRv2"
-            ]
-        },
-        {
-            "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
-            "questionid": "Bk7eWhdHXz2XeSb9Sxzf",
-            "week": "2",
-            "answer": 1,
-            "options": [
-                "A. flattered",
-                "B. deceived",
-                "C. enamoured",
-                "D. overcome"
-            ],
-            "text": "Choose the option nearest in meaning to the quoted words:\nI didn't think she could be so easily \"taken in\" by his pretenses",
-            "explanation": "",
-            "type": "mock",
-            "timestamp": "2024-09-12T12:34:15.421Z"
-        },
-        {
-            "selectedSubjectId": "BRUici1R3kf9w4OhTkTT",
-            "questionid": "BoTRgvO83I5mxDG82pdB",
-            "week": "1",
-            "answer": 2,
-            "options": [
-                "ML2T-3",
-                "MLT-1",
-                "ML2T-2",
-                "ML-3"
-            ],
-            "text": "The dimension of Work and Energy are",
-            "explanation": "",
-            "type": "mock",
-            "timestamp": "2024-02-07T14:52:01.887Z",
-            "users": [
-                "lALqIGowQPfyEvt55QSSQHY8mwS2",
-                "BsB92FedbdYYgE7nUjp1sggWWFV2",
-                "Cfg4lYumf9eN48g4awccYqdq1zC2",
-                "UaSQMQzLCGbZW3T95B8IKjZQPXb2",
-                "4b3QRTJRL5eU3OwkPFq72owtaRv2"
-            ]
-        },
-        {
-            "selectedSubjectId": "1oJlwLsfeG2JoQsOT5tP",
-            "questionid": "BqweDfwdJpiwCVw17RwG",
-            "week": "1",
-            "answer": 2,
-            "options": [
-                "A. Interest rates",
-                "B. Opportunity costs",
-                "C.Economic rent",
-                "D. Indirect costs"
-            ],
-            "text": "37. Which of the following is a term used to describe a payment representing a surplus in excess of transfer costs?",
-            "type": "mock",
-            "timestamp": "2024-09-15T15:53:16.987Z",
-            "explanation": "Explanation: Economic rent refers to the extra income earned by a factor of production (such as land, labor, or capital) over and above what is necessary to keep it in its current use. It arises due to scarcity or unique advantages, such as fertile land or exclusive skills."
-        },
-        {
-            "selectedSubjectId": "QRu4n3IlJ9Ss4pRgSNl5",
-            "questionid": "C94uk0nONhSoYRq1PiZf",
-            "week": "1",
-            "answer": 1,
-            "options": [
-                "The land of Canaan",
-                "The land of Midian",
-                "The land of the Phillistines",
-                "The land of the Hittites"
-            ],
-            "text": "Moses, after killing the Egyptian fled to",
-            "type": "mock",
-            "timestamp": "2024-09-07T13:29:10.258Z",
-            "explanation": "In the bible story, Moses fled Egypt to escape Pharaoh's wrath after killing an Egyptian taskmaster who was beating a Hebrew slave. He sought refuge in Midian, a region located east of Egypt, near the Sinai Peninsula. This is detailed in Exodus 2:15:\n\n\"When Pharaoh heard of this, he tried to kill Moses. But Moses fled from Pharaoh and went to live in Midian, where he sat down by a well.\"\n\nIn Midian, Moses encountered the daughters of the priest of Midian, who introduced him to their father, Jethro (also known as Reuel). Moses eventually married one of Jethro's daughters, Zipporah, and settled there, tending to Jethro's flocks. This period in Midian lasted for about 40 years before God called Moses to return to Egypt and lead the Israelites out of slavery."
-        },
-        {
-            "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
-            "questionid": "CBEC6HH2DUDJAtoCRYs6",
-            "week": "1",
-            "answer": 3,
-            "options": [
-                "A. you",
-                "B. your's",
-                "C. yours'",
-                "D. yours"
-            ],
-            "explanation": "The complete sentence is: \"Invariably, he ends his letters yours amicably.\"",
-            "type": "mock",
-            "timestamp": "2024-09-10T10:33:00.860Z",
-            "text": "Complete each of the following sentences by choosing the option that most suitably fills the space;\nInvariably, he ends his letters .... amicably"
-        },
-        {
-            "selectedSubjectId": "1oJlwLsfeG2JoQsOT5tP",
-            "questionid": "CF7zmLCDY9YcvhOTUveC",
-            "week": "2",
-            "answer": 0,
-            "options": [
-                "A. there are restrictions in trades",
-                "B. there are no costs of transportation",
-                "C. there is perfect competition",
-                "D. there are no tariffs or import and export quotas"
-            ],
-            "text": "10. The principle of comparative advantage or comparative cost is not based on one of the following assumptions:",
-            "type": "mock",
-            "timestamp": "2024-09-17T09:07:15.326Z",
-            "explanation": "The theory assumes free trade without barriers.\n"
-        },
-        {
-            "selectedSubjectId": "BRUici1R3kf9w4OhTkTT",
-            "questionid": "CKPEkdfEIITXMDRtI7ik",
-            "week": "2",
-            "answer": 0,
-            "options": [
-                "A. mv2/r",
-                "B. mr2/v",
-                "C. mr/v",
-                "D. mvr/2"
-            ],
-            "text": "The force required to make an object of mass m, travelling with velocity v, turn in a circle of radius r is",
-            "explanation": "",
-            "type": "mock",
-            "timestamp": "2024-10-03T21:30:35.494Z"
-        },
-        {
-            "selectedSubjectId": "QRu4n3IlJ9Ss4pRgSNl5",
-            "questionid": "CZIHJJJjP7qaZdjwK3kL",
-            "week": "2",
-            "answer": 1,
-            "options": [
-                "the samaritans who did not accept him in their village",
-                "James and John",
-                "The Romans",
-                "The Pharisees"
-            ],
-            "text": "The term \"sons of thunder\" was applied by Jesus to",
-            "type": "mock",
-            "timestamp": "2024-09-08T16:40:05.553Z",
-            "explanation": "The term \"sons of thunder\" was given by Jesus to James and John, two of His disciples, who were brothers. This nickname appears in Mark 3:17, where Jesus calls them \"Boanerges,\" which translates to \"sons of thunder.\" This name likely reflects their passionate and sometimes zealous nature. There’s a specific instance in Luke 9:54 where James and John, seeing a Samaritan village reject Jesus, wanted to call down fire from heaven to destroy the village, displaying their intense fervor.\n\nTheir nickname could also hint at their bold personalities and their desire to defend Jesus' honor at all costs. Jesus later used their zeal in positive ways, as both James and John played important roles in the early church."
-        },
-        {
-            "selectedSubjectId": "BRUici1R3kf9w4OhTkTT",
-            "questionid": "CuGEAQgxyiTbyEYduTwF",
-            "week": "2",
-            "answer": 2,
-            "options": [
-                "A. the consumption of electricity can be recorded",
-                "B. people residing in the house will not have an electric shock if they touch a live wire",
-                "C. the total current drawn from the mains can be limited",
-                "D. the voltage supply can be stabilized"
-            ],
-            "text": "Every house supplied with electricity is provided with a box of fuses so that",
-            "explanation": "",
-            "type": "mock",
-            "timestamp": "2024-10-03T22:05:06.890Z"
-        },
-        {
-            "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
-            "questionid": "Cvje8KGAhaLHyaRJCjJK",
-            "week": "2",
-            "answer": 3,
-            "options": [
-                "A. walk lazily",
-                "B. run briskly",
-                "C. walk and stop intermittently",
-                "D. walk wearily"
-            ],
-            "text": "Choose the option nearest in meaning to the quoted words:\nAfter completing half of the journey, all the travellers could do was \"trudge along\"",
-            "explanation": "The phrase \"trudge along\" suggests a slow, laborious, and weary walking, typically due to exhaustion or fatigue. In this sentence, the travellers have completed half of the journey, and the word \"trudge\" indicates a tired and heavy way of walking. Option D, \"walk wearily,\" closely is closest in meaning to \"trudge along.\"",
-            "type": "mock",
-            "timestamp": "2024-09-12T12:41:58.254Z"
-        },
-        {
-            "selectedSubjectId": "BRUici1R3kf9w4OhTkTT",
-            "questionid": "D3T8w6OEQyDobjx13vxW",
-            "week": "1",
-            "answer": 0,
-            "options": [
-                "ML-1T-2",
-                "MLT-2",
-                "ML2T3",
-                "ML-3"
-            ],
-            "text": "Which of the following is the dimension of pressure?",
-            "explanation": "",
-            "type": "mock",
-            "timestamp": "2024-02-07T14:52:01.889Z",
-            "users": [
-                "lALqIGowQPfyEvt55QSSQHY8mwS2",
-                "BsB92FedbdYYgE7nUjp1sggWWFV2",
-                "Cfg4lYumf9eN48g4awccYqdq1zC2",
-                "UaSQMQzLCGbZW3T95B8IKjZQPXb2",
-                "4b3QRTJRL5eU3OwkPFq72owtaRv2"
-            ]
-        },
-        {
-            "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
-            "questionid": "DD9s65My9TQXmgccxWii",
-            "week": "2",
-            "answer": 1,
-            "options": [
-                "A. hour of driving",
-                "B. hour's drive",
-                "C. hour by driving",
-                "D. hour in driving"
-            ],
-            "text": "Choose the word/expression which best completes each sentence:\nIkorodu is not far from here, it is only an ....",
-            "explanation": "",
-            "type": "mock",
-            "timestamp": "2024-09-12T18:53:52.673Z"
-        },
-        {
-            "selectedSubjectId": "1oJlwLsfeG2JoQsOT5tP",
-            "questionid": "DHQmctUnGKKH6OgiPECP",
-            "week": "1",
-            "answer": 1,
-            "options": [
-                "A. scale of production is limited by size of market",
-                "B.expansion brings diminishing returns",
-                "C. large firms, can cater for wide markets",
-                "D. small firms can provide personal services"
-            ],
-            "text": "5. The following is NOT a reason for the existence of small firms:",
-            "type": "mock",
-            "timestamp": "2024-09-15T15:04:32.432Z",
-            "explanation": "Small firms often exist due to market limitations, not diminishing returns."
-        },
-        {
-            "selectedSubjectId": "QRu4n3IlJ9Ss4pRgSNl5",
-            "questionid": "DNN0azMo0WimnXdgtFjP",
-            "week": "1",
-            "answer": 3,
-            "options": [
-                "King Herold",
-                "Pharoah",
-                "Sennacherib",
-                "Jeroboam"
-            ],
-            "text": "Which of the following people was one of the outstanding kings of Israel after the falling of the Kingdom?",
-            "type": "mock",
-            "timestamp": "2024-09-07T12:35:30.608Z",
-            "explanation": "The house of Israel was divided into two kingdoms under Rehoboam. This division took place after the death of Solomon and during the reign of his son, Rehoboam, and it happened as the people revolted against the heavy taxes levied by Solomon and Rehoboam.\n   Jeroboam was the most outstanding king after the split and was made the king of Jerusalem while Rehoboam was made king of Judah\n\nRef: Genesis, 1 Kings 2:10, 1 Kings 14:1-30"
-        },
-        {
-            "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
-            "questionid": "DYy4H6xpnyYzFqzxvxER",
-            "week": "2",
-            "answer": 1,
-            "options": [
-                "A. comprehensive",
-                "B. irrelevant",
-                "C. pertinent",
-                "D. came rather late"
-            ],
-            "text": "Choose the option nearest in meaning to the quoted words:\n\nMost of his observations were \"wide of the mark\"",
-            "explanation": "In this context, wide of the mark means to be irrelevant, incorrect or inaccurate.",
-            "type": "mock",
-            "timestamp": "2024-09-12T12:44:08.449Z"
-        },
-        {
-            "selectedSubjectId": "QRu4n3IlJ9Ss4pRgSNl5",
-            "questionid": "DfLQ9bi4jQHw1MpIQ71f",
-            "week": "1",
-            "answer": 2,
-            "options": [
-                "Paul and James",
-                "Paul and Peter",
-                "Paul and Barnabas",
-                "Paul and Silas"
-            ],
-            "text": "Who were mistaken for gods in the Acts of the Apostles?",
-            "type": "mock",
-            "timestamp": "2024-09-07T13:42:17.393Z",
-            "explanation": "In the Acts of the Apostles, Paul and Barnabas were mistaken for gods. This incident is recorded in Acts 14:8-18, where, after healing a crippled man in Lystra, the local people believed them to be the gods Zeus and Hermes. They attempted to offer sacrifices to them, but Paul and Barnabas vehemently rejected this, emphasizing that they were mere humans proclaiming the gospel."
-        },
-        {
-            "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
-            "questionid": "Dw6iIHv0TS75NJPqYlIK",
-            "week": "2",
-            "answer": 3,
-            "options": [
-                "A. that no man could find a foot-hold on",
-                "B. that any man could find a foot-hold on it",
-                "C. for no man to find a foot-hold on",
-                "D. that no man could find a foot-hold on it"
-            ],
-            "explanation": "The complete sentence is: \"The hill behind the town was so steep that no man could find a foot-hold on it.\"",
-            "type": "mock",
-            "timestamp": "2024-09-10T11:37:18.117Z",
-            "text": "Choose the expression or word which best complete each sentence:\nThe hill behind the town was so steep ...."
-        },
-        {
-            "selectedSubjectId": "BRUici1R3kf9w4OhTkTT",
-            "questionid": "DwEXFFAxLRqziXzn49Kx",
-            "week": "1",
-            "answer": 0,
-            "options": [
-                "5s",
-                "10s",
-                "12s",
-                "15s"
-            ],
-            "text": "In free fall a body of mass 1kg drops from a height of 125m from rest in 5s. How long will it take another body of mass 2kg to fall from rest from the same height? (g=10ms-2)",
-            "explanation": "",
-            "type": "mock",
-            "timestamp": "2024-02-07T14:52:01.906Z",
-            "users": [
-                "lALqIGowQPfyEvt55QSSQHY8mwS2",
-                "BsB92FedbdYYgE7nUjp1sggWWFV2",
-                "Cfg4lYumf9eN48g4awccYqdq1zC2",
-                "UaSQMQzLCGbZW3T95B8IKjZQPXb2",
-                "4b3QRTJRL5eU3OwkPFq72owtaRv2"
-            ]
-        },
-        {
-            "selectedSubjectId": "QRu4n3IlJ9Ss4pRgSNl5",
-            "questionid": "E5aIAwluHZMEn5WQJdII",
-            "week": "1",
-            "answer": 0,
-            "options": [
-                "Ezekiel",
-                "Isaiah",
-                "Amos",
-                "Jonah"
-            ],
-            "text": "The prophecy \"The soul that sins shall die\", was given by the Prophet",
-            "type": "mock",
-            "timestamp": "2024-09-07T13:58:33.707Z",
-            "explanation": "The prophecy stating, \"The soul that sins shall die,\" was delivered by the prophet Ezekiel. This declaration is found in Ezekiel 18:20, which emphasizes individual responsibility for one's actions:\n\n\"The soul who sins shall die. The son shall not bear the iniquity of the father, nor shall the father bear the iniquity of the son; the righteousness of the righteous shall be upon himself, and the wickedness of the wicked shall be upon himself.\"\n\nIn this context, Ezekiel addresses a common proverb of his time that suggested children suffered for their parents' sins. He refutes this notion, asserting that each person is accountable for their own behavior. This teaching underscores the principle of personal responsibility and divine justice, indicating that individuals will face consequences for their own sins, not for the sins of others."
-        },
-        {
-            "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
-            "questionid": "EAId37wjHeemB6yxneLZ",
-            "week": "1",
-            "answer": 2,
-            "options": [
-                "acommondation",
-                "accomodation",
-                "accommodation",
-                "acommoddation"
-            ],
-            "text": "Very few students have satisfactory .... these days because the student population has increased tremedously",
-            "explanation": "",
-            "type": "mock",
-            "timestamp": "2024-02-07T15:07:10.939Z",
-            "users": [
-                "lALqIGowQPfyEvt55QSSQHY8mwS2",
-                "BsB92FedbdYYgE7nUjp1sggWWFV2",
-                "Cfg4lYumf9eN48g4awccYqdq1zC2",
-                "UaSQMQzLCGbZW3T95B8IKjZQPXb2",
-                "4b3QRTJRL5eU3OwkPFq72owtaRv2"
-            ]
-        },
-        {
-            "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
-            "questionid": "EMSD3QbySHlst4lVSBe3",
-            "week": "2",
-            "answer": 1,
-            "options": [
-                "A. carry them with him",
-                "B. carry them out",
-                "C. carry them on",
-                "D. carry them all"
-            ],
-            "text": "Choose the word/expression which best completes each sentence:\nThe new leader has good intentions, but he is unable to ....",
-            "explanation": "So the sentence would be: \"The new leader has good intentions, but he is unable to carry them out.\"",
-            "type": "mock",
-            "timestamp": "2024-09-12T18:50:46.749Z"
-        },
-        {
-            "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
-            "questionid": "EaAiAcxmq4ud5w2wSnSI",
-            "week": "2",
-            "answer": 1,
-            "options": [
-                "A. because",
-                "B. so that",
-                "C. yet",
-                "D. since"
-            ],
-            "text": "Choose the word/expression which best completes each sentence:\nHe sent the children out to play .... he might be alone",
-            "type": "mock",
-            "timestamp": "2024-09-12T19:03:21.658Z",
-            "explanation": "The correct answer is: \"He sent the children out to play so that he might be alone\"\n\n\"sent the children out to play\" indicates that he instructed the children to go outside and engage in play.\nPurpose: \"so that he might be alone\" explains the reason for sending the children out, which is to have some time alone.\n\n\nIn summary, the sentence conveys that he wanted to be by himself, so he sent the children outside to play."
-        },
-        {
-            "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
-            "questionid": "EbHd1cc9jySj6ZuoVBXU",
-            "week": "2",
-            "answer": 3,
-            "options": [
-                "A. discussing about it",
-                "B. discussing on it",
-                "C. discussing upon it",
-                "D. discussing it"
-            ],
-            "text": "Choose the expression or word which best complete each sentences:\nThe member of the panel were ....",
-            "explanation": "The full sentence is: \"The members of the panel were discussing it.\"",
-            "type": "mock",
-            "timestamp": "2024-09-11T11:53:24.351Z"
-        },
-        {
-            "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
-            "questionid": "EoIiyENyX5LteplrRPMm",
-            "week": "1",
-            "answer": 0,
-            "options": [
-                "querulous",
-                "querrulous",
-                "querrullous",
-                "quarrelous"
-            ],
-            "text": "They were all behaving like a bunch of ..... children?",
-            "explanation": "",
-            "type": "mock",
-            "timestamp": "2024-02-07T15:07:10.932Z",
-            "users": [
-                "lALqIGowQPfyEvt55QSSQHY8mwS2",
-                "BsB92FedbdYYgE7nUjp1sggWWFV2",
-                "Cfg4lYumf9eN48g4awccYqdq1zC2",
-                "UaSQMQzLCGbZW3T95B8IKjZQPXb2",
-                "4b3QRTJRL5eU3OwkPFq72owtaRv2"
-            ]
-        },
-        {
-            "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
-            "questionid": "EoMVrKUTL2e7I0vH6MBJ",
-            "week": "1",
-            "answer": 3,
-            "options": [
-                "past-time / over",
-                "pass-time / over",
-                "passtime / through",
-                "pastime /through"
-            ],
-            "text": "I shall find time for my ..... when I get ....... with this difficult assignment?",
-            "explanation": "",
-            "type": "mock",
-            "timestamp": "2024-02-07T15:07:10.935Z",
-            "users": [
-                "lALqIGowQPfyEvt55QSSQHY8mwS2",
-                "BsB92FedbdYYgE7nUjp1sggWWFV2",
-                "Cfg4lYumf9eN48g4awccYqdq1zC2",
-                "UaSQMQzLCGbZW3T95B8IKjZQPXb2",
-                "4b3QRTJRL5eU3OwkPFq72owtaRv2"
-            ]
-        },
-        {
-            "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
-            "questionid": "EojADQE78BRMl7zlv9LC",
-            "week": "1",
-            "answer": 1,
-            "options": [
-                "A. washed out",
-                "B. wiped out",
-                "C. rooted out",
-                "D. flushed out"
-            ],
-            "explanation": "The complete sentence is: \"The frightening explosion in the factory wiped out the whole wing.\"",
-            "type": "mock",
-            "timestamp": "2024-09-10T10:36:53.774Z",
-            "text": "Complete each of the following sentences by choosing the option that most suitably fills the space;\nthe frightening explosion in the factory .... whole wing"
-        }
-    ];
-    // Fetch questions from API
-    function loadQuestionsFromAPI() {
+<?php
+include 'includes/footerjs.php';
+?>
+    <script>
+        const API_URL = 'https://your-api-endpoint.com/spacedActualQuestions'; // Replace with your actual API URL
+        let currentIndex = 0;
+        let timer;
+        let timeRemaining = 60;
+        let isAnswered = false;
+        let questions = [];
 
-        questions = dataQ;
-        loadQuestions();
-        startTimer();
-        return;
-        $.ajax({
-            url: `../api_ajax/get_spaced_Questions.php`, // Your API URL
-            method: 'GET',
-            success: function (response) {
-                if (response.success && response.data) {
-                    questions = response.data;
-                    loadQuestions();
-                    startTimer();
-                } else {
-                    alert("Error loading questions: " + response.message);
-                }
+
+        let dataQ =  [
+            {
+                "selectedSubjectId": "1oJlwLsfeG2JoQsOT5tP",
+                "questionid": "0qnui9pAr3HK4qWv3aZr",
+                "week": "2",
+                "answer": 3,
+                "options": [
+                    "A. elastic supply",
+                    "B. joint demand",
+                    "C. excess supply",
+                    "D. none of the above"
+                ],
+                "text": "7. When the price of a commodity is below the equilibrium price the quantity demanded will exceed the quantity supplied. Such a situation is referred to as",
+                "type": "mock",
+                "timestamp": "2024-09-17T09:03:58.738Z",
+                "explanation": "This is a shortage, meaning demand exceeds supply at a given price."
             },
-            error: function (err) {
-                console.error('API request failed:', err);
-                alert("Failed to load questions.");
+            {
+                "selectedSubjectId": "1oJlwLsfeG2JoQsOT5tP",
+                "questionid": "11pGVAh83ZT73QBXbzCt",
+                "week": "2",
+                "answer": 0,
+                "options": [
+                    "A. gross national income minus depreciation",
+                    "B. gross domestic product plus net income from abroad",
+                    "C. nominal national income deflated by the price level",
+                    "D. gross national income divided by the total population"
+                ],
+                "text": "25. Net national income is",
+                "type": "mock",
+                "timestamp": "2024-09-17T09:26:46.198Z",
+                "explanation": "Net national income accounts for the depreciation of capital assets."
+            },
+            {
+                "selectedSubjectId": "BRUici1R3kf9w4OhTkTT",
+                "questionid": "1Ab3qA2ww5uBgJeD2uOJ",
+                "week": "2",
+                "answer": 2,
+                "options": [
+                    "A. 0.85 PN-m-2",
+                    "B. 0.86 PN-m-2",
+                    "C. 1.16 PN-m-2",
+                    "D. 1.18 PN-m-2"
+                ],
+                "text": "A gas at pressure PNm−2\n and temperature 27°C is heated to 77°C at constant volume. The new pressure is",
+                "explanation": "At constant volume,\n\nP1T1\n = P2T2\n\n\nP27+273\n = P277+273\n300P2=350P\n\n\nP2 = 1.16 PNm−2",
+                "type": "mock",
+                "timestamp": "2024-10-03T21:42:27.576Z"
+            },
+            {
+                "selectedSubjectId": "QRu4n3IlJ9Ss4pRgSNl5",
+                "questionid": "1B4bDG31ynEjKtAVdh9V",
+                "week": "1",
+                "answer": 1,
+                "options": [
+                    "Daniel",
+                    "Esau",
+                    "Jacob",
+                    "Nathaniel"
+                ],
+                "text": "Who sold his birthright for a plate of pottage?",
+                "explanation": "Esau sold his birthright for a plate of pottage. This incident is recorded in Genesis 25:29-34, where Esau, coming in from the field hungry, exchanges his birthright, which entitled him to the privileges of the firstborn, for a plate of pottage that Jacob, his brother, had prepared.",
+                "type": "mock",
+                "timestamp": "2024-09-07T12:41:58.339Z"
+            },
+            {
+                "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
+                "questionid": "1GqzzQHdHK0q18LLTx1C",
+                "week": "1",
+                "answer": 0,
+                "options": [
+                    "accent",
+                    "assent",
+                    "access",
+                    "ascent"
+                ],
+                "text": "The governor rejected the bill and withheld his ____________?",
+                "explanation": "",
+                "type": "mock",
+                "timestamp": "2024-02-07T15:07:10.935Z",
+                "users": [
+                    "lALqIGowQPfyEvt55QSSQHY8mwS2",
+                    "BsB92FedbdYYgE7nUjp1sggWWFV2",
+                    "Cfg4lYumf9eN48g4awccYqdq1zC2",
+                    "UaSQMQzLCGbZW3T95B8IKjZQPXb2",
+                    "4b3QRTJRL5eU3OwkPFq72owtaRv2"
+                ]
+            },
+            {
+                "selectedSubjectId": "1oJlwLsfeG2JoQsOT5tP",
+                "questionid": "1L5xFXDER8hF3uX9zwNB",
+                "week": "1",
+                "answer": 3,
+                "options": [
+                    "A. manufactured goods",
+                    "B. processed and semi-processed commodities",
+                    "C. invisible items",
+                    "D. primary products"
+                ],
+                "text": "38. Less developed countries obtain foreign exchange reserves mainly from the export of",
+                "type": "mock",
+                "timestamp": "2024-09-15T15:55:01.190Z",
+                "explanation": "Explanation: Many less developed countries (LDCs) rely heavily on exporting raw materials, such as agricultural products, minerals, and crude oil, as their primary source of foreign exchange. These products are often exported to more industrialized nations that process them into finished goods."
+            },
+            {
+                "selectedSubjectId": "QRu4n3IlJ9Ss4pRgSNl5",
+                "questionid": "1TCSfl4rn827TOlwuMtT",
+                "week": "2",
+                "answer": 1,
+                "options": [
+                    "Simeon",
+                    "Reuben",
+                    "Benjamin",
+                    "Ishmael"
+                ],
+                "text": "The one who saved Joseph's life when his brothers wanted to kill him was",
+                "type": "mock",
+                "timestamp": "2024-09-08T16:13:58.537Z",
+                "explanation": "The one who saved Joseph's life when his brothers wanted to kill him was Reuben (Genesis 37:21-22).\n\nReuben, the oldest of Jacob's sons, persuaded his brothers not to kill Joseph but instead to throw him into a pit, intending to later rescue him. However, while Reuben was away, the brothers sold Joseph to a caravan of Ishmaelites, who took him to Egypt."
+            },
+            {
+                "selectedSubjectId": "1oJlwLsfeG2JoQsOT5tP",
+                "questionid": "1huGPnGDZIyZKWbOn639",
+                "week": "2",
+                "answer": 3,
+                "options": [
+                    "A. composite demand",
+                    "B. elastic demand",
+                    "C. derived demand",
+                    "D. competitive demand"
+                ],
+                "text": "4. If two commodities are good substitutes for one another, e.g. butter and margarine, an increase in the demand for one will reduce the demand for the other.\n This type of demand is called",
+                "type": "mock",
+                "timestamp": "2024-09-17T09:00:49.675Z",
+                "explanation": "Competitive demand occurs when two products can replace each other, like butter and margarine."
+            },
+            {
+                "selectedSubjectId": "1oJlwLsfeG2JoQsOT5tP",
+                "questionid": "1yRW0lDjOJEmgoiAh43o",
+                "week": "2",
+                "answer": 1,
+                "options": [
+                    "A. the interest rate fixed by the Central Bank",
+                    "B. the price, of one national currency In terms of another",
+                    "C. the rate at which the Central Bank issues money",
+                    "D. the rate of interest on government bonds"
+                ],
+                "text": "37. The foreign exchange rate of a country is",
+                "type": "mock",
+                "timestamp": "2024-09-17T09:41:22.916Z",
+                "explanation": "The foreign exchange rate is the value of one currency against another.\n"
+            },
+            {
+                "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
+                "questionid": "2ILrHzi4AhSZDr9pFSw7",
+                "week": "1",
+                "answer": 1,
+                "options": [
+                    "A. fly out",
+                    "B. take off",
+                    "C. start out",
+                    "D. shoot off"
+                ],
+                "type": "mock",
+                "timestamp": "2024-09-10T10:38:06.013Z",
+                "text": "Complete each of the following sentences by choosing the option that most suitably fills the space;\nOur plane was scheduled to .... at 10.00 hrs but it was delayed because of the bad weather",
+                "explanation": "The complete question is: \"Our plane was scheduled to take off at 10.00 hrs but it was delayed because of the bad weather.\"\n'Take off' is an instance of becoming airborne. Planes take off into the air"
+            },
+            {
+                "selectedSubjectId": "1oJlwLsfeG2JoQsOT5tP",
+                "questionid": "2MHL2KvQli7IY1Xw7N0h",
+                "week": "2",
+                "answer": 3,
+                "options": [
+                    "A. Transport",
+                    "B. Storage",
+                    "C. Advertising",
+                    "D. Branding"
+                ],
+                "text": "24. Which of the following is not usually the function of \nwholesaler?",
+                "type": "mock",
+                "timestamp": "2024-09-17T09:25:38.069Z",
+                "explanation": "Branding is typically done by manufacturers or retailers, not wholesalers."
+            },
+            {
+                "selectedSubjectId": "QRu4n3IlJ9Ss4pRgSNl5",
+                "questionid": "2USMVn9LE6uSRnKqZoEZ",
+                "week": "2",
+                "answer": 2,
+                "options": [
+                    "He was angry",
+                    "He was hungry",
+                    "He found nothing on it but leaves",
+                    "The tree was by the wayside"
+                ],
+                "text": "Why did Jesus cursed a fig tree",
+                "type": "mock",
+                "timestamp": "2024-09-08T17:07:45.492Z",
+                "explanation": "The correct answer is: He found nothing on it but leaves.\n\n   In Mark 11:12-14 and Matthew 21:18-22, Jesus cursed the fig tree because when He approached it looking for fruit, He found nothing but leaves, even though it was not the season for figs. Jesus used this as a lesson, symbolizing how Israel, despite having the appearance of spiritual fruitfulness, was not producing the kind of faith and righteousness that God desired. The cursing of the fig tree was a symbolic act, showing the judgment on those who outwardly appear faithful but lack true fruitfulness in their lives."
+            },
+            {
+                "selectedSubjectId": "QRu4n3IlJ9Ss4pRgSNl5",
+                "questionid": "2jQV4el7tAjKPVToy2Yu",
+                "week": "1",
+                "answer": 2,
+                "options": [
+                    "Isreal's sin",
+                    "The true worship of God",
+                    "Invasion from the North",
+                    "Repentance"
+                ],
+                "text": "Jeremiah's vision of boiling pot represented",
+                "type": "mock",
+                "timestamp": "2024-09-07T13:02:17.613Z",
+                "explanation": "In Jeremiah's vision of the boiling pot, the correct interpretation is that it represented invasion from the north.\n\n   In Jeremiah 1:13-15, the prophet sees a boiling pot tilting away from the north.  God explains that this symbolizes an impending disaster from the north, specifically the Babylonian invasion. The boiling pot signifies the wrath and judgment that will be poured out upon Judah due to their disobedience."
+            },
+            {
+                "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
+                "questionid": "2ncCpwebuTh4Exao23Hb",
+                "week": "1",
+                "answer": 2,
+                "options": [
+                    "A. shall return",
+                    "B. am returning",
+                    "C. would return",
+                    "D. had return"
+                ],
+                "explanation": "The complete sentence is: \"If I went to the cinema, I would return early.\"",
+                "type": "mock",
+                "timestamp": "2024-09-10T10:34:27.734Z",
+                "text": "Complete each of the following sentences by choosing the option that most suitably fills the space;\nIf I went to the cinema I .... early"
+            },
+            {
+                "selectedSubjectId": "BRUici1R3kf9w4OhTkTT",
+                "questionid": "2rRYMNnI4xI3xdDnJXEr",
+                "week": "2",
+                "answer": 2,
+                "options": [
+                    "A. 0.5 msec-1",
+                    "B. 1.5 msec-1",
+                    "C. 1 msec-1",
+                    "D. 2 msec-1"
+                ],
+                "text": "A machine gun with a mass of 5kg fires a 50g bullet at speed of 100ms-1. The recoil speed of the machine gun is",
+                "explanation": "Gun momentum = bullet momentum\n\n5 x v = 0.05 x 100\n\nv = 1 msec-1",
+                "type": "mock",
+                "timestamp": "2024-10-03T21:18:25.877Z"
+            },
+            {
+                "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
+                "questionid": "2xdjt1dMO8cOI82gp7e3",
+                "week": "1",
+                "answer": 3,
+                "type": "mock",
+                "timestamp": "2024-10-02T03:01:30.585Z",
+                "options": [
+                    "A. jags",
+                    "B. jabs",
+                    "C. jams",
+                    "D. jars"
+                ],
+                "text": "Complete each of the following sentences by choosing the option that most suitably fills the space;\nHis horrible high-pitched laugh .... my nerves",
+                "explanation": "The complete sentence is: \"His horrible high-pitched laugh jars my nerves.\"\nThe sentence expresses that the speaker finds the person's laugh very annoying."
+            },
+            {
+                "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
+                "questionid": "3O4Z9d89NSdbJyGTnpCZ",
+                "week": "1",
+                "answer": 2,
+                "options": [
+                    "rite",
+                    "rights",
+                    "rites",
+                    "right"
+                ],
+                "text": "He did not attend the final burial...........",
+                "explanation": "",
+                "type": "mock",
+                "timestamp": "2024-02-07T15:07:10.932Z",
+                "users": [
+                    "lALqIGowQPfyEvt55QSSQHY8mwS2",
+                    "BsB92FedbdYYgE7nUjp1sggWWFV2",
+                    "Cfg4lYumf9eN48g4awccYqdq1zC2",
+                    "UaSQMQzLCGbZW3T95B8IKjZQPXb2",
+                    "4b3QRTJRL5eU3OwkPFq72owtaRv2"
+                ]
+            },
+            {
+                "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
+                "questionid": "3VNskSHOIbKF4jMKiqR7",
+                "week": "1",
+                "answer": 3,
+                "options": [
+                    "A. didn't he",
+                    "B. had he not",
+                    "C. is not it",
+                    "D. did he"
+                ],
+                "explanation": "The complete sentence is: \"The managing director did not pay his staff last month, did he?\"",
+                "type": "mock",
+                "timestamp": "2024-09-10T10:47:03.060Z",
+                "text": "Complete each of the following sentences by choosing the option that most suitably fills the space;\nThe managing director did not pay his staff last month ....?"
+            },
+            {
+                "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
+                "questionid": "3eikoGGxc5WgqFbfwymJ",
+                "week": "2",
+                "answer": 0,
+                "options": [
+                    "A. speak in support",
+                    "B. explained the part played",
+                    "C. act like a representative of",
+                    "D. emphasize the progress made by"
+                ],
+                "text": "Choose the option nearest in meaning to the quoted words:\nGood citizens should \"take the part\" of a good government when it is being attacked by the foreign press",
+                "explanation": "The option nearest in meaning to \"take the part of a good government\" is:\n\nA. speak in support.",
+                "type": "mock",
+                "timestamp": "2024-09-12T12:47:29.567Z"
+            },
+            {
+                "selectedSubjectId": "BRUici1R3kf9w4OhTkTT",
+                "questionid": "3hEFKSBxrYQI0lChwD94",
+                "week": "1",
+                "answer": 1,
+                "options": [
+                    "20m",
+                    "80m",
+                    "160m",
+                    "320m"
+                ],
+                "text": "An object is projected with velocity of 80m/s at an angle of 30 degrees to the horizontal. The maximum height which it attains is",
+                "explanation": "",
+                "type": "mock",
+                "timestamp": "2024-02-07T14:52:01.894Z",
+                "users": [
+                    "lALqIGowQPfyEvt55QSSQHY8mwS2",
+                    "BsB92FedbdYYgE7nUjp1sggWWFV2",
+                    "Cfg4lYumf9eN48g4awccYqdq1zC2",
+                    "UaSQMQzLCGbZW3T95B8IKjZQPXb2",
+                    "4b3QRTJRL5eU3OwkPFq72owtaRv2"
+                ]
+            },
+            {
+                "selectedSubjectId": "1oJlwLsfeG2JoQsOT5tP",
+                "questionid": "3j7O9UyUaUcztGrF8vht",
+                "week": "2",
+                "answer": 3,
+                "options": [
+                    "A. a fall in income",
+                    "B. a rise in the price of a complement",
+                    "C. a fall in the price of a substitute",
+                    "D. none of the above"
+                ],
+                "text": "6.When the demand curve shifts to the right, it indicates that a larger quantity is demanded at each price. This is caused by one of the following:",
+                "type": "mock",
+                "timestamp": "2024-09-17T09:02:41.332Z",
+                "explanation": "It is usually caused by increased income, a rise in the price of a substitute, or a fall in the price of a complement."
+            },
+            {
+                "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
+                "questionid": "3reL9taI4uvYQoeavVpp",
+                "week": "1",
+                "answer": 0,
+                "options": [
+                    "A. investigate",
+                    "B. search",
+                    "C. look for",
+                    "D. account for"
+                ],
+                "explanation": "\"Go into\" in this context means to examine or investigate the community's complaints carefully and without bias.",
+                "type": "mock",
+                "timestamp": "2024-09-09T19:50:18.395Z",
+                "text": "Choose the option that best conveys the meaning of the underlined portion in the following sentence;\nThe state government appointed a commission of inquiry to \"go into\" the community's complaints carefully and without prejudice"
+            },
+            {
+                "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
+                "questionid": "40Ut7z6RVWCcdtCc6KmI",
+                "week": "1",
+                "answer": 2,
+                "options": [
+                    "A. he attacked the policemen boldly",
+                    "B. he walked up to the policemen",
+                    "C. he faced the situation with apparent boldness",
+                    "D. he bravely attempted to give them a present"
+                ],
+                "explanation": "This means the man tried to appear confident or unafraid when caught by the police, even if he may not have actually felt that way.",
+                "type": "mock",
+                "timestamp": "2024-09-09T20:09:45.955Z",
+                "text": "Choose the option that best conveys the meaning of the quoted portion in the following sentence;\nWhen the man was caught by the police, he \"presented a bold front\""
+            },
+            {
+                "selectedSubjectId": "1oJlwLsfeG2JoQsOT5tP",
+                "questionid": "4BkrEYgc6mPiuPgzLAa4",
+                "week": "1",
+                "options": [
+                    "A. makes loans available to private people and businessmen",
+                    "B. accepts deposits",
+                    "C. can store people's valuables",
+                    "D. can transfer money from one place to another for its customers"
+                ],
+                "text": "8. A commercial Bank is unique in that it is the only institution that",
+                "type": "mock",
+                "timestamp": "2024-09-15T15:07:36.400Z",
+                "answer": 1,
+                "explanation": "Commercial banks accept deposits and provide financial services."
+            },
+            {
+                "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
+                "questionid": "4C4iDrK6LAXWxtd6h6u7",
+                "week": "2",
+                "answer": 2,
+                "options": [
+                    "A. will go",
+                    "B. will be going",
+                    "C. would have gone",
+                    "D. may be going"
+                ],
+                "text": "Choose the word/expression which best completes each sentence:\nHad he known he .... away",
+                "explanation": "",
+                "type": "mock",
+                "timestamp": "2024-09-12T19:00:35.284Z"
+            },
+            {
+                "selectedSubjectId": "1oJlwLsfeG2JoQsOT5tP",
+                "questionid": "4GQuw6TpjurvHjkJWGoh",
+                "week": "2",
+                "answer": 2,
+                "options": [
+                    "A. bankers to the government",
+                    "B. bankers to commercial banks",
+                    "C. merchant banks",
+                    "D. controllers and regulators of the money supply"
+                ],
+                "text": "9. Which of these alternatives is wrong? Central banks are",
+                "type": "mock",
+                "timestamp": "2024-09-17T09:06:19.821Z",
+                "explanation": "Central banks are not merchant banks; they regulate money supply and serve as a lender of last resort."
+            },
+            {
+                "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
+                "questionid": "4VjIyx5jg1xnEyB2xY0R",
+                "week": "1",
+                "answer": 0,
+                "options": [
+                    "UP",
+                    "IN",
+                    "OUT",
+                    "OFF"
+                ],
+                "text": "Maimuna wrote to ask if I could put her …. for the night",
+                "explanation": "",
+                "type": "mock",
+                "timestamp": "2024-02-07T15:07:10.936Z",
+                "users": [
+                    "lALqIGowQPfyEvt55QSSQHY8mwS2",
+                    "BsB92FedbdYYgE7nUjp1sggWWFV2",
+                    "Cfg4lYumf9eN48g4awccYqdq1zC2",
+                    "UaSQMQzLCGbZW3T95B8IKjZQPXb2",
+                    "4b3QRTJRL5eU3OwkPFq72owtaRv2"
+                ]
+            },
+            {
+                "selectedSubjectId": "BRUici1R3kf9w4OhTkTT",
+                "questionid": "4YU3UVF9DW83RRAVPhEt",
+                "week": "2",
+                "answer": 0,
+                "options": [
+                    "A. a low resistance shunt is connected in parallel",
+                    "B. a low resistance shunt is connected in series",
+                    "C. a medium resistance shunt is connected in series",
+                    "D. a high resistance shunt is connected in parallel"
+                ],
+                "text": "In order to convert a galvanometer into an ammeter",
+                "explanation": "",
+                "type": "mock",
+                "timestamp": "2024-10-03T21:57:53.684Z"
+            },
+            {
+                "selectedSubjectId": "1oJlwLsfeG2JoQsOT5tP",
+                "questionid": "4pjbz99vpCzwyKWbdLiO",
+                "week": "2",
+                "answer": 1,
+                "options": [
+                    "A. total amount of an income tax",
+                    "B. a certain percentage tax on the value of a commodity",
+                    "C. a certain percentage tax on the volume of a commodity",
+                    "D. a tax on capital gains"
+                ],
+                "text": "36. An ad valorem tax means",
+                "type": "mock",
+                "timestamp": "2024-09-17T09:40:31.376Z",
+                "explanation": "Ad valorem tax is levied based on the value of the item."
+            },
+            {
+                "selectedSubjectId": "1oJlwLsfeG2JoQsOT5tP",
+                "questionid": "4xgdwvLYg0GX6r07brgx",
+                "week": "1",
+                "answer": 1,
+                "options": [
+                    "A. an increase in price and quantity offered",
+                    "B. an increase in quantity but price will remain the same",
+                    "C. a reduction in price and quantity-offered",
+                    "D. an increase in price but a reduction in quantity offered for sale"
+                ],
+                "text": "31. If the demand for a product with a perfectly elastic supply\nincreases, there will be",
+                "type": "mock",
+                "timestamp": "2024-09-15T15:45:02.037Z",
+                "explanation": "With perfectly elastic supply, firms can supply any amount at the same price."
+            },
+            {
+                "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
+                "questionid": "502mz7UGNwhGfhq6GGnL",
+                "week": "1",
+                "answer": 0,
+                "options": [
+                    "sheer",
+                    "cheer",
+                    "share",
+                    "shear"
+                ],
+                "text": "the man rose to an important position as a result of __ hardwork",
+                "explanation": "",
+                "type": "mock",
+                "timestamp": "2024-02-07T15:07:10.930Z",
+                "users": [
+                    "lALqIGowQPfyEvt55QSSQHY8mwS2",
+                    "BsB92FedbdYYgE7nUjp1sggWWFV2",
+                    "Cfg4lYumf9eN48g4awccYqdq1zC2",
+                    "UaSQMQzLCGbZW3T95B8IKjZQPXb2",
+                    "4b3QRTJRL5eU3OwkPFq72owtaRv2"
+                ]
+            },
+            {
+                "selectedSubjectId": "1oJlwLsfeG2JoQsOT5tP",
+                "questionid": "565fBLN16pQqYCXEn0v8",
+                "week": "1",
+                "answer": 1,
+                "options": [
+                    "A. P2",
+                    "B. P0",
+                    "C. P1",
+                    "D. indeterminate"
+                ],
+                "text": "3. In the diagram equilibrium price is:",
+                "type": "mock",
+                "timestamp": "2024-09-15T14:59:44.390Z",
+                "image": "https://drive.google.com/file/d/10ZcwQLdhVRUZ4enAI-MTv985RasUFJLN/view?usp=drivesdk",
+                "explanation": "Equilibrium price is where demand and supply intersect.\n"
+            },
+            {
+                "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
+                "questionid": "588KMfOrl2PbDE8HDMEA",
+                "week": "1",
+                "answer": 0,
+                "options": [
+                    "coarse",
+                    "causal",
+                    "coerce",
+                    "course"
+                ],
+                "text": "The sergeant spoke to me in a...... manner?",
+                "explanation": "",
+                "type": "mock",
+                "timestamp": "2024-02-07T15:07:10.940Z",
+                "users": [
+                    "lALqIGowQPfyEvt55QSSQHY8mwS2",
+                    "BsB92FedbdYYgE7nUjp1sggWWFV2",
+                    "Cfg4lYumf9eN48g4awccYqdq1zC2",
+                    "UaSQMQzLCGbZW3T95B8IKjZQPXb2",
+                    "4b3QRTJRL5eU3OwkPFq72owtaRv2"
+                ]
+            },
+            {
+                "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
+                "questionid": "5AJ6wfP55vEOG0dZ6AEF",
+                "week": "1",
+                "answer": 3,
+                "options": [
+                    "my headmaster is strong",
+                    "my headmaster is cheerful",
+                    "my headmaster is friendly",
+                    "my headmaster is enthusiastic about his job"
+                ],
+                "text": "My Headmaster is getting old. His mates have been retired. But because of his zeal for work, he has been retained.",
+                "explanation": "",
+                "type": "mock",
+                "timestamp": "2024-02-07T15:07:10.936Z",
+                "users": [
+                    "lALqIGowQPfyEvt55QSSQHY8mwS2",
+                    "BsB92FedbdYYgE7nUjp1sggWWFV2",
+                    "Cfg4lYumf9eN48g4awccYqdq1zC2",
+                    "UaSQMQzLCGbZW3T95B8IKjZQPXb2",
+                    "4b3QRTJRL5eU3OwkPFq72owtaRv2"
+                ]
+            },
+            {
+                "selectedSubjectId": "QRu4n3IlJ9Ss4pRgSNl5",
+                "questionid": "5Pl2mRuvOA6qQyhE89Td",
+                "week": "2",
+                "answer": 0,
+                "options": [
+                    "He would make nations of him",
+                    "He would live long",
+                    "He would give him flocks",
+                    "He would give him crops"
+                ],
+                "text": "The promise of God made with Abraham was that",
+                "type": "mock",
+                "timestamp": "2024-09-08T16:03:48.699Z",
+                "explanation": "The correct answer is: \"He would make nations of him.\"\n\n  God’s promise to Abraham, known as the Abrahamic Covenant, is found in Genesis 12:1-3, Genesis 15:5, and Genesis 17:4-6. In these passages, God promises Abraham:\n\nA great nation: \"I will make you into a great nation, and I will bless you.\" (Genesis 12:2)\nMany descendants: \"Look up at the sky and count the stars—if indeed you can count them. So shall your offspring be.\" (Genesis 15:5)\nHe would be the father of many nations: \"You will be the father of many nations. I will make you very fruitful; I will make nations of you, and kings will come from you.\" (Genesis 17:4-6)."
+            },
+            {
+                "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
+                "questionid": "5v4coKj8SqU1JN3nW03J",
+                "week": "2",
+                "answer": 1,
+                "options": [
+                    "A. I employed her",
+                    "B. I did not employ him",
+                    "C. I did not employ her",
+                    "D. I employed him"
+                ],
+                "text": "Choose the option nearest in meaning to the quoted statement or words:\n\"Had she asked me earlier, I might have been able to employ him\"",
+                "explanation": "The original sentence implies that the speaker did not employ him because the request came too late. Therefore, the nearest meaning is that \"I did not employ him.\"",
+                "type": "mock",
+                "timestamp": "2024-09-11T12:06:17.928Z"
+            },
+            {
+                "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
+                "questionid": "62MmxFufdOABgDcdHgLx",
+                "week": "1",
+                "answer": 0,
+                "options": [
+                    "A. to have broken",
+                    "B. to be breaking",
+                    "C. to break",
+                    "D. to break in"
+                ],
+                "explanation": "The complete sentence is: \"I would not have condescended to appease the traffic policeman, but I happened to have broken traffic regulation.\"",
+                "type": "mock",
+                "timestamp": "2024-09-10T10:45:55.869Z",
+                "text": "Complete each of the following sentences by choosing the option that most suitably fills the space;\nI would not have condescended to appease the traffic policeman but i happened .... traffic regulation"
+            },
+            {
+                "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
+                "questionid": "67Wn42MwppgL0u9BiY0h",
+                "week": "1",
+                "answer": 3,
+                "options": [
+                    "Commitee/ accommondation",
+                    "Comittee/ acommodation",
+                    "committe/accommodasion",
+                    "committee/ accommodation"
+                ],
+                "text": "The ------------------- in an attempt to please the workers promised to provide for them an..........as soon as possible.",
+                "explanation": "",
+                "type": "mock",
+                "timestamp": "2024-02-07T15:07:10.932Z",
+                "users": [
+                    "lALqIGowQPfyEvt55QSSQHY8mwS2",
+                    "BsB92FedbdYYgE7nUjp1sggWWFV2",
+                    "Cfg4lYumf9eN48g4awccYqdq1zC2",
+                    "UaSQMQzLCGbZW3T95B8IKjZQPXb2",
+                    "4b3QRTJRL5eU3OwkPFq72owtaRv2"
+                ]
+            },
+            {
+                "selectedSubjectId": "QRu4n3IlJ9Ss4pRgSNl5",
+                "questionid": "69k4Kz8kyajVjOU9HiYl",
+                "week": "1",
+                "answer": 2,
+                "options": [
+                    "James",
+                    "Phillip",
+                    "Stephen",
+                    "John"
+                ],
+                "text": "Who was the first Christian Martyr?",
+                "type": "mock",
+                "timestamp": "2024-09-07T13:39:55.787Z",
+                "explanation": "Stephen is recognized as the first Christian martyr. According to the New Testament, he was a deacon in the early church who was arrested and brought before the Sanhedrin on charges of blasphemy. In his defense, Stephen delivered a speech recounting Israel's history and accusing the Jewish leaders of resisting the Holy Spirit. This enraged the council, leading them to drag him out of the city and stone him to death. Stephen's martyrdom is detailed in Acts 6:8–7:60."
+            },
+            {
+                "selectedSubjectId": "BRUici1R3kf9w4OhTkTT",
+                "questionid": "6Ih1dAEgFwe2Y8YWwyb0",
+                "week": "1",
+                "answer": 2,
+                "options": [
+                    "10ms-2",
+                    "15ms-2",
+                    "20ms-2",
+                    "60ms-2"
+                ],
+                "text": "The velocity V of a particle in a time t is given by the equation V = 10+2t2 . Find the instantaneous acceleration after 5s.",
+                "explanation": "",
+                "type": "mock",
+                "timestamp": "2024-02-07T14:52:01.906Z",
+                "users": [
+                    "lALqIGowQPfyEvt55QSSQHY8mwS2",
+                    "BsB92FedbdYYgE7nUjp1sggWWFV2",
+                    "Cfg4lYumf9eN48g4awccYqdq1zC2",
+                    "UaSQMQzLCGbZW3T95B8IKjZQPXb2",
+                    "4b3QRTJRL5eU3OwkPFq72owtaRv2"
+                ]
+            },
+            {
+                "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
+                "questionid": "6PK3JeoiyAhN1dwmjYuD",
+                "week": "1",
+                "answer": 1,
+                "options": [
+                    "A. small boys",
+                    "B. unimportant people",
+                    "C. frightened people",
+                    "D. frivolous people"
+                ],
+                "explanation": "The expression \"small fry\" in this context is used as a metaphor to refer to unimportant or insignificant people. So, the sentence is saying that only the unimportant or insignificant individuals get punished for such social misdemeanors.\n\nOption B, \"unimportant people,\" is the best fit because it conveys the idea that those who are not considered significant or influential in the situation are the ones facing punishment. The term \"small fry\" is often used to describe individuals of little importance or influence in a particular context.",
+                "type": "mock",
+                "timestamp": "2024-09-09T19:27:18.755Z",
+                "text": "Choose the option that best conveys the meaning of the quoted portion in the following sentence:\n\nOnly the \"small fry\" gets punished for such social misdemeanours."
+            },
+            {
+                "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
+                "questionid": "6VKhWbZbndpXE0fP52qr",
+                "week": "2",
+                "answer": 2,
+                "options": [
+                    "A. The part of the problem that has just surfaced",
+                    "B. The result of the matter",
+                    "C. The most important aspect of the problem",
+                    "D. The ways to solved the problem"
+                ],
+                "text": "Choose the option nearest in meaning to the quoted words:\nThe \"crux of the matter\" is that the president has just become aware of the mismanagement",
+                "explanation": "The option nearest in meaning to \"The crux of the matter\" is:\n\nC. The most important aspect of the problem.",
+                "type": "mock",
+                "timestamp": "2024-09-12T12:35:38.798Z"
+            },
+            {
+                "selectedSubjectId": "QRu4n3IlJ9Ss4pRgSNl5",
+                "questionid": "6VdwwGU6rC0vFtIWLmhf",
+                "week": "1",
+                "answer": 3,
+                "options": [
+                    "Jerusalem",
+                    "Samaria",
+                    "Cyrene",
+                    "Antioch"
+                ],
+                "text": "Paul's First Missionary Journey started from",
+                "type": "mock",
+                "timestamp": "2024-09-07T13:40:57.883Z",
+                "explanation": "Paul's first missionary journey began in Antioch. According to the Bible, the church in Antioch was instrumental in sending Paul and Barnabas on their mission. In Acts 13:2-3, it is written:\n\n\"While they were worshiping the Lord and fasting, the Holy Spirit said, 'Set apart for me Barnabas and Saul for the work to which I have called them.' So after they had fasted and prayed, they placed their hands on them and sent them off.\"\n\nThis passage indicates that the church in Antioch commissioned Paul and Barnabas for their missionary work."
+            },
+            {
+                "selectedSubjectId": "BRUici1R3kf9w4OhTkTT",
+                "questionid": "6ghnMccf6gI87tlYyipv",
+                "week": "1",
+                "answer": 1,
+                "options": [
+                    "5ms-2",
+                    "9ms-2",
+                    "10ms-2",
+                    "18ms-2"
+                ],
+                "text": "A motorcyclist traveling at 30ms-1 start to apply his brakes when he is 50m from the trafic light that has just turned red. If he just reached the trafic light, his deceleration is",
+                "explanation": "",
+                "type": "mock",
+                "timestamp": "2024-02-07T14:52:01.907Z",
+                "users": [
+                    "lALqIGowQPfyEvt55QSSQHY8mwS2",
+                    "BsB92FedbdYYgE7nUjp1sggWWFV2",
+                    "Cfg4lYumf9eN48g4awccYqdq1zC2",
+                    "UaSQMQzLCGbZW3T95B8IKjZQPXb2",
+                    "4b3QRTJRL5eU3OwkPFq72owtaRv2"
+                ]
+            },
+            {
+                "selectedSubjectId": "1oJlwLsfeG2JoQsOT5tP",
+                "questionid": "6kkcUKwhyDSBdLOaQAIu",
+                "week": "2",
+                "options": [
+                    "A. progressive",
+                    "B. indirect",
+                    "C. regressive",
+                    "D. none of the above"
+                ],
+                "text": "26. If Mr. A earns N2000 a year while Mr. B earns N8000 a year but Mr. A pays N200 per annum in tax while Mr. B pays N400, such a tax is",
+                "type": "mock",
+                "timestamp": "2024-09-17T09:28:31.970Z",
+                "answer": 2,
+                "explanation": "The tax is regressive because the tax rate decreases as income increases."
+            },
+            {
+                "selectedSubjectId": "1oJlwLsfeG2JoQsOT5tP",
+                "questionid": "6lXLeBV1AT56MdfK0ljP",
+                "week": "1",
+                "answer": 2,
+                "options": [
+                    "A. whose quality is low",
+                    "B. consumed by very poor people",
+                    "C. whose consumption falls when consumers' income rises",
+                    "D. which satisfy only the basic needs"
+                ],
+                "text": "6. Inferior goods are defined in Economics as goods",
+                "type": "mock",
+                "timestamp": "2024-09-15T15:05:37.275Z",
+                "explanation": "Inferior goods are replaced by better alternatives as income increases."
+            },
+            {
+                "selectedSubjectId": "1oJlwLsfeG2JoQsOT5tP",
+                "questionid": "6oioxb4zOeNtxm3E0fen",
+                "week": "1",
+                "answer": 1,
+                "options": [
+                    "A. Advances",
+                    "B. Deposits",
+                    "C. Treasury bills",
+                    "D. Overdrafts"
+                ],
+                "text": "17. Which of the following can be regarded as a liability of a commercial bank?",
+                "type": "mock",
+                "timestamp": "2024-09-15T15:22:50.505Z",
+                "explanation": "Deposits are customer funds that banks owe."
+            },
+            {
+                "selectedSubjectId": "BRUici1R3kf9w4OhTkTT",
+                "questionid": "6wEGOolZIhPB6Azi96vL",
+                "week": "2",
+                "answer": 3,
+                "options": [
+                    "A. 9s",
+                    "B. 4.5s",
+                    "C. 6s",
+                    "D. 3s"
+                ],
+                "text": "A palm fruit dropped to the ground from the top of a tree 45m tall. How long does it take to reach the ground? (g = 10ms-2)",
+                "explanation": "Using the equation of motion\n\nS = ut + 12\nat2\n\n45 = (0 x t) + (12\n x 10 x t2)\n\nt = 3s",
+                "type": "mock",
+                "timestamp": "2024-10-03T21:07:22.783Z"
+            },
+            {
+                "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
+                "questionid": "7KKI6C3nSUVrVzZ3Nytq",
+                "week": "1",
+                "answer": 3,
+                "options": [
+                    "the loud music soon helped John to fall asleep",
+                    "John soon fell asleep as a result of the loud music",
+                    "the loud music made John despise sleep",
+                    "John soon fell asleep even though the music was loud"
+                ],
+                "text": "In spite of the loud music, John soon managed to fall asleep",
+                "explanation": "",
+                "type": "mock",
+                "timestamp": "2024-02-07T15:07:10.936Z",
+                "users": [
+                    "lALqIGowQPfyEvt55QSSQHY8mwS2",
+                    "BsB92FedbdYYgE7nUjp1sggWWFV2",
+                    "Cfg4lYumf9eN48g4awccYqdq1zC2",
+                    "UaSQMQzLCGbZW3T95B8IKjZQPXb2",
+                    "4b3QRTJRL5eU3OwkPFq72owtaRv2"
+                ]
+            },
+            {
+                "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
+                "questionid": "7Tk3VuRWoi6HrKrE5n9J",
+                "week": "1",
+                "answer": 0,
+                "options": [
+                    "accent",
+                    "assent",
+                    "access",
+                    "ascent"
+                ],
+                "text": "The governor rejected the bill and withheld his ____________?",
+                "explanation": "",
+                "type": "mock",
+                "timestamp": "2024-02-07T15:07:10.939Z",
+                "users": [
+                    "lALqIGowQPfyEvt55QSSQHY8mwS2",
+                    "BsB92FedbdYYgE7nUjp1sggWWFV2",
+                    "Cfg4lYumf9eN48g4awccYqdq1zC2",
+                    "UaSQMQzLCGbZW3T95B8IKjZQPXb2",
+                    "4b3QRTJRL5eU3OwkPFq72owtaRv2"
+                ]
+            },
+            {
+                "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
+                "questionid": "7XCXB3juRt0K2zfzsKrg",
+                "week": "1",
+                "answer": 0,
+                "options": [
+                    "A. mastery",
+                    "B. mastering",
+                    "C. speaking",
+                    "D. ideas"
+                ],
+                "explanation": "The complete sentence is: \"Although he is in all respects a poor student, he has managed to buy a tape recorder to improve his mastery of French.\"",
+                "type": "mock",
+                "timestamp": "2024-09-10T10:48:13.213Z",
+                "text": "Complete each of the following sentences by choosing the option that most suitably fills the space;\nAlthough he is in all respects a poor student, he has managed to buy a tape recorder to improve his .... of french"
+            },
+            {
+                "selectedSubjectId": "QRu4n3IlJ9Ss4pRgSNl5",
+                "questionid": "7eCyTZ9mHw35VW0OBmWC",
+                "week": "2",
+                "answer": 3,
+                "options": [
+                    "buy more food from the land of Canaan",
+                    "fight the Jebusites",
+                    "smite the Amorites",
+                    "to make a sacrifice to the Lord in the wilderness"
+                ],
+                "text": "Moses asked Pharaoh to allow the Hebrews to depart from Egypt to",
+                "explanation": "Moses asked Pharaoh to allow the Hebrews to depart from Egypt specifically so that they could make a sacrifice to the Lord in the wilderness. This can be found in Exodus 3:18. Moses requested permission from Pharaoh to let the people go into the wilderness to worship and offer sacrifices to their God.",
+                "type": "mock",
+                "timestamp": "2024-09-08T16:08:18.704Z"
+            },
+            {
+                "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
+                "questionid": "7laA3mxO4xPu5HG8RUFs",
+                "week": "2",
+                "answer": 2,
+                "options": [
+                    "A. shows anxiety when making a serious point",
+                    "B. breaks down when talking seriously",
+                    "C. uses is hands and arms as a sign",
+                    "D. bows his head in humility to the crowd"
+                ],
+                "text": "Choose the option nearest in meaning to the quoted words:\nThe politicians have a number of peculiarities. The most \"conspicuous is the way he gesticulates\" when making a serious point",
+                "explanation": "The option nearest in meaning to \"gesticulates when making a serious point\" is:\n\nC. uses his hands and arms as a sign.",
+                "type": "mock",
+                "timestamp": "2024-09-12T12:48:59.908Z"
+            },
+            {
+                "selectedSubjectId": "QRu4n3IlJ9Ss4pRgSNl5",
+                "questionid": "7rIricsqLV3iXW4ny0PR",
+                "week": "1",
+                "answer": 1,
+                "options": [
+                    "Darius",
+                    "Cyrus",
+                    "Zechariah",
+                    "Zerubbabel"
+                ],
+                "text": "The King of Persia who made it possible for the return of the exiles from Babylon was",
+                "type": "mock",
+                "timestamp": "2024-09-07T14:02:10.088Z",
+                "explanation": "Cyrus the Great, the king of Persia, made it possible for the exiles to return from Babylon. According to Ezra 1:1-4, after conquering Babylon in 539 BCE, Cyrus issued a decree allowing the Jewish people to return to Jerusalem and rebuild the Temple. This event marked the end of the Babylonian Captivity, which had lasted about 70 years.\n\nCyrus' policy of religious tolerance and restoration of displaced peoples was part of his broader strategy to stabilize his newly acquired empire. The Cyrus Cylinder, an ancient Persian artifact, also confirms his approach to allowing exiled groups to return to their homelands."
+            },
+            {
+                "selectedSubjectId": "BRUici1R3kf9w4OhTkTT",
+                "questionid": "8Lev7zhRnRpmd4pP0EjT",
+                "week": "2",
+                "answer": 1,
+                "options": [
+                    "A. field magnet",
+                    "B. commutator",
+                    "C. armature",
+                    "D. slip rings"
+                ],
+                "text": "On an a.c generator, which of the following does not apply?",
+                "explanation": "An AC generator consists of the following parts:\n\nField Magnet: It is a horseshoe-shaped permanent magnet that produces a strong magnetic field in the space between its two poles.\nArmature: It is a rectangular coil with a huge number of insulated copper wire that turns on a cylindrical core of soft iron. \nSlip Rings: The two ends of the armature are connected with the help of slip rings. \nBrushes: Two brushes, made up of graphite or a flexible metal rod, are pressed against the two slip rings. These brushes are responsible for feeding the current produced in the armature coil to the external circuit via wires. \nEnergy Source: The armature coil is rotated about its axis with the help of a turbine. The rotational kinetic energy of the turbine is the factor that helps an AC generator produce electricity.",
+                "type": "mock",
+                "timestamp": "2024-10-03T22:00:31.146Z"
+            },
+            {
+                "selectedSubjectId": "QRu4n3IlJ9Ss4pRgSNl5",
+                "questionid": "8XbESf3aR8tqIeGZqZNK",
+                "week": "1",
+                "answer": 0,
+                "options": [
+                    "Solomon",
+                    "Josiah",
+                    "Saul",
+                    "David"
+                ],
+                "text": "He was a king remembered for his erecting a mighty temple for the worship of God:",
+                "type": "mock",
+                "timestamp": "2024-09-07T12:43:27.988Z",
+                "explanation": "The correct answer is Solomon.\n\n  King Solomon is remembered for building the magnificent Temple in Jerusalem, often referred to as Solomon's Temple. This temple was dedicated to the worship of God and became the central place of worship for the Israelites. The construction of the temple is described in great detail in 1 Kings 6-7, and it was a significant achievement in Israel's history, marking a high point of prosperity and peace under Solomon's reign."
+            },
+            {
+                "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
+                "questionid": "8hfm0VZYY9VDJTxji2g9",
+                "week": "2",
+                "answer": 3,
+                "options": [
+                    "A. away",
+                    "B. against",
+                    "C. out",
+                    "D. off"
+                ],
+                "text": "Choose the expression or word which best complete each sentences:\nThere is an obvious need to ward .... enemy attacks",
+                "explanation": "The full sentence is: \"There is an obvious need to ward off enemy attacks.\"",
+                "type": "mock",
+                "timestamp": "2024-09-11T10:51:57.718Z"
+            },
+            {
+                "selectedSubjectId": "BRUici1R3kf9w4OhTkTT",
+                "questionid": "8jbar35hns8U0fwUZ62w",
+                "week": "1",
+                "answer": 1,
+                "options": [
+                    "Force, Mass and Moment",
+                    "Acceleration, Velocity and Moment",
+                    "Mass, Weigth and Density",
+                    "Mass, Volume and Density"
+                ],
+                "text": "Which of the following is a state of vectors?",
+                "explanation": "",
+                "type": "mock",
+                "timestamp": "2024-02-07T14:52:01.829Z",
+                "users": [
+                    "lALqIGowQPfyEvt55QSSQHY8mwS2",
+                    "BsB92FedbdYYgE7nUjp1sggWWFV2",
+                    "Cfg4lYumf9eN48g4awccYqdq1zC2",
+                    "UaSQMQzLCGbZW3T95B8IKjZQPXb2",
+                    "4b3QRTJRL5eU3OwkPFq72owtaRv2"
+                ]
+            },
+            {
+                "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
+                "questionid": "9TLomWIqZKEvJDppy2U0",
+                "week": "2",
+                "answer": 3,
+                "options": [
+                    "A. so masterly",
+                    "B. very masterly",
+                    "C. in such a masterly way",
+                    "D. in a masterly way"
+                ],
+                "text": "Choose the expression or word which best complete each sentences:\nThis writer analyses the evil society ....",
+                "explanation": "The full sentence is: \"This writer analyses the evil society in a masterly way.\"",
+                "type": "mock",
+                "timestamp": "2024-09-11T11:54:38.462Z"
+            },
+            {
+                "selectedSubjectId": "QRu4n3IlJ9Ss4pRgSNl5",
+                "questionid": "9WWzQYKg7fRENPhOugTF",
+                "week": "2",
+                "answer": 2,
+                "options": [
+                    "the Birth of Jesus",
+                    "the Temptation of Jesus",
+                    "the Baptism",
+                    "the Transfiguration of Jesus"
+                ],
+                "text": "The statement,'This is my beloved son with whom i am well pleased'was said during",
+                "type": "mock",
+                "timestamp": "2024-09-08T16:54:19.439Z",
+                "explanation": "The correct answer is: \"The Baptism'''.\n\n   The statement, \"This is my beloved Son, with whom I am well pleased,\" was spoken by God the Father during the Baptism of Jesus. This event is recorded in Matthew 3:16-17: \"And when Jesus was baptized, immediately he went up from the water, and behold, the heavens were opened to him, and he saw the Spirit of God descending like a dove and coming to rest on him; and behold, a voice from heaven said, 'This is my beloved Son, with whom I am well pleased.'” (Matthew 3:16-17, ESV)\n\nThis moment marked the beginning of Jesus' public ministry, and the presence of the Father (voice from heaven), the Son (Jesus), and the Holy Spirit (dove) signifies the Trinity."
+            },
+            {
+                "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
+                "questionid": "9Wl95LVRst2Tu3AFsHdY",
+                "week": "2",
+                "answer": 3,
+                "options": [
+                    "A. the loud music soon helped John to fall asleep",
+                    "B. John soon fell asleep as a result of the loud music",
+                    "C. the loud music made John despise sleep",
+                    "D. John soon fell asleep even though the music was loud"
+                ],
+                "text": "Choose the option nearest in meaning to the quoted words:\n\"In spite of the loud music, John soon managed to fall asleep\"",
+                "explanation": "The option nearest in meaning to \"In spite of the loud music, John soon managed to fall asleep\" is:\n\nD. John soon fell asleep even though the music was loud.",
+                "type": "mock",
+                "timestamp": "2024-09-12T12:50:28.016Z"
+            },
+            {
+                "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
+                "questionid": "9b49w1ETM8YP7FWfPsCT",
+                "week": "2",
+                "answer": 1,
+                "options": [
+                    "A. forgery",
+                    "B. perjury",
+                    "C. libel",
+                    "D. slander"
+                ],
+                "text": "Choose the option nearest in meaning to the quoted words:\nThe witness was guilty of \"swearing to a statement he knew to be false\"",
+                "explanation": "The option nearest in meaning to \"swearing to a statement he knew to be false\" is:\n\nB. perjury.",
+                "type": "mock",
+                "timestamp": "2024-09-12T12:37:13.167Z"
+            },
+            {
+                "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
+                "questionid": "9bkj1yXg2Di88m1Q4fsk",
+                "week": "1",
+                "answer": 1,
+                "options": [
+                    "guerrilas",
+                    "guerrillas",
+                    "geurrilas",
+                    "geurrillas"
+                ],
+                "text": "The army officer said that more ...... would be needed to prosecute the war?",
+                "explanation": "",
+                "type": "mock",
+                "timestamp": "2024-02-07T15:07:10.934Z",
+                "users": [
+                    "lALqIGowQPfyEvt55QSSQHY8mwS2",
+                    "BsB92FedbdYYgE7nUjp1sggWWFV2",
+                    "Cfg4lYumf9eN48g4awccYqdq1zC2",
+                    "UaSQMQzLCGbZW3T95B8IKjZQPXb2",
+                    "4b3QRTJRL5eU3OwkPFq72owtaRv2"
+                ]
+            },
+            {
+                "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
+                "questionid": "9qpMAQ4gQ5rfYiLckTn3",
+                "week": "2",
+                "answer": 2,
+                "options": [
+                    "A. is arrived",
+                    "B. will be arriving",
+                    "C. has arrived",
+                    "D. had arrived"
+                ],
+                "text": "Choose the word/expression which best completes each sentence:\nDo you know if the new teacher .... yet?",
+                "explanation": "",
+                "type": "mock",
+                "timestamp": "2024-09-12T18:54:40.526Z"
+            },
+            {
+                "selectedSubjectId": "QRu4n3IlJ9Ss4pRgSNl5",
+                "questionid": "9wmV0Y3u9VRuLwG3yua0",
+                "week": "2",
+                "answer": 0,
+                "options": [
+                    "Amos",
+                    "Elijah",
+                    "Hosea",
+                    "Jeremiah"
+                ],
+                "text": "One of the following said: \"The lion hath roared,who will not fear?The Lord has spoken,who can but prophesy?\"",
+                "type": "mock",
+                "timestamp": "2024-09-08T16:28:53.904Z",
+                "explanation": "The phrase, \"The lion hath roared, who will not fear? The Lord has spoken, who can but prophesy?\" was said by Amos (Amos 3:8).\n\nAmos was a prophet from Judah who was called to deliver God's message to the northern kingdom of Israel. This particular statement emphasizes the inevitability of prophecy when God speaks, likening it to a lion's roar that demands attention and fear."
+            },
+            {
+                "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
+                "questionid": "A3bp4kXdkMr4ZpPfGiAP",
+                "week": "2",
+                "answer": 1,
+                "options": [
+                    "A. yes, I mind",
+                    "B. no, I don't",
+                    "C. no, I do",
+                    "D. yes, I don't mind"
+                ],
+                "text": "Complete the following with the appropriate answer to the question:\n\nJohn would you mind lifting this box?",
+                "explanation": "In response to the question \"John, would you mind lifting this box?\" the appropriate and polite response is typically \"No, I don't mind.\" This implies that John is willing to lift the box and does not have an objection or reluctance to doing so.",
+                "type": "mock",
+                "timestamp": "2024-09-11T12:04:01.695Z"
+            },
+            {
+                "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
+                "questionid": "A4aUV9EvFwf4IiXlQV82",
+                "week": "1",
+                "answer": 1,
+                "options": [
+                    "disappointed",
+                    "embarassed",
+                    "equipped",
+                    "rythm"
+                ],
+                "text": "chose the wrongly spelt word",
+                "explanation": "",
+                "type": "mock",
+                "timestamp": "2024-02-07T15:07:10.929Z",
+                "users": [
+                    "lALqIGowQPfyEvt55QSSQHY8mwS2",
+                    "BsB92FedbdYYgE7nUjp1sggWWFV2",
+                    "Cfg4lYumf9eN48g4awccYqdq1zC2",
+                    "UaSQMQzLCGbZW3T95B8IKjZQPXb2",
+                    "4b3QRTJRL5eU3OwkPFq72owtaRv2"
+                ]
+            },
+            {
+                "selectedSubjectId": "QRu4n3IlJ9Ss4pRgSNl5",
+                "questionid": "AOBsmHP2vsDujUkFXb85",
+                "week": "2",
+                "answer": 1,
+                "options": [
+                    "some written codes",
+                    "circumcision",
+                    "promise of wealth",
+                    "promise of long life"
+                ],
+                "text": "God's covenant with Abraham took the form of",
+                "type": "mock",
+                "timestamp": "2024-09-08T16:11:34.158Z",
+                "explanation": "God's covenant with Abraham took the form of circumcision (Genesis 17:10-14).\n\nGod instructed Abraham to circumcise himself and his descendants as a sign of the covenant between them. This was a physical and lasting symbol of their special relationship with God. The covenant also included promises of land, descendants, and blessings, but circumcision was the primary outward sign."
+            },
+            {
+                "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
+                "questionid": "AQJdpBE8gybIqFWJbBYT",
+                "week": "1",
+                "answer": 1,
+                "options": [
+                    "A. illegal",
+                    "B. illegitimate",
+                    "C. illicit",
+                    "D. unlawful"
+                ],
+                "explanation": "\"illegitimate\" is used to describe a child born outside of marriage.",
+                "type": "mock",
+                "timestamp": "2024-09-09T20:38:01.665Z",
+                "text": "Complete each of the following sentences by choosing the option that most suitably fills the space;\nThe boy was born before his parents actually got married and so the court has declared him ...."
+            },
+            {
+                "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
+                "questionid": "AVKvjqJMpF5l9xgZfBkR",
+                "week": "1",
+                "answer": 2,
+                "options": [
+                    "A. played most brilliantly",
+                    "B. played below their usual form",
+                    "C. won unexpectedly",
+                    "D. lost as expected"
+                ],
+                "explanation": "The term \"dark horse\" is an idiomatic expression that refers to a little-known or less-favoured contender in a competition who unexpectedly achieves success. In the context of the sentence, describing the sub mariners as \"the dark horse\" suggests that they were not widely expected to win, but they surprised everyone by emerging victorious in the match against the uplanders team.\n\nTherefore, option C, \"won unexpectedly,\" accurately conveys the meaning of the underlined portion in the sentence.",
+                "type": "mock",
+                "timestamp": "2024-09-09T19:25:49.914Z",
+                "text": "Choose the option that best conveys the meaning of the quoted portion in the following sentence:\nIn the match against the uplanders team, the sub mariners turned out to be the \"dark horse\""
+            },
+            {
+                "selectedSubjectId": "QRu4n3IlJ9Ss4pRgSNl5",
+                "questionid": "Agp7aFKIWSQfpGuOXQxa",
+                "week": "1",
+                "answer": 0,
+                "options": [
+                    "Jebusites",
+                    "The philistines",
+                    "The Ammonites",
+                    "The Edomites"
+                ],
+                "text": "David took Jerusalem from",
+                "type": "mock",
+                "timestamp": "2024-09-07T12:58:16.404Z",
+                "explanation": "David took Jerusalem from the Jebusites.\n\n   In 2 Samuel 5:6-7, it is recorded that David and his men went to Jerusalem against the Jebusites, the inhabitants of the land. The Jebusites, confident in the city's strong defenses, mocked David, saying, \"You shall not come in here; but the blind and the lame will repel you.\" Despite their confidence, David captured the stronghold of Zion, which became known as the City of David."
+            },
+            {
+                "selectedSubjectId": "1oJlwLsfeG2JoQsOT5tP",
+                "questionid": "BTv8K5QORWgkzqiju0Hz",
+                "week": "1",
+                "answer": 1,
+                "options": [
+                    "A. a branch of the social studies",
+                    "B. a study of the ways man wants from limited resources",
+                    "C. a dismal science in the malthusian sense",
+                    "D. governed by scientific laws"
+                ],
+                "text": "33. Economics is called a social science because it is",
+                "type": "mock",
+                "timestamp": "2024-09-15T15:48:53.449Z",
+                "explanation": "Economics deals with resource allocation and decision-making.\n"
+            },
+            {
+                "selectedSubjectId": "BRUici1R3kf9w4OhTkTT",
+                "questionid": "BV7s0f8PY5mU7iWvfzsr",
+                "week": "2",
+                "answer": 3,
+                "options": [
+                    "A. insulation",
+                    "B. precipitation",
+                    "C. conduction",
+                    "D. radiation"
+                ],
+                "text": "The heat from the sun reaches the earth by the process",
+                "explanation": "",
+                "type": "mock",
+                "timestamp": "2024-10-03T21:45:41.638Z"
+            },
+            {
+                "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
+                "questionid": "BayWVKNawVpWtBFwogmI",
+                "week": "1",
+                "answer": 3,
+                "options": [
+                    "hipoppotemus",
+                    "hippoppotemus",
+                    "hipoppotamus",
+                    "hippopotamus"
+                ],
+                "text": "A nursery rhyme is used to teach pupils how to spell the word ...... ?",
+                "explanation": "",
+                "type": "mock",
+                "timestamp": "2024-02-07T15:07:10.935Z",
+                "users": [
+                    "lALqIGowQPfyEvt55QSSQHY8mwS2",
+                    "BsB92FedbdYYgE7nUjp1sggWWFV2",
+                    "Cfg4lYumf9eN48g4awccYqdq1zC2",
+                    "UaSQMQzLCGbZW3T95B8IKjZQPXb2",
+                    "4b3QRTJRL5eU3OwkPFq72owtaRv2"
+                ]
+            },
+            {
+                "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
+                "questionid": "Bk7eWhdHXz2XeSb9Sxzf",
+                "week": "2",
+                "answer": 1,
+                "options": [
+                    "A. flattered",
+                    "B. deceived",
+                    "C. enamoured",
+                    "D. overcome"
+                ],
+                "text": "Choose the option nearest in meaning to the quoted words:\nI didn't think she could be so easily \"taken in\" by his pretenses",
+                "explanation": "",
+                "type": "mock",
+                "timestamp": "2024-09-12T12:34:15.421Z"
+            },
+            {
+                "selectedSubjectId": "BRUici1R3kf9w4OhTkTT",
+                "questionid": "BoTRgvO83I5mxDG82pdB",
+                "week": "1",
+                "answer": 2,
+                "options": [
+                    "ML2T-3",
+                    "MLT-1",
+                    "ML2T-2",
+                    "ML-3"
+                ],
+                "text": "The dimension of Work and Energy are",
+                "explanation": "",
+                "type": "mock",
+                "timestamp": "2024-02-07T14:52:01.887Z",
+                "users": [
+                    "lALqIGowQPfyEvt55QSSQHY8mwS2",
+                    "BsB92FedbdYYgE7nUjp1sggWWFV2",
+                    "Cfg4lYumf9eN48g4awccYqdq1zC2",
+                    "UaSQMQzLCGbZW3T95B8IKjZQPXb2",
+                    "4b3QRTJRL5eU3OwkPFq72owtaRv2"
+                ]
+            },
+            {
+                "selectedSubjectId": "1oJlwLsfeG2JoQsOT5tP",
+                "questionid": "BqweDfwdJpiwCVw17RwG",
+                "week": "1",
+                "answer": 2,
+                "options": [
+                    "A. Interest rates",
+                    "B. Opportunity costs",
+                    "C.Economic rent",
+                    "D. Indirect costs"
+                ],
+                "text": "37. Which of the following is a term used to describe a payment representing a surplus in excess of transfer costs?",
+                "type": "mock",
+                "timestamp": "2024-09-15T15:53:16.987Z",
+                "explanation": "Explanation: Economic rent refers to the extra income earned by a factor of production (such as land, labor, or capital) over and above what is necessary to keep it in its current use. It arises due to scarcity or unique advantages, such as fertile land or exclusive skills."
+            },
+            {
+                "selectedSubjectId": "QRu4n3IlJ9Ss4pRgSNl5",
+                "questionid": "C94uk0nONhSoYRq1PiZf",
+                "week": "1",
+                "answer": 1,
+                "options": [
+                    "The land of Canaan",
+                    "The land of Midian",
+                    "The land of the Phillistines",
+                    "The land of the Hittites"
+                ],
+                "text": "Moses, after killing the Egyptian fled to",
+                "type": "mock",
+                "timestamp": "2024-09-07T13:29:10.258Z",
+                "explanation": "In the bible story, Moses fled Egypt to escape Pharaoh's wrath after killing an Egyptian taskmaster who was beating a Hebrew slave. He sought refuge in Midian, a region located east of Egypt, near the Sinai Peninsula. This is detailed in Exodus 2:15:\n\n\"When Pharaoh heard of this, he tried to kill Moses. But Moses fled from Pharaoh and went to live in Midian, where he sat down by a well.\"\n\nIn Midian, Moses encountered the daughters of the priest of Midian, who introduced him to their father, Jethro (also known as Reuel). Moses eventually married one of Jethro's daughters, Zipporah, and settled there, tending to Jethro's flocks. This period in Midian lasted for about 40 years before God called Moses to return to Egypt and lead the Israelites out of slavery."
+            },
+            {
+                "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
+                "questionid": "CBEC6HH2DUDJAtoCRYs6",
+                "week": "1",
+                "answer": 3,
+                "options": [
+                    "A. you",
+                    "B. your's",
+                    "C. yours'",
+                    "D. yours"
+                ],
+                "explanation": "The complete sentence is: \"Invariably, he ends his letters yours amicably.\"",
+                "type": "mock",
+                "timestamp": "2024-09-10T10:33:00.860Z",
+                "text": "Complete each of the following sentences by choosing the option that most suitably fills the space;\nInvariably, he ends his letters .... amicably"
+            },
+            {
+                "selectedSubjectId": "1oJlwLsfeG2JoQsOT5tP",
+                "questionid": "CF7zmLCDY9YcvhOTUveC",
+                "week": "2",
+                "answer": 0,
+                "options": [
+                    "A. there are restrictions in trades",
+                    "B. there are no costs of transportation",
+                    "C. there is perfect competition",
+                    "D. there are no tariffs or import and export quotas"
+                ],
+                "text": "10. The principle of comparative advantage or comparative cost is not based on one of the following assumptions:",
+                "type": "mock",
+                "timestamp": "2024-09-17T09:07:15.326Z",
+                "explanation": "The theory assumes free trade without barriers.\n"
+            },
+            {
+                "selectedSubjectId": "BRUici1R3kf9w4OhTkTT",
+                "questionid": "CKPEkdfEIITXMDRtI7ik",
+                "week": "2",
+                "answer": 0,
+                "options": [
+                    "A. mv2/r",
+                    "B. mr2/v",
+                    "C. mr/v",
+                    "D. mvr/2"
+                ],
+                "text": "The force required to make an object of mass m, travelling with velocity v, turn in a circle of radius r is",
+                "explanation": "",
+                "type": "mock",
+                "timestamp": "2024-10-03T21:30:35.494Z"
+            },
+            {
+                "selectedSubjectId": "QRu4n3IlJ9Ss4pRgSNl5",
+                "questionid": "CZIHJJJjP7qaZdjwK3kL",
+                "week": "2",
+                "answer": 1,
+                "options": [
+                    "the samaritans who did not accept him in their village",
+                    "James and John",
+                    "The Romans",
+                    "The Pharisees"
+                ],
+                "text": "The term \"sons of thunder\" was applied by Jesus to",
+                "type": "mock",
+                "timestamp": "2024-09-08T16:40:05.553Z",
+                "explanation": "The term \"sons of thunder\" was given by Jesus to James and John, two of His disciples, who were brothers. This nickname appears in Mark 3:17, where Jesus calls them \"Boanerges,\" which translates to \"sons of thunder.\" This name likely reflects their passionate and sometimes zealous nature. There’s a specific instance in Luke 9:54 where James and John, seeing a Samaritan village reject Jesus, wanted to call down fire from heaven to destroy the village, displaying their intense fervor.\n\nTheir nickname could also hint at their bold personalities and their desire to defend Jesus' honor at all costs. Jesus later used their zeal in positive ways, as both James and John played important roles in the early church."
+            },
+            {
+                "selectedSubjectId": "BRUici1R3kf9w4OhTkTT",
+                "questionid": "CuGEAQgxyiTbyEYduTwF",
+                "week": "2",
+                "answer": 2,
+                "options": [
+                    "A. the consumption of electricity can be recorded",
+                    "B. people residing in the house will not have an electric shock if they touch a live wire",
+                    "C. the total current drawn from the mains can be limited",
+                    "D. the voltage supply can be stabilized"
+                ],
+                "text": "Every house supplied with electricity is provided with a box of fuses so that",
+                "explanation": "",
+                "type": "mock",
+                "timestamp": "2024-10-03T22:05:06.890Z"
+            },
+            {
+                "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
+                "questionid": "Cvje8KGAhaLHyaRJCjJK",
+                "week": "2",
+                "answer": 3,
+                "options": [
+                    "A. walk lazily",
+                    "B. run briskly",
+                    "C. walk and stop intermittently",
+                    "D. walk wearily"
+                ],
+                "text": "Choose the option nearest in meaning to the quoted words:\nAfter completing half of the journey, all the travellers could do was \"trudge along\"",
+                "explanation": "The phrase \"trudge along\" suggests a slow, laborious, and weary walking, typically due to exhaustion or fatigue. In this sentence, the travellers have completed half of the journey, and the word \"trudge\" indicates a tired and heavy way of walking. Option D, \"walk wearily,\" closely is closest in meaning to \"trudge along.\"",
+                "type": "mock",
+                "timestamp": "2024-09-12T12:41:58.254Z"
+            },
+            {
+                "selectedSubjectId": "BRUici1R3kf9w4OhTkTT",
+                "questionid": "D3T8w6OEQyDobjx13vxW",
+                "week": "1",
+                "answer": 0,
+                "options": [
+                    "ML-1T-2",
+                    "MLT-2",
+                    "ML2T3",
+                    "ML-3"
+                ],
+                "text": "Which of the following is the dimension of pressure?",
+                "explanation": "",
+                "type": "mock",
+                "timestamp": "2024-02-07T14:52:01.889Z",
+                "users": [
+                    "lALqIGowQPfyEvt55QSSQHY8mwS2",
+                    "BsB92FedbdYYgE7nUjp1sggWWFV2",
+                    "Cfg4lYumf9eN48g4awccYqdq1zC2",
+                    "UaSQMQzLCGbZW3T95B8IKjZQPXb2",
+                    "4b3QRTJRL5eU3OwkPFq72owtaRv2"
+                ]
+            },
+            {
+                "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
+                "questionid": "DD9s65My9TQXmgccxWii",
+                "week": "2",
+                "answer": 1,
+                "options": [
+                    "A. hour of driving",
+                    "B. hour's drive",
+                    "C. hour by driving",
+                    "D. hour in driving"
+                ],
+                "text": "Choose the word/expression which best completes each sentence:\nIkorodu is not far from here, it is only an ....",
+                "explanation": "",
+                "type": "mock",
+                "timestamp": "2024-09-12T18:53:52.673Z"
+            },
+            {
+                "selectedSubjectId": "1oJlwLsfeG2JoQsOT5tP",
+                "questionid": "DHQmctUnGKKH6OgiPECP",
+                "week": "1",
+                "answer": 1,
+                "options": [
+                    "A. scale of production is limited by size of market",
+                    "B.expansion brings diminishing returns",
+                    "C. large firms, can cater for wide markets",
+                    "D. small firms can provide personal services"
+                ],
+                "text": "5. The following is NOT a reason for the existence of small firms:",
+                "type": "mock",
+                "timestamp": "2024-09-15T15:04:32.432Z",
+                "explanation": "Small firms often exist due to market limitations, not diminishing returns."
+            },
+            {
+                "selectedSubjectId": "QRu4n3IlJ9Ss4pRgSNl5",
+                "questionid": "DNN0azMo0WimnXdgtFjP",
+                "week": "1",
+                "answer": 3,
+                "options": [
+                    "King Herold",
+                    "Pharoah",
+                    "Sennacherib",
+                    "Jeroboam"
+                ],
+                "text": "Which of the following people was one of the outstanding kings of Israel after the falling of the Kingdom?",
+                "type": "mock",
+                "timestamp": "2024-09-07T12:35:30.608Z",
+                "explanation": "The house of Israel was divided into two kingdoms under Rehoboam. This division took place after the death of Solomon and during the reign of his son, Rehoboam, and it happened as the people revolted against the heavy taxes levied by Solomon and Rehoboam.\n   Jeroboam was the most outstanding king after the split and was made the king of Jerusalem while Rehoboam was made king of Judah\n\nRef: Genesis, 1 Kings 2:10, 1 Kings 14:1-30"
+            },
+            {
+                "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
+                "questionid": "DYy4H6xpnyYzFqzxvxER",
+                "week": "2",
+                "answer": 1,
+                "options": [
+                    "A. comprehensive",
+                    "B. irrelevant",
+                    "C. pertinent",
+                    "D. came rather late"
+                ],
+                "text": "Choose the option nearest in meaning to the quoted words:\n\nMost of his observations were \"wide of the mark\"",
+                "explanation": "In this context, wide of the mark means to be irrelevant, incorrect or inaccurate.",
+                "type": "mock",
+                "timestamp": "2024-09-12T12:44:08.449Z"
+            },
+            {
+                "selectedSubjectId": "QRu4n3IlJ9Ss4pRgSNl5",
+                "questionid": "DfLQ9bi4jQHw1MpIQ71f",
+                "week": "1",
+                "answer": 2,
+                "options": [
+                    "Paul and James",
+                    "Paul and Peter",
+                    "Paul and Barnabas",
+                    "Paul and Silas"
+                ],
+                "text": "Who were mistaken for gods in the Acts of the Apostles?",
+                "type": "mock",
+                "timestamp": "2024-09-07T13:42:17.393Z",
+                "explanation": "In the Acts of the Apostles, Paul and Barnabas were mistaken for gods. This incident is recorded in Acts 14:8-18, where, after healing a crippled man in Lystra, the local people believed them to be the gods Zeus and Hermes. They attempted to offer sacrifices to them, but Paul and Barnabas vehemently rejected this, emphasizing that they were mere humans proclaiming the gospel."
+            },
+            {
+                "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
+                "questionid": "Dw6iIHv0TS75NJPqYlIK",
+                "week": "2",
+                "answer": 3,
+                "options": [
+                    "A. that no man could find a foot-hold on",
+                    "B. that any man could find a foot-hold on it",
+                    "C. for no man to find a foot-hold on",
+                    "D. that no man could find a foot-hold on it"
+                ],
+                "explanation": "The complete sentence is: \"The hill behind the town was so steep that no man could find a foot-hold on it.\"",
+                "type": "mock",
+                "timestamp": "2024-09-10T11:37:18.117Z",
+                "text": "Choose the expression or word which best complete each sentence:\nThe hill behind the town was so steep ...."
+            },
+            {
+                "selectedSubjectId": "BRUici1R3kf9w4OhTkTT",
+                "questionid": "DwEXFFAxLRqziXzn49Kx",
+                "week": "1",
+                "answer": 0,
+                "options": [
+                    "5s",
+                    "10s",
+                    "12s",
+                    "15s"
+                ],
+                "text": "In free fall a body of mass 1kg drops from a height of 125m from rest in 5s. How long will it take another body of mass 2kg to fall from rest from the same height? (g=10ms-2)",
+                "explanation": "",
+                "type": "mock",
+                "timestamp": "2024-02-07T14:52:01.906Z",
+                "users": [
+                    "lALqIGowQPfyEvt55QSSQHY8mwS2",
+                    "BsB92FedbdYYgE7nUjp1sggWWFV2",
+                    "Cfg4lYumf9eN48g4awccYqdq1zC2",
+                    "UaSQMQzLCGbZW3T95B8IKjZQPXb2",
+                    "4b3QRTJRL5eU3OwkPFq72owtaRv2"
+                ]
+            },
+            {
+                "selectedSubjectId": "QRu4n3IlJ9Ss4pRgSNl5",
+                "questionid": "E5aIAwluHZMEn5WQJdII",
+                "week": "1",
+                "answer": 0,
+                "options": [
+                    "Ezekiel",
+                    "Isaiah",
+                    "Amos",
+                    "Jonah"
+                ],
+                "text": "The prophecy \"The soul that sins shall die\", was given by the Prophet",
+                "type": "mock",
+                "timestamp": "2024-09-07T13:58:33.707Z",
+                "explanation": "The prophecy stating, \"The soul that sins shall die,\" was delivered by the prophet Ezekiel. This declaration is found in Ezekiel 18:20, which emphasizes individual responsibility for one's actions:\n\n\"The soul who sins shall die. The son shall not bear the iniquity of the father, nor shall the father bear the iniquity of the son; the righteousness of the righteous shall be upon himself, and the wickedness of the wicked shall be upon himself.\"\n\nIn this context, Ezekiel addresses a common proverb of his time that suggested children suffered for their parents' sins. He refutes this notion, asserting that each person is accountable for their own behavior. This teaching underscores the principle of personal responsibility and divine justice, indicating that individuals will face consequences for their own sins, not for the sins of others."
+            },
+            {
+                "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
+                "questionid": "EAId37wjHeemB6yxneLZ",
+                "week": "1",
+                "answer": 2,
+                "options": [
+                    "acommondation",
+                    "accomodation",
+                    "accommodation",
+                    "acommoddation"
+                ],
+                "text": "Very few students have satisfactory .... these days because the student population has increased tremedously",
+                "explanation": "",
+                "type": "mock",
+                "timestamp": "2024-02-07T15:07:10.939Z",
+                "users": [
+                    "lALqIGowQPfyEvt55QSSQHY8mwS2",
+                    "BsB92FedbdYYgE7nUjp1sggWWFV2",
+                    "Cfg4lYumf9eN48g4awccYqdq1zC2",
+                    "UaSQMQzLCGbZW3T95B8IKjZQPXb2",
+                    "4b3QRTJRL5eU3OwkPFq72owtaRv2"
+                ]
+            },
+            {
+                "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
+                "questionid": "EMSD3QbySHlst4lVSBe3",
+                "week": "2",
+                "answer": 1,
+                "options": [
+                    "A. carry them with him",
+                    "B. carry them out",
+                    "C. carry them on",
+                    "D. carry them all"
+                ],
+                "text": "Choose the word/expression which best completes each sentence:\nThe new leader has good intentions, but he is unable to ....",
+                "explanation": "So the sentence would be: \"The new leader has good intentions, but he is unable to carry them out.\"",
+                "type": "mock",
+                "timestamp": "2024-09-12T18:50:46.749Z"
+            },
+            {
+                "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
+                "questionid": "EaAiAcxmq4ud5w2wSnSI",
+                "week": "2",
+                "answer": 1,
+                "options": [
+                    "A. because",
+                    "B. so that",
+                    "C. yet",
+                    "D. since"
+                ],
+                "text": "Choose the word/expression which best completes each sentence:\nHe sent the children out to play .... he might be alone",
+                "type": "mock",
+                "timestamp": "2024-09-12T19:03:21.658Z",
+                "explanation": "The correct answer is: \"He sent the children out to play so that he might be alone\"\n\n\"sent the children out to play\" indicates that he instructed the children to go outside and engage in play.\nPurpose: \"so that he might be alone\" explains the reason for sending the children out, which is to have some time alone.\n\n\nIn summary, the sentence conveys that he wanted to be by himself, so he sent the children outside to play."
+            },
+            {
+                "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
+                "questionid": "EbHd1cc9jySj6ZuoVBXU",
+                "week": "2",
+                "answer": 3,
+                "options": [
+                    "A. discussing about it",
+                    "B. discussing on it",
+                    "C. discussing upon it",
+                    "D. discussing it"
+                ],
+                "text": "Choose the expression or word which best complete each sentences:\nThe member of the panel were ....",
+                "explanation": "The full sentence is: \"The members of the panel were discussing it.\"",
+                "type": "mock",
+                "timestamp": "2024-09-11T11:53:24.351Z"
+            },
+            {
+                "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
+                "questionid": "EoIiyENyX5LteplrRPMm",
+                "week": "1",
+                "answer": 0,
+                "options": [
+                    "querulous",
+                    "querrulous",
+                    "querrullous",
+                    "quarrelous"
+                ],
+                "text": "They were all behaving like a bunch of ..... children?",
+                "explanation": "",
+                "type": "mock",
+                "timestamp": "2024-02-07T15:07:10.932Z",
+                "users": [
+                    "lALqIGowQPfyEvt55QSSQHY8mwS2",
+                    "BsB92FedbdYYgE7nUjp1sggWWFV2",
+                    "Cfg4lYumf9eN48g4awccYqdq1zC2",
+                    "UaSQMQzLCGbZW3T95B8IKjZQPXb2",
+                    "4b3QRTJRL5eU3OwkPFq72owtaRv2"
+                ]
+            },
+            {
+                "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
+                "questionid": "EoMVrKUTL2e7I0vH6MBJ",
+                "week": "1",
+                "answer": 3,
+                "options": [
+                    "past-time / over",
+                    "pass-time / over",
+                    "passtime / through",
+                    "pastime /through"
+                ],
+                "text": "I shall find time for my ..... when I get ....... with this difficult assignment?",
+                "explanation": "",
+                "type": "mock",
+                "timestamp": "2024-02-07T15:07:10.935Z",
+                "users": [
+                    "lALqIGowQPfyEvt55QSSQHY8mwS2",
+                    "BsB92FedbdYYgE7nUjp1sggWWFV2",
+                    "Cfg4lYumf9eN48g4awccYqdq1zC2",
+                    "UaSQMQzLCGbZW3T95B8IKjZQPXb2",
+                    "4b3QRTJRL5eU3OwkPFq72owtaRv2"
+                ]
+            },
+            {
+                "selectedSubjectId": "Sqn3YPikF2m4lm9qsPoM",
+                "questionid": "EojADQE78BRMl7zlv9LC",
+                "week": "1",
+                "answer": 1,
+                "options": [
+                    "A. washed out",
+                    "B. wiped out",
+                    "C. rooted out",
+                    "D. flushed out"
+                ],
+                "explanation": "The complete sentence is: \"The frightening explosion in the factory wiped out the whole wing.\"",
+                "type": "mock",
+                "timestamp": "2024-09-10T10:36:53.774Z",
+                "text": "Complete each of the following sentences by choosing the option that most suitably fills the space;\nthe frightening explosion in the factory .... whole wing"
             }
-        });
-    }
+        ];
+        // Fetch questions from API
+        function loadQuestionsFromAPI() {
 
-    // Dynamically load the questions into the container
-    function loadQuestions() {
-        const questionSlides = $('#questionSlides');
-        questions.forEach((question, index) => {
-            const slide = $(`
+            questions = dataQ;
+            loadQuestions();
+            startTimer();
+            return;
+            $.ajax({
+                url: `../api_ajax/get_spaced_Questions.php`, // Your API URL
+                method: 'GET',
+                success: function (response) {
+                    if (response.success && response.data) {
+                        questions = response.data;
+                        loadQuestions();
+                        startTimer();
+                    } else {
+                        alert("Error loading questions: " + response.message);
+                    }
+                },
+                error: function (err) {
+                    console.error('API request failed:', err);
+                    alert("Failed to load questions.");
+                }
+            });
+        }
+
+        // Dynamically load the questions into the container
+        function loadQuestions() {
+            const questionSlides = $('#questionSlides');
+            questions.forEach((question, index) => {
+                const slide = $(`
                 <div class="question question-container no-padding-left-right" id="question${index}">
                     <div class="question">
 
@@ -2005,76 +2025,98 @@ require_once __DIR__ . '/../templates/loggedInc.php';
                     </div>
                 </div>
             `);
-            questionSlides.append(slide);
-        });
-        showQuestion(currentIndex);
-    }
-
-    // Show the current question
-    function showQuestion(index) {
-        $(".question-container").hide(); // Hide all questions
-        $(`#question${index}`).show(); // Show the current question
-    }
-
-    // Handle answer selection
-    function selectAnswer(correctAnswer, selectedAnswer, index) {
-        if (isAnswered) return; // Prevent multiple answers for the same question
-
-        isAnswered = true;
-        const feedbackMessage = $('#feedbackMessage');
-        const explanation = $('#explanation');
-        const modal = $('#feedbackModal');
-        alert(selectedAnswer);
-
-        if (selectedAnswer === correctAnswer) {
-            feedbackMessage.text("Correct Answer!");
-            explanation.text(questions[index].explanation);
-        } else {
-            feedbackMessage.text("Incorrect Answer!");
-            explanation.text(`Correct Answer: ${correctAnswer}\nExplanation: ${questions[index].explanation}`);
-        }
-
-        modal.show();
-        clearInterval(timer);  // Stop the timer
-    }
-
-    // Close the feedback modal
-    $('#closeModalBtn').on('click', () => {
-        const modal = $('#feedbackModal');
-        modal.hide();
-        isAnswered = false;
-        currentIndex++;
-        if (currentIndex < questions.length) {
+                questionSlides.append(slide);
+            });
             showQuestion(currentIndex);
-            resetTimer();  // Start the timer again after closing the modal
         }
-    });
 
-    // Timer logic
-    function startTimer() {
-        timer = setInterval(() => {
-            if (timeRemaining <= 0) {
-                clearInterval(timer);
-                selectAnswer(questions[currentIndex].answer, '', currentIndex);
+        // Show the current question
+        function showQuestion(index) {
+            $(".question-container").hide(); // Hide all questions
+            $(`#question${index}`).show(); // Show the current question
+        }
+
+        // Handle answer selection
+        let modal; // Declare modal outside of any function to maintain its reference
+
+        // Initialize the Bootstrap modal only once
+        const modalElement = document.getElementById('feedbackModal');
+        modal = new bootstrap.Modal(modalElement, {
+            backdrop: 'static',  // Prevent modal from closing when clicking outside
+            keyboard: false      // Prevent modal from closing when pressing ESC key
+        });
+        function selectAnswer(correctAnswer, selectedAnswer, index) {
+            if (isAnswered) return; // Prevent multiple answers for the same question
+
+            isAnswered = true;
+            const feedbackMessage = $('#feedbackMessage');
+            const explanation = $('#explanation');
+            // $('#feedbackModal').addClass('fade');
+            // const modal = $('#feedbackModal');
+            // alert(selectedAnswer);
+            // alert(correctAnswer);
+          let answerText =  questions[index].options[correctAnswer];
+          // alert(answerText);
+
+            if (selectedAnswer === correctAnswer) {
+                feedbackMessage.text("Correct Answer!");
+                explanation.text(questions[index].explanation);
             } else {
-                $('#timer').text(timeRemaining);
-                timeRemaining--;
+                feedbackMessage.text("Incorrect Answer!");
+                // explanation.text(`Correct Answer: ${correctAnswer}\nExplanation: ${questions[index].explanation}`);
+                explanation.html(`Correct Answer: ${answerText}<br>Explanation: ${questions[index].explanation}`);
+
             }
-        }, 1000);
-    }
 
-    function resetTimer() {
-        timeRemaining = 60;
-        startTimer();
-    }
+            // modal.show();
+            // const modalElement = document.getElementById('feedbackModal');
+            //
+            // // Initialize the Bootstrap modal with custom options
+            // const modal = new bootstrap.Modal(modalElement, {
+            //     backdrop: 'static',  // Prevent modal from closing when clicking outside
+            //     keyboard: false      // Prevent modal from closing when pressing ESC key
+            // });
+            modal.show();
+            // modal.modal('show');
+            clearInterval(timer);  // Stop the timer
+        }
 
-    // Initialize the quiz on load
-    loadQuestionsFromAPI();
-</script>
+        // Close the feedback modal
+        $('#closeModalBtn').on('click', () => {
+            // const modal = $('#feedbackModal');
 
-<?php
-include 'includes/footerjs.php';
-?>
+            // modal.modal('hide');
+            modal.hide();
+            // modal.hide();
+            isAnswered = false;
+            currentIndex++;
+            if (currentIndex < questions.length) {
+                showQuestion(currentIndex);
+                resetTimer();  // Start the timer again after closing the modal
+            }
+        });
+
+        // Timer logic
+        function startTimer() {
+            timer = setInterval(() => {
+                if (timeRemaining <= 0) {
+                    clearInterval(timer);
+                    selectAnswer(questions[currentIndex].answer, '', currentIndex);
+                } else {
+                    $('#timer').text(timeRemaining);
+                    timeRemaining--;
+                }
+            }, 1000);
+        }
+
+        function resetTimer() {
+            timeRemaining = 60;
+            startTimer();
+        }
+
+        // Initialize the quiz on load
+        loadQuestionsFromAPI();
+    </script>
 <script src="assets/tstyle/TimeCircles.js"></script>
 
 </body>
