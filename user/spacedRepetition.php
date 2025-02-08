@@ -2055,16 +2055,19 @@ include 'includes/footerjs.php';
             // const modal = $('#feedbackModal');
             // alert(selectedAnswer);
             // alert(correctAnswer);
+            // alert(questions[index].questionid);
           let answerText =  questions[index].options[correctAnswer];
           // alert(answerText);
-
-            if (selectedAnswer === correctAnswer) {
+ var isCorrectAnswerSelected = false;
+            if (selectedAnswer == correctAnswer) {
                 feedbackMessage.text("Correct Answer!");
                 explanation.text(questions[index].explanation);
+                isCorrectAnswerSelected = true;
             } else {
                 feedbackMessage.text("Incorrect Answer!");
                 // explanation.text(`Correct Answer: ${correctAnswer}\nExplanation: ${questions[index].explanation}`);
-                explanation.html(`Correct Answer: ${answerText}<br>Explanation: ${questions[index].explanation}`);
+                explanation.html(`<b>Correct Answer: </b>${answerText}<br><b>Explanation:</b> ${questions[index].explanation}`);
+                isCorrectAnswerSelected = false;
 
             }
 
@@ -2079,6 +2082,31 @@ include 'includes/footerjs.php';
             modal.show();
             // modal.modal('show');
             clearInterval(timer);  // Stop the timer
+
+
+            $.ajax({
+                url: '../api_ajax/saveUserAnswerSpaced.php',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    questionId: questions[index].questionid,
+                    userAnswer: selectedAnswer,
+                    rightOrWrong: isCorrectAnswerSelected,
+                }),
+                success: function (responseData) {
+                    if (responseData.success) {
+                        console.log('Answer saved successfully!');
+                    } else {
+                        tryc('error','Error','Answer not saved, kindly ensure you have a good network connection', 'bottomCenter');
+                        console.log('Error saving answer:', responseData.error);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error:', error);
+                },
+            });
+
+
         }
 
         // Close the feedback modal
