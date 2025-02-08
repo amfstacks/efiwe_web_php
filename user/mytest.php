@@ -51,7 +51,7 @@ require_once __DIR__ . '/../templates/loggedInc.php';
                                                             </div>
                                                         </div>
                                                         <div class="pricing-cta bg-primary">
-                                                            <a href="#" class="bg-primary text-white">Start <i class="fas fa-arrow-right"></i></a>
+                                                            <a href="spacedRepetition" class="bg-primary text-white">Start <i class="fas fa-arrow-right"></i></a>
                                                         </div>
                                                     </div>
                                                 </div>

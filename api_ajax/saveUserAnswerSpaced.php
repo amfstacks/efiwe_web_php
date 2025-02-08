@@ -55,6 +55,7 @@ if (!isset($requestData['questionId']) || !isset($requestData['userAnswer']) || 
 $questionId = trim($requestData['questionId']);
 $userAnswer = trim($requestData['userAnswer']);
 $rightOrWrong = trim($requestData['rightOrWrong']);
+$consecutiveCorrectAttempts = trim($requestData['consecutiveCorrectAttempts']);
 // Collect form data
 //$questionId = isset($_POST['questionId']) ? trim($_POST['questionId']) : '';
 //$userAnswer = isset($_POST['userAnswer']) ? trim($_POST['userAnswer']) : '';
@@ -91,6 +92,7 @@ $profileData = [
     "questionId" => $questionId,
     "userAnswer" => $userAnswer,
     "rightOrWrong" => $rightOrWrong ? 1: 0,
+    "consecutiveCorrectAttempts" => $consecutiveCorrectAttempts,
     "uid" => $uid,
     "refreshtoken" => $refreshToken
 ];
