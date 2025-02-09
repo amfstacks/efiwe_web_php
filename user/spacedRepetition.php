@@ -158,7 +158,16 @@ require_once __DIR__ . '/../templates/loggedInc.php';
                                     <a href="#" class="badge badge-light mb-1" id="go-back-btn">Go Back</a>
                                     <h1><span class="badge badge-secondary">Spaced Repetition </span></h1>
                                 </div>
-<!--                                <div id="exam_timer" data-timer="0" style="max-width:400px; width: 100%; height: 150px; display: none;"></div>-->
+<!--                                <div class="progress-container">-->
+<!--                                    <label for="progress">Progress:</label>-->
+<!--                                    <progress id="progress" value="0" max="100"></progress>-->
+<!--                                </div>-->
+                               <center> <div class="progress mb-3 col-lg-6 p-l-5" data-height="10" style="height: 10px;">
+                                    <div  id="progress-bar" class="progress-bar" role="progressbar" data-width="0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">0%</div>
+                                </div>
+                               </center>
+
+                                <!--                                <div id="exam_timer" data-timer="0" style="max-width:400px; width: 100%; height: 150px; display: none;"></div>-->
 
                              <center>   <div class="timer-container">
                                     <span id="timer" class="btn  btn-primary btn-lg font-15">60</span> seconds remaining
@@ -216,7 +225,7 @@ include 'includes/footerjs.php';
         const API_URL = 'https://your-api-endpoint.com/spacedActualQuestions'; // Replace with your actual API URL
         let currentIndex = 0;
         let timer;
-        let timeRemaining = 60;
+        let timeRemaining = 5;
         let isAnswered = false;
         let questions = [];
 
@@ -2120,7 +2129,7 @@ include 'includes/footerjs.php';
           let answerText =  questions[index].options[correctAnswer];
           // alert(answerText);
  var isCorrectAnswerSelected = false;
-            if (selectedAnswer == correctAnswer) {
+            if ((selectedAnswer != '' )&& (selectedAnswer == correctAnswer)) {
                 feedbackMessage.text("Correct Answer!");
                 explanation.text(questions[index].explanation);
                 isCorrectAnswerSelected = true;
@@ -2143,7 +2152,17 @@ include 'includes/footerjs.php';
             modal.show();
             // modal.modal('show');
             clearInterval(timer);  // Stop the timer
+try{
 
+    updateProgressBar();
+}
+catch (e){
+
+}
+
+if(selectedAnswer == ''){
+    return;
+}
 
             $.ajax({
                 url: '../api_ajax/saveUserAnswerSpaced.php',
@@ -2200,8 +2219,26 @@ include 'includes/footerjs.php';
         }
 
         function resetTimer() {
-            timeRemaining = 60;
+            timeRemaining = 5;
             startTimer();
+        }
+        function updateProgressBar() {
+            const totalQuestions = questions.length;
+            const answeredQuestions = currentIndex + 1; // Increment by 1 because the index starts from 0
+            const progress = (answeredQuestions / totalQuestions) * 100;
+
+            // Update progress bar
+            // document.getElementById('progress').value = progress;
+            //
+
+
+            const progressBar = document.getElementById('progress-bar');
+            progressBar.style.width = `${progress}%`;
+
+            // Update the progress text (the percentage inside the bar)
+            progressBar.innerHTML = `${Math.round(progress)}%`;
+            // Optionally, show percentage
+            console.log(`Progress: ${Math.round(progress)}%`);
         }
 
         // Initialize the quiz on load

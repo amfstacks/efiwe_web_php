@@ -669,6 +669,11 @@ function api_request_post($endpoint, $data = null, $method = 'POST', $accessToke
         ];
     }
 
+
+    if (isset($decoded['isNewToken']) && $decoded['isNewToken'] === true && isset($decoded['token'])) {
+        // Update the session's idToken with the new token
+        $_SESSION['user']['idToken'] = $decoded['token'];
+    }
     // Return the decoded response
     // Return the decoded response
     return $decoded;
