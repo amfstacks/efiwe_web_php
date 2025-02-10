@@ -1,4 +1,5 @@
 <?php
+exit;
 $encodedData = '';
 if (isset($_GET['data'])) {
     $encodedData = $_GET['data'];

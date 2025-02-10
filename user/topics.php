@@ -88,6 +88,11 @@ include 'includes/footerjs.php';
 <script src="assets/js/lga.min.js"></script>
 </body>
 <script>
+    function saveTopicData(topic) {
+        // alert('saved');
+        // Save the entire topic object to localStorage
+        localStorage.setItem('currentTopic', JSON.stringify(topic));
+    }
     $(document).ready(function() {
         function loadTopics(subjectId) {
             $('#topics-list').empty(); // Clear previous topics
@@ -115,7 +120,8 @@ include 'includes/footerjs.php';
                             topics.forEach(topic => {
                                 const topicItem = $(`
                                 <li class="topic-item list-group-item col-lg-6">
-                                    <a href="${topic.video}" target="_blank">${topic.topic}</a>
+<!--                                    <a href="${topic.video}" target="_blank">${topic.topic}</a>-->
+                                    <a href="topicDetails"  onclick="saveTopicData('${encodeURIComponent(JSON.stringify(topic))}')" >${topic.topic}</a>
                                 </li>
                             `);
                                 $('#topics-list').append(topicItem);
