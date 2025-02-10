@@ -91,7 +91,7 @@ include 'includes/footerjs.php';
     function saveTopicData(topic) {
         // alert('saved');
         // Save the entire topic object to localStorage
-        localStorage.setItem('currentTopic', JSON.stringify(topic));
+        localStorage.setItem('currentTopic', topic);
     }
     $(document).ready(function() {
         function loadTopics(subjectId) {
