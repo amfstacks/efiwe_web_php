@@ -51,6 +51,17 @@ $currentSubjectName = strtoupper($currentSubjectName);
 <!--                                                    style="border: none;"-->
 <!--                                                    allow="autoplay"-->
 <!--                                            ></iframe>-->
+
+                                            <div id="pdf-viewer" style="width: 100%; height: 600px; border: 1px solid #ccc;">
+                                                <iframe
+                                                        id="pdf-iframe"
+                                                        src=""
+                                                        width="100%"
+                                                        height="100%"
+                                                        style="border: none;"
+                                                        allow="autoplay"
+                                                ></iframe>
+                                            </div>
                                             <h5 id="topicName">Topic Details</h5>
                                             <p>Topic ID: <span id="topicId"></span></p>
                                             <p>Topic Name: <span id="topicName"></span></p>
@@ -236,7 +247,56 @@ include 'includes/footerjs.php';
     // }
     // getDetails();
 
+    function initializePage() {
+        const topicData = getTopicDataFromLocalStorage();
+        if (topicData) {
+            displayTopicDetails(topicData);
+            lazyLoadYouTubeVideo(topicData.video);
+            embedPDFViewer(topicData.doc);
+        } else {
+            console.error("No topic data found.");
+        }
+    }
 
+    function displayTopicDetails(topicData) {
+        document.getElementById('topicName').innerText = topicData.topic;
+        document.getElementById('videoLink').innerText = topicData.video;
+        document.getElementById('docLink').innerText = topicData.doc;
+        document.getElementById('description').innerText = topicData.description;
+    }
+
+    function lazyLoadYouTubeVideo(videoLink) {
+        const videoId = extractYouTubeVideoId(videoLink);
+        if (videoId) {
+            const placeholder = document.getElementById('youtube-placeholder');
+            setTimeout(() => {
+                const iframe = document.createElement('iframe');
+                iframe.width = "100%";
+                iframe.height = "400";
+                iframe.src = `https://www.youtube.com/embed/${videoId}`;
+                iframe.frameborder = "0";
+                iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+                iframe.allowfullscreen = true;
+                iframe.loading = "lazy";
+
+                placeholder.innerHTML = '';
+                placeholder.appendChild(iframe);
+            }, 1000); // Delay loading by 1 second
+        } else {
+            console.error("Invalid YouTube video link.");
+        }
+    }
+
+    // Function to get topic data from localStorage
+    function getTopicDataFromLocalStorage() {
+        try {
+            const encodedTopicData = localStorage.getItem('currentTopic');
+            return JSON.parse(decodeURIComponent(encodedTopicData));
+        } catch (error) {
+            console.error("Error parsing topic data:", error);
+            return null;
+        }
+    }
     function getDetails() {
         try {
             const encodedTopicData = localStorage.getItem('currentTopic');
@@ -371,8 +431,12 @@ include 'includes/footerjs.php';
         }
     }
     function embedPDFViewer(docLink) {
-        const pdfViewerContainer = document.getElementById('pdf-viewer');
-
+        // const pdfViewerContainer = document.getElementById('pdf-viewer');
+        const pdfViewerContainer = document.getElementById('pdf-iframe');
+        docLink =   convertToPreviewLink(docLink);
+        // pdfViewerContainer.src(docLink)
+        pdfViewerContainer.src = docLink;
+        return;
         if (docLink) {
             // Initialize PDF.js
             pdfjsLib.getDocument(docLink).promise.then(pdfDoc => {
@@ -409,13 +473,26 @@ include 'includes/footerjs.php';
             pdfViewerContainer.innerHTML = '<p>No PDF document available.</p>';
         }
     }
-    const pdfUrl = "https://drive.google.com/file/d/1aff0BbNCVoRNKaOsl_ggkKGbs4xu7mEm/preview"; // Use the preview link
-    embedPDFViewer(pdfUrl);
+    // const pdfUrl = "https://drive.google.com/file/d/1aff0BbNCVoRNKaOsl_ggkKGbs4xu7mEm/preview"; // Use the preview link
+    // embedPDFViewer(pdfUrl);
     // Call getDetails on page load
-    getDetails();
+    // getDetails();
     $(document).ready(function() {
 
     });
+    function convertToPreviewLink(downloadLink) {
+        // Extract the file ID from the download link
+        const fileIdMatch = downloadLink.match(/[&?]id=([^&]+)/);
+        if (fileIdMatch && fileIdMatch[1]) {
+            const fileId = fileIdMatch[1];
+            // Construct the preview link
+            return `https://drive.google.com/file/d/${fileId}/preview`;
+        } else {
+            console.error("Invalid Google Drive download link.");
+            return null;
+        }
+    }
+    document.addEventListener('DOMContentLoaded', initializePage);
 </script>
 <script>
 
