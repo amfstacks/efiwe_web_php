@@ -39,27 +39,13 @@ if (empty($uid)) {
 }
 
 
-$requestData = json_decode(file_get_contents('php://input'), true);
+//$requestData = json_decode(file_get_contents('php://input'), true);
 
-// Check if data was provided
-if (!isset($requestData['questionId']) || !isset($requestData['userAnswer']) || !isset($requestData['rightOrWrong'])) {
-    echo json_encode([
-        "success" => false,
-        "message" => "Missing required fields."
-    ]);
-    exit();
-}
+
 //var_dump($requestData);
 //exit;
 
-$questionId = trim($requestData['questionId']);
-$userAnswer = trim($requestData['userAnswer']);
-$rightOrWrong = trim($requestData['rightOrWrong']);
-$consecutiveCorrectAttempts = trim($requestData['consecutiveCorrectAttempts']);
-// Collect form data
-//$questionId = isset($_POST['questionId']) ? trim($_POST['questionId']) : '';
-//$userAnswer = isset($_POST['userAnswer']) ? trim($_POST['userAnswer']) : '';
-//$rightOrWrong = isset($_POST['rightOrWrong']) ? trim($_POST['rightOrWrong']) : '';
+$attempts = trim($_POST['attempts']);
 
 
 // Validate required fields
@@ -90,6 +76,7 @@ $refreshToken = isset($user['refreshToken']) ? $user['refreshToken'] : '';
 // Prepare data for the API
 $profileData = [
     "uid" => $uid,
+    "currentAttempt" => $attempts,
     "refreshtoken" => $refreshToken
 ];
 

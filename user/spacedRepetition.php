@@ -2087,11 +2087,23 @@ include 'includes/footerjs.php';
                 method: 'GET',
                 success: function (response) {
                     if (response.success && response.data) {
-                        questions = response.data;
-                        loadQuestions();
-                        startTimer();
-                        $('#spacedInstruction').hide();
-                        $('#spacedData').show();
+                        if(Array.isArray(response.data) && response.data.length > 1) {
+                            questions = response.data;
+                            loadQuestions();
+                            startTimer();
+                            $('#spacedInstruction').hide();
+                            $('#spacedData').show();
+                            saveSpacedRepetition(response.spacedAttempts);
+                            enterFullScreen();
+                        }
+                        else {
+                            $('#spacedInstruction').show();
+                            $('.start-exam').removeClass('btn-progress');
+                            tryc('error','Error','Questions not found', 'bottomCenter');
+                            $('#errorAjaxDisplay').text('Questions not found').show();
+
+
+                        }
                     } else {
                         tryc('error','Error',response.message, 'bottomCenter');
                         $('#spacedInstruction').show();
@@ -2101,29 +2113,44 @@ include 'includes/footerjs.php';
                 },
                 error: function (err) {
                     console.error('API request failed:', err);
-                    alert("Failed to load questions.");
+                    // alert("Failed to load questions.");
+                    $('#spacedInstruction').show();
+                    $('.start-exam').removeClass('btn-progress');
+                    $('#errorAjaxDisplay').text(err).show();
                 }
             });
         }
+        function enterFullScreen() {
+            if (document.documentElement.requestFullscreen) {
+                document.documentElement.requestFullscreen().catch((err) => {
+                    console.error("Failed to enter full-screen mode:", err);
+                });
+            } else if (document.documentElement.mozRequestFullScreen) { // Firefox
+                document.documentElement.mozRequestFullScreen();
+            } else if (document.documentElement.webkitRequestFullscreen) { // Chrome, Safari, and Opera
+                document.documentElement.webkitRequestFullscreen();
+            } else if (document.documentElement.msRequestFullscreen) { // IE/Edge
+                document.documentElement.msRequestFullscreen();
+            }
+        }
+        function saveSpacedRepetition(attempts) {
+            $.ajax({
+                url: "../api_ajax/saveSpacedRepetionDetails.php",
+                method: "POST",
+                data:{attempts:attempts},
+                success: function (data) {
+                    console.log(data)
+                    if (data.success) {
 
-        // function getSpacedRepetition() {
-        //     $.ajax({
-        //         url: "../api_ajax/saveSpacedRepetionDetails.php",
-        //         method: "POST",
-        //         data:{questionCount:questions.length},
-        //         success: function (data) {
-        //             console.log(data)
-        //             if (data.success) {
-        //
-        //             } else {
-        //
-        //             }
-        //         },
-        //         error: function (xhr, status, error) {
-        //             console.error("Error preloading questions:", error);
-        //         },
-        //     });
-        // }
+                    } else {
+
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error preloading questions:", error);
+                },
+            });
+        }
 
 
         // Dynamically load the questions into the container
@@ -2293,6 +2320,7 @@ if(selectedAnswer == ''){
             console.log(`Progress: ${Math.round(progress)}%`);
         }
 
+        // saveSpacedRepetition(2);
         // Initialize the quiz on load
         // loadQuestionsFromAPI();
     </script>
