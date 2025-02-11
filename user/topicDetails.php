@@ -3,7 +3,8 @@ require_once __DIR__ . '/../templates/loggedInc.php';
 
 $currentSubjectId = isset($_SESSION['currentSubjectId']) ? $_SESSION['currentSubjectId'] : null;
 $currentSubjectName = isset($_SESSION['currentSubjectName']) ? $_SESSION['currentSubjectName'] : null;
-
+//echo $currentSubjectId;
+//exit;
 // Ensure the subject is set, otherwise redirect to an error page or show a message
 if (!$currentSubjectId || !$currentSubjectName) {
     // Optionally, redirect to a 404 or show an error
@@ -138,7 +139,8 @@ include 'includes/footerjs.php';
 ?>
 </body>
 <script>
-
+var subjectId = "<?php echo $currentSubjectId ?>";  //BRUici1R3kf9w4OhTkTT BRUici1R3kf9w4OhTkTT_K3wOskJhlIgeFeO7aC39
+var topicId = ''; //K3wOskJhlIgeFeO7aC39
 
     function initializePage() {
         const topicData = getTopicDataFromLocalStorage();
@@ -155,7 +157,7 @@ include 'includes/footerjs.php';
         document.getElementById('topicName').innerText = topicData.topic;
         document.getElementById('videoLink').innerText = topicData.video;
         document.getElementById('docLink').innerText = topicData.doc;
-        // document.getElementById('description').innerText = topicData.description;
+        topicId = topicData.id;
     }
 
     function lazyLoadYouTubeVideo(videoLink) {
