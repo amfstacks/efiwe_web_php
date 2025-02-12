@@ -15,7 +15,132 @@ $currentSubjectName = strtoupper($currentSubjectName);
 
 ?>
 
+<style>
+    .main-content{
+        /*padding-left: 15px !important;*/
+        /*padding-top: 15px !important;*/
+    }
+    .question-container {
+        max-width: 800px;
+        margin: 1px auto;
+        padding: 40px;
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        text-align: center;
+    }
 
+    .question-container h5 {
+        background-color: #0066cc;
+        color: #fff;
+        padding: 15px;
+        border-radius: 8px;
+        /*margin: 20px auto;*/
+        display: block;
+        width: auto;
+    }
+
+    .options-list {
+        list-style: none;
+        padding: 0;
+        margin: 20px 0;
+    }
+
+    .options-list li {
+        margin: 10px 0;
+    }
+
+    .options-list label {
+        display: block;
+        background-color: #f4f4f9;
+        border: 2px solid #ccc;
+        border-radius: 6px;
+        padding: 15px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+        text-align: left;
+    }
+
+    .options-list label:hover {
+        background-color: #cdd3d8;
+        color: #fff;
+        border-color: #cdd3d8;
+    }
+
+    .options-list input[type="radio"] {
+        display: none; /* Hide checkboxes */
+    }
+
+    .options-list input[type="radio"]:checked + label {
+        background-color: #6777ef;
+        color: #fff;
+        border-color: #6777ef;
+        text-align: left;
+    }
+
+    .explanation {
+        margin-top: 20px;
+        font-size: 14px;
+        color: #666;
+    }
+
+    .explanation strong {
+        color: #333;
+    }
+
+    .options-list label.selected {
+        background-color: #6777ef;
+        color: #fff;
+        border-color: #6777ef;
+    }
+    .navigation-numbers {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .navigation-numbers button {
+        margin: 3px;
+        padding: 5px 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #f4f4f9;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .navigation-numbers button:hover {
+        background-color: #cdd3d8;
+    }
+
+    .navigation-numbers button.active {
+        background-color: #6777ef;
+        color: #fff;
+        border-color: #6777ef;
+    }
+    .navigation-numbers button.answered {
+        background-color: #6777ef;
+        color: #fff;
+        border-color: #6777ef;
+    }
+
+    /* Remove highlighting for unselected options */
+    .options-list label.selected {
+        background-color: #6777ef;
+        color: #fff;
+        border-color: #6777ef;
+    }
+
+    .options-list label:not(.selected) {
+        background-color: #f4f4f9;
+        color: inherit;
+        border-color: #ccc;
+    }
+    #go-back-btn {
+        /*display: block;      !* Makes the <a> element a block-level element *!*/
+        /*width: 100%;         !* Makes it occupy the full width of the container *!*/
+        /*text-align: center;  !* Centers the text within the <a> element *!*/
+    }
+</style>
 <body>
 <div class="loader"></div>
 <div id="app">
@@ -108,8 +233,29 @@ $currentSubjectName = strtoupper($currentSubjectName);
                                                                        <br> <i class="fas fa-spinner fa-spin font-30 mb-3 mt-4 " id="loader" style="display: none; maargin: auto !important;"></i>
                                                                     </div>
 
+                                                                    <div id="spacedData" style="display: none">
+                                                                        <center> <div class="progress mb-3 col-lg-6 p-l-5" data-height="10" style="height: 10px;">
+                                                                                <div  id="progress-bar" class="progress-bar" role="progressbar" data-width="0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">0%</div>
+                                                                            </div>
+                                                                        </center>
+                                                                    <center>   <div class="timer-container">
+                                                                            <span id="timer" class="btn  btn-primary btn-lg font-15">60</span> seconds remaining
+                                                                        </div>
+                                                                    </center>
+                                                                    <div class="container quiz-container">
+                                                                        <div id="questionSlides">
+                                                                            <!-- Questions will be dynamically inserted here -->
+                                                                        </div>
 
 
+
+                                                                        <!-- Feedback Modal -->
+
+                                                                    </div>
+
+
+
+                                                                </div>
                                                                 </div>
 
                                                             </div>
@@ -141,6 +287,26 @@ $currentSubjectName = strtoupper($currentSubjectName);
             <div class="footer-right">
             </div>
         </footer>    </div>
+
+<div class="modal fade" id="feedbackModal" >
+    <div class="modal-dialog modal-dialog-centered ">
+        <div class="modal-content">
+            <div class="modal-body">
+                <h3 id="feedbackMessage"></h3>
+                <br>
+                <p id="explanation"></p>
+                <!--            <button  class="btn btn-success btn-lg w-100">Continue</button>-->
+            </div>
+            <div class="modal-footer bg-whitesmoke br">
+                <button type="button" class="btn btn-primary btn-lg  w-100 font-15" id="closeModalBtn" >Continue <i class="fas fa-check-circle"></i> </button>
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
 </div>
 
 
@@ -277,8 +443,7 @@ function loadActiveQuestions() {
     let subtop = subjectId+'_'+topicId;
 
 
-    // return;
-    // $('#loadQuestionButton').addClass('btn-progress');
+
     $('#errorAjaxDisplay').hide();
     $('#loadQuestionButton').prop('disabled', true);
 
@@ -295,9 +460,9 @@ function loadActiveQuestions() {
                 if(Array.isArray(response.data) && response.data.length > 1) {
                     questions = response.data;
                     loadQuestions();
-                    // startTimer();
-                    // $('#spacedInstruction').hide();
-                    // $('#spacedData').show();
+                    startTimer();
+                    $('#spacedInstruction').hide();
+                    $('#spacedData').show();
                     // enterFullScreen();
                 }
                 else {
@@ -422,6 +587,7 @@ function selectAnswer(correctAnswer, selectedAnswer, index,consecutiveCorrectAtt
     if(selectedAnswer == ''){
         return;
     }
+    return;
 
     $.ajax({
         url: '../api_ajax/saveUserAnswerSpaced.php',
