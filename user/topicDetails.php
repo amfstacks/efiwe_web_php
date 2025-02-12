@@ -306,6 +306,30 @@ $currentSubjectName = strtoupper($currentSubjectName);
         </div>
     </div>
 </div>
+<div class="modal fade" id="completeModal" >
+    <div class="modal-dialog modal-dialog-centered ">
+        <div class="modal-content">
+            <div class="modal-body">
+                <h3 id="completeFeedbackMessage"> </h3>
+                <br>
+                <h3 class="font-light mb-0" id="score_data">
+
+                </h3>
+                <br>
+<span id="completedRemark"> </span>
+                <p id="explanationa">
+                    You can take Active Recalls multiple times!
+                </p>
+            </div>
+            <div class="modal-footer bg-whitesmoke br">
+                <button type="button" class="btn btn-primary btn-lg  w-100 font-15" id="completeCloseModalBtn" >Finish <i class="fas fa-check-circle"></i> </button>
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
 
 </div>
 
@@ -326,6 +350,7 @@ let timeRemaining = 60;
 let timeRemainingRefresh = 60;
 let isAnswered = false;
 let questions = [];
+let correctlyAnswer = 0;
 
     function initializePage() {
         const topicData = getTopicDataFromLocalStorage();
@@ -461,9 +486,9 @@ function loadActiveQuestions() {
                     questions = response.data;
                     loadQuestions();
                     startTimer();
-                    $('#spacedInstruction').hide();
+                    $('#instruction').hide();
                     $('#spacedData').show();
-                    // enterFullScreen();
+                    enterFullScreen();
                 }
                 else {
                     $('#loadQuestionButton').prop('disabled', false);
@@ -498,7 +523,19 @@ function loadActiveQuestions() {
     });
 }
 
-
+function enterFullScreen() {
+    if (document.documentElement.requestFullscreen) {
+        document.documentElement.requestFullscreen().catch((err) => {
+            console.error("Failed to enter full-screen mode:", err);
+        });
+    } else if (document.documentElement.mozRequestFullScreen) { // Firefox
+        document.documentElement.mozRequestFullScreen();
+    } else if (document.documentElement.webkitRequestFullscreen) { // Chrome, Safari, and Opera
+        document.documentElement.webkitRequestFullscreen();
+    } else if (document.documentElement.msRequestFullscreen) { // IE/Edge
+        document.documentElement.msRequestFullscreen();
+    }
+}
 function loadQuestions() {
     const questionSlides = $('#questionSlides');
     questions.forEach((question, index) => {
@@ -532,12 +569,18 @@ function showQuestion(index) {
 
 // Handle answer selection
 let modal; // Declare modal outside of any function to maintain its reference
+let completeModal; // Declare modal outside of any function to maintain its reference
 
 // Initialize the Bootstrap modal only once
 const modalElement = document.getElementById('feedbackModal');
 modal = new bootstrap.Modal(modalElement, {
     backdrop: 'static',  // Prevent modal from closing when clicking outside
     keyboard: false      // Prevent modal from closing when pressing ESC key
+});// Initialize the Bootstrap modal only once
+const completeModalElement = document.getElementById('completeModal');
+completeModal = new bootstrap.Modal(completeModalElement, {
+    // backdrop: 'static',  // Prevent modal from closing when clicking outside
+    // keyboard: false      // Prevent modal from closing when pressing ESC key
 });
 function selectAnswer(correctAnswer, selectedAnswer, index,consecutiveCorrectAttempts = 0) {
     if (isAnswered) return; // Prevent multiple answers for the same question
@@ -557,6 +600,7 @@ function selectAnswer(correctAnswer, selectedAnswer, index,consecutiveCorrectAtt
         feedbackMessage.text("Correct Answer!");
         explanation.text(questions[index].explanation);
         isCorrectAnswerSelected = true;
+        correctlyAnswer++;
     } else {
         feedbackMessage.text("Incorrect Answer!");
         // explanation.text(`Correct Answer: ${correctAnswer}\nExplanation: ${questions[index].explanation}`);
@@ -627,6 +671,60 @@ $('#closeModalBtn').on('click', () => {
         showQuestion(currentIndex);
         resetTimer();  // Start the timer again after closing the modal
     }
+    if(currentIndex >=questions.length){
+        completeModal.show();
+        $('#spacedData').hide();
+        $('#instruction').show();
+        $('#completeFeedbackMessage').text('Active Mock Completed');
+
+
+        const feedbacks = [
+            { range: [0, 30], feedback: "Needs improvement. Please try again." },
+            { range: [31, 40], feedback: "Below average. Keep practicing." },
+            { range: [41, 50], feedback: "Not bad, but you can do better!" },
+            { range: [51, 60], feedback: "Decent. Keep going!" },
+            { range: [61, 70], feedback: "Good job, but there's room for improvement." },
+            { range: [71, 80], feedback: "Great work! Keep it up." },
+            { range: [81, 90], feedback: "Excellent! You're doing really well." },
+            { range: [91, 100], feedback: "Perfect! You nailed it!" }
+        ];
+
+        const percentage = (correctlyAnswer / questions.length) * 100;
+        let selectedFeedback = '';
+        for (let i = 0; i < feedbacks.length; i++) {
+            if (percentage >= feedbacks[i].range[0] && percentage <= feedbacks[i].range[1]) {
+                selectedFeedback = feedbacks[i].feedback;
+                break;
+            }
+        }
+let alert = 'info';
+        if (percentage > 40 && percentage < 60) {
+            alertType = 'warning';
+        } else if (percentage >= 60) {
+            alertType = 'success';
+        } else if (percentage < 40) {
+            alertType = 'danger';
+        }
+        $('#score_data').text( correctlyAnswer +' / '+ questions.length);
+
+        $('#completedRemark').html(`
+    <div class="alert alert-${alertType}">
+        ${selectedFeedback}
+    </div>
+`);
+
+
+        tryc('success', 'Active recall Completed');
+    }
+});
+$('#completeCloseModalBtn').on('click', () => {
+
+    $('#completeFeedbackMessage').text('Active Mock Completed');
+
+    // modal.modal('hide');
+    completeModal.hide();
+    // modal.hide();
+
 });
 
 // Timer logic

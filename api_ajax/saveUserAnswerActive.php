@@ -89,7 +89,6 @@ $refreshToken = isset($user['refreshToken']) ? $user['refreshToken'] : '';
 //exit;
 // Prepare data for the API
  $hastakenBefore = isset($_SESSION['hastakenBefore']) ? $_SESSION['hastakenBefore'] : false;
-echo $_SESSION['hastakenBefore'];
 
 $profileData = [
     "questionId" => $questionId,
@@ -102,7 +101,7 @@ $profileData = [
 ];
 
 //var_dump($profileData);
-exit();
+//exit();
 // Send data to the API
 $apiResponse = api_request_post('saveAnswerActive', $profileData, 'POST', $accessToken,$refreshToken);
 //$apiResponse = api_request('profileSetup', $profileData, 'POST', $accessToken);

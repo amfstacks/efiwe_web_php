@@ -2282,6 +2282,9 @@ if(selectedAnswer == ''){
                 showQuestion(currentIndex);
                 resetTimer();  // Start the timer again after closing the modal
             }
+            if(currentIndex >=questions.length){
+                tryc('success', 'Active recall Completed');
+            }
         });
 
         // Timer logic
