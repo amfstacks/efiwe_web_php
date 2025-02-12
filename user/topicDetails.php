@@ -100,11 +100,12 @@ $currentSubjectName = strtoupper($currentSubjectName);
                                                             <div class="tab-pane fade" id="contact3" role="tabpanel" aria-labelledby="contact-tab3">
                                                                 <div class="my-5">
                                                                     <div id="instruction">
-                                                                        <div class="alert alert-light col-lg-8 mb-2">
+                                                                        <div class="alert alert-light col-lg-8 mb-3">
                                                                             You can take the active recalls as many times as possible!
                                                                         </div>
 
-                                                                        <button  class="btn btn-outline-primary">Click to load Active Recalls</button>
+                                                                        <button  class="btn btn-outline-primary" id="loadQuestionButton" onclick="loadActiveQuestions()" type="button">Click to load Active Recalls</button>
+                                                                       <br> <i class="fas fa-spinner fa-spin font-30 mb-3 mt-4 " id="loader" style="display: none; maargin: auto !important;"></i>
                                                                     </div>
 
 
@@ -150,7 +151,15 @@ include 'includes/footerjs.php';
 </body>
 <script>
 var subjectId = "<?php echo $currentSubjectId ?>";  //BRUici1R3kf9w4OhTkTT BRUici1R3kf9w4OhTkTT_K3wOskJhlIgeFeO7aC39
-var topicId = ''; //K3wOskJhlIgeFeO7aC39
+var topicId = '';
+
+
+let currentIndex = 0;
+let timer;
+let timeRemaining = 60;
+let timeRemainingRefresh = 60;
+let isAnswered = false;
+let questions = [];
 
     function initializePage() {
         const topicData = getTopicDataFromLocalStorage();
@@ -255,6 +264,242 @@ var topicId = ''; //K3wOskJhlIgeFeO7aC39
             return null;
         }
     }
+
+
+
+function loadActiveQuestions() {
+
+    if(subjectId == '' || topicId == ''){
+        tryc('error', 'Error with topic data, Please try again in few minutes');
+        return;
+    }
+    $('#loader').show();
+    let subtop = subjectId+'_'+topicId;
+
+
+    // return;
+    // $('#loadQuestionButton').addClass('btn-progress');
+    $('#errorAjaxDisplay').hide();
+    $('#loadQuestionButton').prop('disabled', true);
+
+    // return;
+    $.ajax({
+        url: `../api_ajax/get_active_recalls_Questions.php`, // Your API URL
+        method: 'GET',
+        data:{subTop:subtop},
+        success: function (response) {
+            $('#loader').hide();
+            $('#loadQuestionButton').prop('disabled', false);
+
+            if (response.success && response.data) {
+                if(Array.isArray(response.data) && response.data.length > 1) {
+                    questions = response.data;
+                    loadQuestions();
+                    // startTimer();
+                    // $('#spacedInstruction').hide();
+                    // $('#spacedData').show();
+                    // enterFullScreen();
+                }
+                else {
+                    $('#loadQuestionButton').prop('disabled', false);
+
+                    $('#spacedInstruction').show();
+                    $('.start-exam').removeClass('btn-progress');
+                    tryc('error','Error','Questions not found', 'bottomCenter');
+                    $('#errorAjaxDisplay').text('Questions not found').show();
+
+
+                }
+            } else {
+                $('#loader').hide();
+                $('#loadQuestionButton').prop('disabled', false);
+
+                tryc('error','Error',response.message, 'bottomCenter');
+                $('#spacedInstruction').show();
+                $('.start-exam').removeClass('btn-progress');
+                $('#errorAjaxDisplay').text(response.message).show();
+            }
+        },
+        error: function (err) {
+            $('#loader').hide();
+            $('#loadQuestionButton').prop('disabled', false);
+
+            console.error('API request failed:', err);
+            // alert("Failed to load questions.");
+            $('#spacedInstruction').show();
+            $('.start-exam').removeClass('btn-progress');
+            $('#errorAjaxDisplay').text(err).show();
+        }
+    });
+}
+
+
+function loadQuestions() {
+    const questionSlides = $('#questionSlides');
+    questions.forEach((question, index) => {
+        const slide = $(`
+                <div class="question question-container no-padding-left-right" id="question${index}">
+                    <div class="question">
+
+                        <h5 class="bg-dark-gray">${question.text}</h5>
+                        <div class="options options-list">
+                            ${question.options.map((option, i) => `
+ <li>
+                        <input type="radio" name="question_${index}" value="${i}" id="question_${index}_option_${i}" onclick="selectAnswer('${question.answer}', '${i}', ${index},${question.consecutiveCorrectAttempts})" data-answer="${i}" data-question-id="${question.questionid}" data-w="${question.answer}" class="option" />
+                        <label for="question_${index}_option_${i}" class="p-x-3i">${option}</label>
+                    </li>
+<!--                                <button class="option-btn btn" onclick="selectAnswer('${question.answer}', '${i}', ${index},${question.consecutiveCorrectAttempts})">${option}</button><br>-->
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `);
+        questionSlides.append(slide);
+    });
+    showQuestion(currentIndex);
+}
+
+// Show the current question
+function showQuestion(index) {
+    $(".question-container").hide(); // Hide all questions
+    $(`#question${index}`).show(); // Show the current question
+}
+
+// Handle answer selection
+let modal; // Declare modal outside of any function to maintain its reference
+
+// Initialize the Bootstrap modal only once
+const modalElement = document.getElementById('feedbackModal');
+modal = new bootstrap.Modal(modalElement, {
+    backdrop: 'static',  // Prevent modal from closing when clicking outside
+    keyboard: false      // Prevent modal from closing when pressing ESC key
+});
+function selectAnswer(correctAnswer, selectedAnswer, index,consecutiveCorrectAttempts) {
+    if (isAnswered) return; // Prevent multiple answers for the same question
+
+    isAnswered = true;
+    const feedbackMessage = $('#feedbackMessage');
+    const explanation = $('#explanation');
+    // $('#feedbackModal').addClass('fade');
+    // const modal = $('#feedbackModal');
+    // alert(selectedAnswer);
+    // alert(correctAnswer);
+    // alert(questions[index].questionid);
+    let answerText =  questions[index].options[correctAnswer];
+    // alert(answerText);
+    var isCorrectAnswerSelected = false;
+    if ((selectedAnswer != '' )&& (selectedAnswer == correctAnswer)) {
+        feedbackMessage.text("Correct Answer!");
+        explanation.text(questions[index].explanation);
+        isCorrectAnswerSelected = true;
+    } else {
+        feedbackMessage.text("Incorrect Answer!");
+        // explanation.text(`Correct Answer: ${correctAnswer}\nExplanation: ${questions[index].explanation}`);
+        explanation.html(`<b>Correct Answer: </b>${answerText}<br><b>Explanation:</b> ${questions[index].explanation}`);
+        isCorrectAnswerSelected = false;
+
+    }
+
+    // modal.show();
+    // const modalElement = document.getElementById('feedbackModal');
+    //
+    // // Initialize the Bootstrap modal with custom options
+    // const modal = new bootstrap.Modal(modalElement, {
+    //     backdrop: 'static',  // Prevent modal from closing when clicking outside
+    //     keyboard: false      // Prevent modal from closing when pressing ESC key
+    // });
+    modal.show();
+    // modal.modal('show');
+    clearInterval(timer);  // Stop the timer
+    try{
+
+        updateProgressBar();
+    }
+    catch (e){
+
+    }
+
+    if(selectedAnswer == ''){
+        return;
+    }
+
+    $.ajax({
+        url: '../api_ajax/saveUserAnswerSpaced.php',
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({
+            questionId: questions[index].questionid,
+            userAnswer: selectedAnswer,
+            rightOrWrong: isCorrectAnswerSelected,
+            consecutiveCorrectAttempts: consecutiveCorrectAttempts,
+        }),
+        success: function (responseData) {
+            if (responseData.success) {
+                console.log('Answer saved successfully!');
+            } else {
+                tryc('error','Error','Answer not saved, kindly ensure you have a good network connection', 'bottomCenter');
+                console.log('Error saving answer:', responseData.error);
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error('Error:', error);
+        },
+    });
+
+
+}
+
+// Close the feedback modal
+$('#closeModalBtn').on('click', () => {
+    // const modal = $('#feedbackModal');
+
+    // modal.modal('hide');
+    modal.hide();
+    // modal.hide();
+    isAnswered = false;
+    currentIndex++;
+    if (currentIndex < questions.length) {
+        showQuestion(currentIndex);
+        resetTimer();  // Start the timer again after closing the modal
+    }
+});
+
+// Timer logic
+function startTimer() {
+    timer = setInterval(() => {
+        if (timeRemaining <= 0) {
+            clearInterval(timer);
+            selectAnswer(questions[currentIndex].answer, '', currentIndex,questions[currentIndex].consecutiveCorrectAttempts);
+        } else {
+            $('#timer').text(timeRemaining);
+            timeRemaining--;
+        }
+    }, 1000);
+}
+
+function resetTimer() {
+    timeRemaining = timeRemainingRefresh;
+    startTimer();
+}
+function updateProgressBar() {
+    const totalQuestions = questions.length;
+    const answeredQuestions = currentIndex + 1; // Increment by 1 because the index starts from 0
+    const progress = (answeredQuestions / totalQuestions) * 100;
+
+    // Update progress bar
+    // document.getElementById('progress').value = progress;
+    //
+
+
+    const progressBar = document.getElementById('progress-bar');
+    progressBar.style.width = `${progress}%`;
+
+    // Update the progress text (the percentage inside the bar)
+    progressBar.innerHTML = `${Math.round(progress)}%`;
+    // Optionally, show percentage
+    console.log(`Progress: ${Math.round(progress)}%`);
+}
+
     // document.addEventListener('DOMContentLoaded', initializePage);
 </script>
 <script>

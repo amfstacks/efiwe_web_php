@@ -312,6 +312,25 @@ function fetch_Spaced_Questions($uid, $refreshToken, $accessToken) {
     return api_request_get('spacedActualQuestions', $data, 'GET', $accessToken,$refreshToken);
 }
 
+function fetch_ActiveRecall_Questions($uid, $refreshToken, $accessToken,$mySubject) {
+    $data = [
+        'uid' => $uid,
+        'refreshToken' => $refreshToken,
+        'mySubject' => $mySubject,
+    ];
+
+    return api_request_get('fetchARQuestions', $data, 'GET', $accessToken,$refreshToken);
+}
+function fetch_ActiveRecallActual_Questions($uid, $refreshToken, $accessToken,$mySubject) {
+    $data = [
+        'uid' => $uid,
+        'refreshToken' => $refreshToken,
+        'subjectTopicId' => $mySubject,
+    ];
+
+    return api_request_get('fetchActualARQuestions', $data, 'GET', $accessToken,$refreshToken);
+}
+
 function load_Mock_Questions($uid, $refreshToken, $accessToken,$mockWeek,$selectedSubjects) {
     $data = [
         'uid' => $uid,
