@@ -98,9 +98,19 @@ $currentSubjectName = strtoupper($currentSubjectName);
                                                                 </div>
                                                             </div>
                                                             <div class="tab-pane fade" id="contact3" role="tabpanel" aria-labelledby="contact-tab3">
-                                                                Vestibulum imperdiet odio sed neque ultricies, ut dapibus mi maximus. Proin ligula massa,
-                                                                gravida in lacinia efficitur, hendrerit eget mauris. Pellentesque fermentum, sem interdum
-                                                                molestie finibus, nulla diam varius leo, nec varius lectus elit id dolor.
+                                                                <div class="my-5">
+                                                                    <div id="instruction">
+                                                                        <div class="alert alert-light col-lg-8 mb-2">
+                                                                            You can take the active recalls as many times as possible!
+                                                                        </div>
+
+                                                                        <button  class="btn btn-outline-primary">Click to load Active Recalls</button>
+                                                                    </div>
+
+
+
+                                                                </div>
+
                                                             </div>
                                                         </div>
                                                     </div>
@@ -204,9 +214,14 @@ var topicId = ''; //K3wOskJhlIgeFeO7aC39
     }
 
     function embedPDFViewer(docLink) {
+        const pdfPlaceholder = document.getElementById('pdf-placeholder');
+        if(docLink == ''){
+            pdf-placeholder.html('Pdf not available');
+            return;
+        }
         // const pdfViewerContainer = document.getElementById('pdf-viewer');
         const pdfViewerContainer = document.getElementById('pdf-iframe');
-        const pdfPlaceholder = document.getElementById('pdf-placeholder');
+
         docLink =   convertToPreviewLink(docLink);
         // pdfViewerContainer.src(docLink)
         pdfViewerContainer.src = docLink;
