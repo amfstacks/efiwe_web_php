@@ -149,6 +149,7 @@ var topicId = ''; //K3wOskJhlIgeFeO7aC39
             lazyLoadYouTubeVideo(topicData.video);
             embedPDFViewer(topicData.doc);
         } else {
+            tryc('Error', 'Error','No topic data found.');
             console.error("No topic data found.");
         }
     }
