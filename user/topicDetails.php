@@ -436,7 +436,7 @@ let questions = [];
 function loadActiveQuestions() {
 
     if(subjectId == '' || topicId == ''){
-        tryc('error', 'Error with topic data, Please try again in few minutes');
+        tryc('error', 'Error with topic data, Please try again in few seconds');
         return;
     }
     $('#loader').show();
@@ -539,7 +539,7 @@ modal = new bootstrap.Modal(modalElement, {
     backdrop: 'static',  // Prevent modal from closing when clicking outside
     keyboard: false      // Prevent modal from closing when pressing ESC key
 });
-function selectAnswer(correctAnswer, selectedAnswer, index,consecutiveCorrectAttempts) {
+function selectAnswer(correctAnswer, selectedAnswer, index,consecutiveCorrectAttempts = 0) {
     if (isAnswered) return; // Prevent multiple answers for the same question
 
     isAnswered = true;
@@ -587,10 +587,9 @@ function selectAnswer(correctAnswer, selectedAnswer, index,consecutiveCorrectAtt
     if(selectedAnswer == ''){
         return;
     }
-    return;
 
     $.ajax({
-        url: '../api_ajax/saveUserAnswerSpaced.php',
+        url: '../api_ajax/saveUserAnswerActive.php',
         method: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({

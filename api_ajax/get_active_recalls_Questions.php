@@ -49,6 +49,9 @@ if($resultDecode['success'] == false){
    exit();
 }
 
+$hastakenBefore = isset($resultDecode['hastakenBefore']) ? $resultDecode['hastakenBefore'] : false;
+$_SESSION['hastakenBefore'] = $hastakenBefore;
+//$_SESSION['hastakenBefore'] = 'abc';
 $resultTwo = fetch_ActiveRecallActual_Questions($uid, $refreshToken, $accessToken,$mySubject);
 echo json_encode($resultTwo);
 
