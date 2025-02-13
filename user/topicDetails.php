@@ -176,7 +176,7 @@ $currentSubjectName = strtoupper($currentSubjectName);
 
                                             <div id="topics-container" class="mt-3"">
 <!--                                                <h5>Topics Name</h5>-->
-                                            <p>Document Link: <span id="docLink"></span></p>
+<!--                                            <p>Document Link: <span id="docLink"></span></p>-->
 
                                             </div>
 
@@ -318,7 +318,8 @@ $currentSubjectName = strtoupper($currentSubjectName);
                 <br>
 <span id="completedRemark"> </span>
                 <p id="explanationa">
-                    You can take Active Recalls multiple times!
+                    NOTE  <br>
+                <h4>   You can take <b>Active Recalls</b> multiple times! </h4>
                 </p>
             </div>
             <div class="modal-footer bg-whitesmoke br">
@@ -367,7 +368,7 @@ let correctlyAnswer = 0;
     function displayTopicDetails(topicData) {
         document.getElementById('topicName').innerText = topicData.topic;
         document.getElementById('videoLink').innerText = topicData.video;
-        document.getElementById('docLink').innerText = topicData.doc;
+        // document.getElementById('docLink').innerText = topicData.doc;
         topicId = topicData.id;
     }
 
@@ -471,7 +472,7 @@ function loadActiveQuestions() {
 
     $('#errorAjaxDisplay').hide();
     $('#loadQuestionButton').prop('disabled', true);
-
+    resetActiveRecall();
     // return;
     $.ajax({
         url: `../api_ajax/get_active_recalls_Questions.php`, // Your API URL
@@ -540,7 +541,7 @@ function loadQuestions() {
     const questionSlides = $('#questionSlides');
     questions.forEach((question, index) => {
         const slide = $(`
-                <div class="question question-container no-padding-left-right" id="question${index}">
+                <div class="question question-container no-padding-left-right" id="question${index}" style="display: block">
                     <div class="question">
 
                         <h5 class="bg-dark-gray">${question.text}</h5>
@@ -579,11 +580,14 @@ modal = new bootstrap.Modal(modalElement, {
 });// Initialize the Bootstrap modal only once
 const completeModalElement = document.getElementById('completeModal');
 completeModal = new bootstrap.Modal(completeModalElement, {
-    // backdrop: 'static',  // Prevent modal from closing when clicking outside
-    // keyboard: false      // Prevent modal from closing when pressing ESC key
+    backdrop: 'static',  // Prevent modal from closing when clicking outside
+    keyboard: false      // Prevent modal from closing when pressing ESC key
 });
 function selectAnswer(correctAnswer, selectedAnswer, index,consecutiveCorrectAttempts = 0) {
-    if (isAnswered) return; // Prevent multiple answers for the same question
+    if (isAnswered){
+tryc('warning','no multiple entries');
+        return; // Prevent multiple answers for the same question
+    }
 
     isAnswered = true;
     const feedbackMessage = $('#feedbackMessage');
@@ -726,6 +730,22 @@ $('#completeCloseModalBtn').on('click', () => {
     // modal.hide();
 
 });
+
+function resetActiveRecall(){
+    currentIndex = 0;
+     timeRemaining = 60;
+     timeRemainingRefresh = 60;
+     isAnswered = false;
+     questions = [];
+     correctlyAnswer = 0;
+    progress = 0;
+    const progressBar = document.getElementById('progress-bar');
+    progressBar.style.width = `${progress}%`;
+
+    // Update the progress text (the percentage inside the bar)
+    progressBar.innerHTML = `${Math.round(progress)}%`;
+    $('input[type="radio"]').prop('checked', false);
+}
 
 // Timer logic
 function startTimer() {
