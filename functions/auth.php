@@ -32,6 +32,32 @@ function login_user($user_data) {
     $_SESSION['user'] = $user_data;
 }
 
+function isTrialActive($dateRegistered, $trialDays = 3){
+
+    $dateRegistered = new DateTime($dateRegistered);
+
+    // Get the current date and time
+    $currentDate = new DateTime();
+
+    // Calculate the difference in days
+    $interval = $dateRegistered->diff($currentDate);
+
+    // Get the number of days between the two dates
+    $daysElapsed = $interval->days;
+
+    // Calculate the remaining days of the trial
+    $daysLeft = $trialDays - $daysElapsed;
+
+    // If the trial period has expired (i.e., daysLeft <= 0), return 0
+    if ($daysLeft <= 0) {
+        return 0;
+    }
+
+    // Return the remaining days of the trial
+    return $daysLeft;
+
+}
+
 /**
  * Logs out the user by clearing the session.
  */

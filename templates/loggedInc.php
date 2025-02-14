@@ -10,6 +10,9 @@ $userData = isset($_SESSION['userData']) ? $_SESSION['userData'] : [];
 $uid = isset($user['localId']) ? $user['localId'] : '';
 $refreshToken = isset($user['refreshToken']) ? $user['refreshToken'] : '';
 $accessToken = isset($user['idToken']) ? $user['idToken'] : '';
+
+
+
 $profileSet = false;
 if(isset($_SESSION['profileSet']) && $_SESSION['profileSet']){
     $profileSet = true;
@@ -79,6 +82,22 @@ $email = isset($user['email']) ? $user['email'] : '-';
 require_once __DIR__ . '/../config/app_base.php';
 $selectedSubjects = isset($_SESSION['userData']['subjectSelect']) ? $_SESSION['userData']['subjectSelect'] : [];
 //exit;
+$dateRegistered = isset($_SESSION['userData']['dateRegistered']) ? $_SESSION['userData']['dateRegistered'] : '';
+
+if($dateRegistered != ''){
+    $_SESSION['trialDays']  = isTrialActive($dateRegistered,TRIAL_ALLOW_DAYS);
+//   exit;
+}
+else{
+     echo "system could not get your data";
+     exit;
+}
+
+//echo $_SESSION['trialDays'];
+//exit;
+
+
+$hasActiveSubscription = false;
 
 ?>
 
