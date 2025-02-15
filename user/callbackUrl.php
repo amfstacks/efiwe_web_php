@@ -57,7 +57,8 @@ if (isset($_GET['reference'])) {
             "subid" => $_SESSION['sub_package'],
             "selectedAmount" => $_SESSION['sub_amount'],
             "subDur" => $_SESSION['sub_duration'],
-            "referenceID" => $responseData['data']['reference'],
+//            "referenceID" => $responseData['data']['reference'],
+            "referenceID" => $_SESSION['reference'],
             "uid" => $uid,
             "refreshtoken" => $refreshToken
         ];

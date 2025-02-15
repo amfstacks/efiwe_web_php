@@ -1,4 +1,7 @@
 <?php
+
+require_once __DIR__ . '/../functions/auth.php';
+require_once __DIR__ . '/../functions/api.php';
 // Ensure the request is coming via POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     session_start();
@@ -15,6 +18,31 @@ $_SESSION['sub_duration'] = $duration;
         echo json_encode(['status' => 'error', 'message' => 'Invalid payment amount.']);
         exit;
     }
+    $user = isset($_SESSION['user']) ? $_SESSION['user'] : [];
+    $uid = isset($user['localId']) ? $user['localId'] : '';
+//echo $uid;
+//exit;
+
+// Extract accessToken and refreshToken
+    $accessToken = isset($user['idToken']) ? $user['idToken'] : ''; //$_SESSION['user']['idToken']
+    $refreshToken = isset($user['refreshToken']) ? $user['refreshToken'] : '';
+    $modifiedUid = substr($uid, 6);
+    $currentTime = date("His");
+    $uniqueReference = $modifiedUid . $currentTime;
+    $profileData = [
+        "subid" => $_SESSION['sub_package'],
+        "selectedAmount" => $_SESSION['sub_amount'],
+        "subDur" => $_SESSION['sub_duration'],
+        "referenceID" => $uniqueReference,
+        "uid" => $uid,
+        "refreshtoken" => $refreshToken
+    ];
+
+//        var_dump($profileData);
+//        exit;
+    //? add log
+//    $apiResponse = api_request_post('subscribeUser', $profileData, 'POST', $accessToken,$refreshToken);
+
 
     // Paystack secret key (should never be exposed on the frontend)
     $secretKey = 'sk_test_fdbad1bf0761399f90464bd283dbe5ab1b41548f';
@@ -26,7 +54,9 @@ $_SESSION['sub_duration'] = $duration;
         'amount' => $amount * 100, // Paystack expects the amount in kobo (multiply by 100)
         'email' => 'amfstacks@gmail.com', // Replace with the customer's email
         'callback_url' => $base.'callbackUrl.php', // Your callback URL after payment
+        'reference' => $uniqueReference, // Your callback URL after payment
     ];
+    $_SESSION['reference'] = $uniqueReference;
 
     // Use cURL to make the API call to Paystack
     $ch = curl_init($url);

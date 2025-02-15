@@ -342,7 +342,7 @@ if ($trialDays < TRIAL_ALLOW_DAYS && !$checkSub){
     <script>
         $(document).ready(function(){
             $("#exampleModalCenterSub").modal('show');
-            tryc("info", "Set up your Bio-Data");
+            tryc("info","Subscribe Now", "Your trial days are over");
         });
     </script>
 
