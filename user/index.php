@@ -249,35 +249,33 @@ require_once __DIR__ . '/../templates/loggedInc.php';
         </div>
     </div>
 </div>
-
-<div class="modal fade" id="setupsubject" tabindex="-1" role="dialog"
-     aria-labelledby="setupsubjectTitle" aria-hidden="true" data-keyboard="false" data-backdrop="static">
+<div class="modal fade" id="exampleModalCenterSub" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-keyboard="false" data-backdrop="static">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-            <!-- <div class="modal-header">
-                <h5 class="modal-title" id="formModal"></h5>
-
-              </div> -->
+            <div class="modal-header">
+                <h5 class="modal-title" id="formModal">Dear <b><?php echo $firstName != ''  ? $firstName : $email; ?></b>,</h5>
+                <hr>
+            </div>
             <div class="modal-body">
-                <h5 class="modal-title" id="formModal">Dear <b> </b>,</h5>
-                <hr class="mb-0">
-                <div class="card-body ">
-                    <!-- <h3 class="text-center"> welcome to your <b>dashboard</b> </h3> -->
-                    <!-- <hr> -->
-                    <!-- <div class="row">
-                        <div class="form-group col-12">
+                <div class="card-body text-center">
+                    <h3 class="mt-0 text-bold">
+                        <?php
+                        if($trialDays <=0 && !$checkSub){
+                            echo "Your trial days are exhausted";
+                        }
+                        else{
+                        ?>
+                        You have <?php echo $trialDays > 0 ? $trialDays." trial days " :$trialDays." trial day $checkSub"  ?>  left.
+                        <?php
+                        }?>
 
-                        </div>
-                      </div> -->
-
-                    <!-- <small class="text-muted">With faded secondary text</small> -->
-
-                    <p class="lead mta-1">
-                        Welcome to your  dashboard,
-                        <br> <small>Check for  assessments Schedule for your dated assessments !</small>
+                    </h3>
+                    <p class="lead mt-4">
+                        Do not deny yourself an opportunity to pass your JAMB excellently!
                     </p>
-                    <button  id="a" type="button" class="btn btn-primary"  data-dismiss="modal" >  <i class="fa fa-spin fa-cog"></i> Go to Dashboard
-                    </button>
+                    <a href="sub-packages">     <button type="button" class="btn btn-primary btn-lg font-20" >  <i class="fa fa-spain fa-credit-card mr-1"></i> Subscribe Now
+                        </button></a>
                 </div>
 
 
@@ -286,6 +284,7 @@ require_once __DIR__ . '/../templates/loggedInc.php';
         </div>
     </div>
 </div>
+
 
 
 <div class="modal fade" id="changepass" tabindex="-1" role="dialog"
@@ -331,6 +330,21 @@ if ($profileSet == 0){
         tryc("info", "Set up your Bio-Data");
     });
 </script>
+
+    <?php
+
+}
+?>
+
+<?php
+if ($trialDays < TRIAL_ALLOW_DAYS && !$checkSub){
+    ?>
+    <script>
+        $(document).ready(function(){
+            $("#exampleModalCenterSub").modal('show');
+            tryc("info", "Set up your Bio-Data");
+        });
+    </script>
 
     <?php
 

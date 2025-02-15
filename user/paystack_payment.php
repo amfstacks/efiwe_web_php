@@ -1,10 +1,15 @@
 <?php
 // Ensure the request is coming via POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    session_start();
     // Receive the data (amount) sent from the frontend
     $data = json_decode(file_get_contents("php://input"), true);
     $amount = $data['amount'];
-
+    $duration = $data['duration'];
+    $package = $data['package'];
+$_SESSION['sub_amount'] = $amount;
+$_SESSION['sub_duration'] = $duration;
+    $_SESSION['sub_package'] = $package;
     // Validate the amount (e.g., ensure it's greater than 0)
     if ($amount <= 0 || !is_numeric($amount)) {
         echo json_encode(['status' => 'error', 'message' => 'Invalid payment amount.']);
@@ -16,10 +21,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Prepare the request to Paystack to initialize the transaction
     $url = 'https://api.paystack.co/transaction/initialize';
+    $base = 'http://localhost/pro/efiweweb/user/';
     $fields = [
         'amount' => $amount * 100, // Paystack expects the amount in kobo (multiply by 100)
         'email' => 'amfstacks@gmail.com', // Replace with the customer's email
-        'callback_url' => 'https://yourwebsite.com/callback.php', // Your callback URL after payment
+        'callback_url' => $base.'callbackUrl.php', // Your callback URL after payment
     ];
 
     // Use cURL to make the API call to Paystack

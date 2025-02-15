@@ -14,8 +14,18 @@ $accessToken = isset($user['idToken']) ? $user['idToken'] : '';
 
 
 $profileSet = false;
+$hasActiveSubscription = false;
+$hasCheckedSubscription = false;
+$hasCheckedTrial = false;
 if(isset($_SESSION['profileSet']) && $_SESSION['profileSet']){
     $profileSet = true;
+}
+
+if(isset($_SESSION['hasCheckedSubscription']) && $_SESSION['hasCheckedSubscription']){
+    $hasCheckedSubscription = true;
+}
+if(isset($_SESSION['hasCheckedTrial']) && $_SESSION['hasCheckedTrial']){
+    $hasCheckedTrial = true;
 }
 //var_dump( $_SESSION['user']);
 // Check if UID is available
@@ -84,20 +94,64 @@ $selectedSubjects = isset($_SESSION['userData']['subjectSelect']) ? $_SESSION['u
 //exit;
 $dateRegistered = isset($_SESSION['userData']['dateRegistered']) ? $_SESSION['userData']['dateRegistered'] : '';
 
-if($dateRegistered != ''){
-    $_SESSION['trialDays']  = isTrialActive($dateRegistered,TRIAL_ALLOW_DAYS);
-//   exit;
+
+
+
+
+
+    if($dateRegistered != ''){
+        $_SESSION['trialDays']  = isTrialActive($dateRegistered,TRIAL_ALLOW_DAYS);
+        if($_SESSION['trialDays']){
+            $hasActiveSubscription = true;
+            $_SESSION['hasActiveSubscription']  = true;
+            $_SESSION['hasCheckedSubscription'] = true;
+            $hasCheckedSubscription = true;
+        }
+        else{
+            $hasActiveSubscription = false;
+            $_SESSION['hasActiveSubscription']  = false;
+//            $hasCheckedSubscription = false;
+
+        }
+    }
+    else{
+        $_SESSION['trialDays'] = false;
+    }
+
+if(!$hasCheckedSubscription){
+if(!$_SESSION['trialDays']) {
+    $queryParams = [
+        'uid' => $uid,
+        'refreshtoken' => $refreshToken
+    ];
+    $response = api_request_get_bool('hasSub', $queryParams, 'GET', $accessToken, $refreshToken);
+//    var_dump($response);
+ $checkSubStat = $response['success'];
+
+    if ($checkSubStat == 'true') {
+        echo "here__";
+
+        $_SESSION['hasActiveSubscription'] = true;
+    } else {
+        echo "here";
+        $_SESSION['hasActiveSubscription'] = false;
+    }
+    $_SESSION['hasCheckedSubscription'] = true;
+//echo $response;
+//    exit;
 }
-else{
-     echo "system could not get your data";
-     exit;
 }
+//echo $dateRegistered;
+//echo $_SESSION['trialDays'];
+ $checkSub = $_SESSION['hasActiveSubscription'];
+$trialDays = isset($_SESSION['trialDays']) ? $_SESSION['trialDays'] : 0;
+//exit;
 
 //echo $_SESSION['trialDays'];
 //exit;
 
 
-$hasActiveSubscription = false;
+
 
 ?>
 

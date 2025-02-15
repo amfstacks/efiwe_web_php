@@ -35,7 +35,7 @@ require_once __DIR__ . '/../templates/loggedInc.php';
                                                         </div>
                                                         <div class="pricing-padding">
                                                             <div class="h3 font-weight-bold">
-                                                                <div><span id="price-display">3,000 </span><br><small>Basic Plan</small></div>
+                                                                <div><span id="price-display">₦3,000 </span><br><small>Basic Plan</small></div>
                                                             </div>
                                                             <div class="pricing-details">
                                                                 <a href="#" class="btn btn-outline-primary bg-primary text-white" id="one-month-btn">1 month</a>
@@ -54,7 +54,7 @@ require_once __DIR__ . '/../templates/loggedInc.php';
                                                         </div>
                                                         <div class="pricing-padding">
                                                             <div class="h3 font-weight-bold">
-                                                                <div><span id="price-displayPremium">20,000 </span><br><small>Premium Plan</small></div>
+                                                                <div><span id="price-displayPremium">₦20,000 </span><br><small>Premium Plan</small></div>
                                                             </div>
                                                             <div class="pricing-details">
                                                                 <a href="#" class="btn btn-outline-primary bg-primary text-white" id="pone-month-btn">1 month</a>
@@ -98,14 +98,17 @@ include 'includes/footerjs.php';
 
         let selectedPackage = 'Basic';
         let selectedDuration = 1;  // Default: 1 month
-        let selectedAmount = 3000;  // Default: 20,000
+        let selectedAmount = 3000;
+        let pselectedPackage = 'Premium';
+        let pselectedDuration = 1;  // Default: 1 month
+        let pselectedAmount = 20000;  // Default: 20,000
 
         // Update price and toggle button styles for Basic Plan
         oneMonthBtn.on('click', function(e) {
             e.preventDefault();
             selectedDuration = 1;
             selectedAmount = 3000;
-            priceDisplay.html('3,000');
+            priceDisplay.html('₦3,000');
             oneMonthBtn.addClass('bg-primary text-white').removeClass('btn-outline-primary');
             threeMonthBtn.addClass('btn-outline-primary').removeClass('bg-primary text-white');
         });
@@ -114,7 +117,7 @@ include 'includes/footerjs.php';
             e.preventDefault();
             selectedDuration = 3;
             selectedAmount = 8500;
-            priceDisplay.html('8,500');
+            priceDisplay.html('₦8,500');
             threeMonthBtn.addClass('bg-primary text-white').removeClass('btn-outline-primary');
             oneMonthBtn.addClass('btn-outline-primary').removeClass('bg-primary text-white');
         });
@@ -127,20 +130,20 @@ include 'includes/footerjs.php';
         // Update price and toggle button styles for Premium Plan
         poneMonthBtn.on('click', function(e) {
             e.preventDefault();
-            selectedPackage = 'Premium';
-            selectedDuration = 1;
-            selectedAmount = 20000;
-            ppriceDisplay.html('20,000');
+            pselectedPackage = 'Premium';
+            pselectedDuration = 1;
+            pselectedAmount = 20000;
+            ppriceDisplay.html('₦20,000');
             poneMonthBtn.addClass('bg-primary text-white').removeClass('btn-outline-primary');
             pthreeMonthBtn.addClass('btn-outline-primary').removeClass('bg-primary text-white');
         });
 
         pthreeMonthBtn.on('click', function(e) {
             e.preventDefault();
-            selectedPackage = 'Premium';
-            selectedDuration = 3;
-            selectedAmount = 55000;
-            ppriceDisplay.html('55,000');
+            pselectedPackage = 'Premium';
+            pselectedDuration = 3;
+            pselectedAmount = 55000;
+            ppriceDisplay.html('₦55,000');
             pthreeMonthBtn.addClass('bg-primary text-white').removeClass('btn-outline-primary');
             poneMonthBtn.addClass('btn-outline-primary').removeClass('bg-primary text-white');
         });
@@ -149,14 +152,48 @@ include 'includes/footerjs.php';
         subscribeBtn.on('click', function(e) {
             e.preventDefault();
 
+            fetch('paystack_payment.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ amount: selectedAmount,duration:selectedDuration,package:selectedPackage })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === "success") {
+                        // Redirect the user to the Paystack payment page (no public key required)
+                        window.location.href = data.authorization_url;
+                    } else {
+                        alert("Error initializing payment");
+                    }
+                });
 
         });
 
         // Trigger Paystack payment for Premium Plan
         premiumSubscribeBtn.on('click', function(e) {
             e.preventDefault();
-
-
+//             alert(pselectedPackage);
+//             alert(pselectedDuration);
+//             alert(pselectedAmount);
+// return;
+            fetch('paystack_payment.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ amount: pselectedAmount,duration:pselectedDuration,package:pselectedPackage })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === "success") {
+                        // Redirect the user to the Paystack payment page (no public key required)
+                        window.location.href = data.authorization_url;
+                    } else {
+                        alert("Error initializing payment");
+                    }
+                });
         });
     });
 </script>
