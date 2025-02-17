@@ -108,8 +108,8 @@ $dateRegistered = isset($_SESSION['userData']['dateRegistered']) ? $_SESSION['us
             $hasCheckedSubscription = true;
         }
         else{
-            $hasActiveSubscription = false;
-            $_SESSION['hasActiveSubscription']  = false;
+//            $hasActiveSubscription = false;
+//            $_SESSION['hasActiveSubscription']  = false;
 //            $hasCheckedSubscription = false;
 
         }
@@ -129,11 +129,11 @@ if(!$_SESSION['trialDays']) {
  $checkSubStat = $response['success'];
 
     if ($checkSubStat == 'true') {
-        echo "here__";
+//        echo "here__";
 
         $_SESSION['hasActiveSubscription'] = true;
     } else {
-        echo "here";
+//        echo "here";
         $_SESSION['hasActiveSubscription'] = false;
     }
     $_SESSION['hasCheckedSubscription'] = true;
@@ -143,7 +143,7 @@ if(!$_SESSION['trialDays']) {
 }
 //echo $dateRegistered;
 //echo $_SESSION['trialDays'];
- $checkSub = $_SESSION['hasActiveSubscription'];
+  $checkSub = $_SESSION['hasActiveSubscription'];
 $trialDays = isset($_SESSION['trialDays']) ? $_SESSION['trialDays'] : 0;
 //exit;
 

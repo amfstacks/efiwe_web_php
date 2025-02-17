@@ -28,6 +28,8 @@ $_SESSION['sub_duration'] = $duration;
     $refreshToken = isset($user['refreshToken']) ? $user['refreshToken'] : '';
     $modifiedUid = substr($uid, 6);
     $currentTime = date("His");
+    //? test very well
+
     $uniqueReference = $modifiedUid . $currentTime;
     $profileData = [
         "subid" => $_SESSION['sub_package'],
@@ -41,7 +43,10 @@ $_SESSION['sub_duration'] = $duration;
 //        var_dump($profileData);
 //        exit;
     //? add log
-//    $apiResponse = api_request_post('subscribeUser', $profileData, 'POST', $accessToken,$refreshToken);
+    try {
+        $apiResponse = api_request_post('subscribeUserLog', $profileData, 'POST', $accessToken, $refreshToken);
+    }catch (Exception $e){
+    }
 
 
     // Paystack secret key (should never be exposed on the frontend)
@@ -56,6 +61,7 @@ $_SESSION['sub_duration'] = $duration;
         'callback_url' => $base.'callbackUrl.php', // Your callback URL after payment
         'reference' => $uniqueReference, // Your callback URL after payment
     ];
+    //? test very well
     $_SESSION['reference'] = $uniqueReference;
 
     // Use cURL to make the API call to Paystack

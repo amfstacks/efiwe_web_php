@@ -30,7 +30,7 @@ if (isset($_GET['reference'])) {
 
     // Decode the response from Paystack
     $responseData = json_decode($response, true);
-
+//var_dump($responseData);
     // Check if the transaction was successful
     if ($responseData['status'] === true && $responseData['data']['status'] === 'success') {
         // Here you can process the payment (e.g., update database, send confirmation email)
@@ -53,12 +53,13 @@ if (isset($_GET['reference'])) {
             ]);
             exit;
         }
+
         $profileData = [
             "subid" => $_SESSION['sub_package'],
             "selectedAmount" => $_SESSION['sub_amount'],
             "subDur" => $_SESSION['sub_duration'],
 //            "referenceID" => $responseData['data']['reference'],
-            "referenceID" => $_SESSION['reference'],
+            "referenceID" => $responseData['data']['reference'],
             "uid" => $uid,
             "refreshtoken" => $refreshToken
         ];
@@ -81,9 +82,14 @@ if (isset($_GET['reference'])) {
         $hasSubscription = $decodedResponse['hasSubscription'];
      if($success){
          $_SESSION['hasSubscription'] = $hasSubscription;
+         $_SESSION['hasActiveSubscription']  = true;
+
+         $_SESSION['hasCheckedSubscription'] = true;
          if($data != null && $data != ''){
              $_SESSION['sub_expires'] = $data;
          }
+         header("location: index");
+         exit;
      }
 
 //        echo "Payment successful! Your payment reference is: " . $responseData['data']['reference'];

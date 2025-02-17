@@ -2,6 +2,42 @@
 $page_title = '|| Subscription packages';
 
 require_once __DIR__ . '/../templates/loggedInc.php';
+$queryParams = [
+    'uid' => $uid,
+    'refreshtoken' => $refreshToken
+];
+$response = api_request_get('subData', $queryParams, 'GET', $accessToken, $refreshToken);
+
+$amount = '';
+$duration = '';
+$end_date = '';
+$package = '';
+
+$errorWithFetch = true;
+if ($response['success']) {
+    $subdata = $response['data'];
+    $amount =  $subdata['amount'];
+    $duration =  $subdata['duration'];
+    $end_date =  $subdata['end_date']['date'];
+
+    $end_date_string = isset($subdata['end_date']['date']) ? $subdata['end_date']['date'] : '';  // e.g., "2025-05-16 13:13:47.000000"
+
+if($end_date_string != '') {
+    $end_date = new DateTime($end_date_string);
+
+// Format the date to a user-friendly format (e.g., May 16, 2025 at 1:13 PM)
+    $end_date = $end_date->format('F j, Y \a\t g:i A');
+
+// Output the formatted date
+
+}
+
+    $package =  $subdata['package'];
+//    var_dump($subdata);
+    $errorWithFetch = false;
+}
+//var_dump($end_date);
+//exit;
 ?>
 
 <body>
@@ -24,10 +60,44 @@ require_once __DIR__ . '/../templates/loggedInc.php';
                                 <div class="padding-20">
                                     <form class="needs-validation" novalidate="" id="profile-form" enctype="multipart/form-data">
                                         <div class="card-header">
-                                            <h4> Select a Subscription Package</h4>
+                                            <?php
+                                            if($errorWithFetch){
+                                            ?>
+                                            <div class="col-lg-6">
+                                                <div class="carda">
+                                                    <div class="card-bodya card-type-3">
+                                                        <div class="row">
+                                                            <div class="col">
+                                                                YOUR SUBSCRIPTION<br>
+                                                                <span class="btn btn-lg btn-primary font-20 m-r-20"><?php echo $package?> plan <br></span>
+                                                                <div class="font-weight-bold mt-1 h3">₦<?php echo $amount?><small><p class="mt-0 mb-0 text-muted text-sm">
+                                                                            <span class="text-warning mr-2"> Expires</span>
+                                                                            <span class="text-nowrap"><?php echo $end_date ?></span>
+                                                                        </p></small></div>
+
+
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <?php
+                                            }
+                                            else{
+
+                                                echo '   <div class="alert alert-danger">
+                                                Error fetching Subscription 
+                    </div>';
+                                            }
+                                            ?>
+
                                         </div>
                                         <div class="card-body">
+                                            <h4 class="mb-5"> Select a Subscription Package</h4>
+
                                             <div class="row">
+
                                                 <div class="col-12 col-md-4 col-lg-4 mx-auto">
                                                     <div class="pricing">
                                                         <div class="pricing-title">
@@ -151,7 +221,8 @@ include 'includes/footerjs.php';
         // Trigger Paystack payment on Subscribe button click
         subscribeBtn.on('click', function(e) {
             e.preventDefault();
-
+            subscribeBtn.addClass('btn-progress');
+            // return;
             fetch('paystack_payment.php', {
                 method: 'POST',
                 headers: {
@@ -167,6 +238,7 @@ include 'includes/footerjs.php';
                     } else {
                         alert("Error initializing payment");
                     }
+                    subscribeBtn.removeClass('btn-progress');
                 });
 
         });
@@ -178,6 +250,8 @@ include 'includes/footerjs.php';
 //             alert(pselectedDuration);
 //             alert(pselectedAmount);
 // return;
+            subscribeBtn.addClass('btn-progress');
+
             fetch('paystack_payment.php', {
                 method: 'POST',
                 headers: {
@@ -193,6 +267,8 @@ include 'includes/footerjs.php';
                     } else {
                         alert("Error initializing payment");
                     }
+                    subscribeBtn.removeClass('btn-progress');
+
                 });
         });
     });
