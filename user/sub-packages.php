@@ -85,7 +85,6 @@ if($end_date_string != '') {
                                             <?php
                                             }
                                             else{
-
                                                 echo '   <div class="alert alert-danger">
                                                 Error fetching Subscription 
                     </div>';
