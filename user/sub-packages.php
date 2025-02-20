@@ -12,7 +12,8 @@ $amount = '';
 $duration = '';
 $end_date = '';
 $package = '';
-
+//var_dump($response);
+//exit;
 $errorWithFetch = true;
 if ($response['success']) {
     $subdata = $response['data'];
@@ -35,6 +36,9 @@ if($end_date_string != '') {
     $package =  $subdata['package'];
 //    var_dump($subdata);
     $errorWithFetch = false;
+}
+else{
+
 }
 //var_dump($end_date);
 //exit;
@@ -61,7 +65,7 @@ if($end_date_string != '') {
                                     <form class="needs-validation" novalidate="" id="profile-form" enctype="multipart/form-data">
                                         <div class="card-header">
                                             <?php
-                                            if($errorWithFetch){
+                                            if(!$errorWithFetch){
                                             ?>
                                             <div class="col-lg-6">
                                                 <div class="carda">
