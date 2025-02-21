@@ -86,6 +86,7 @@ if(!$profileSet) {
 //var_dump($user);
 //exit;
 
+
 $firstName = isset($userData['firstname']) ? $userData['firstname'] : '-';
 $surname = isset($userData['surname']) ? $userData['surname'] : '-';
 $email = isset($user['email']) ? $user['email'] : '-';
