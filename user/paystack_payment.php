@@ -52,12 +52,13 @@ $_SESSION['sub_duration'] = $duration;
     // Paystack secret key (should never be exposed on the frontend)
     $secretKey = 'sk_test_fdbad1bf0761399f90464bd283dbe5ab1b41548f';
 
+    $email = isset($user['email']) ? $user['email'] : 'amfstacks@gmail.com';
     // Prepare the request to Paystack to initialize the transaction
     $url = 'https://api.paystack.co/transaction/initialize';
     $base = 'http://localhost/pro/efiweweb/user/';
     $fields = [
         'amount' => $amount * 100, // Paystack expects the amount in kobo (multiply by 100)
-        'email' => 'amfstacks@gmail.com', // Replace with the customer's email
+        'email' => $email, // Replace with the customer's email
         'callback_url' => $base.'callbackUrl.php', // Your callback URL after payment
         'reference' => $uniqueReference, // Your callback URL after payment
     ];

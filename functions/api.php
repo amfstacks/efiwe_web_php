@@ -13,6 +13,9 @@ require_once __DIR__ . '/../config/config.php';
  *
  * @return array The API response.
  */
+
+$checkSub = $_SESSION['hasActiveSubscription'];
+
 function api_request($endpoint, $data = null, $method = 'POST', $accessToken = null) {
     $url = API_BASE_URL . $endpoint;
 
@@ -66,6 +69,14 @@ function api_request($endpoint, $data = null, $method = 'POST', $accessToken = n
 return json_decode($response, true);
 }
 function api_request_get($endpoint, $data = null, $method = 'GET', $accessToken = null,$refreshToken = null) {
+    global $checkSub;
+    if(!$checkSub){
+        return [
+            "success" => false,
+            "message" => "No active subscription.",
+        ];
+        exit;
+    }
     // Construct the full URL with query parameters if provided
     if ($accessToken == '' || $accessToken == null) {
         return [

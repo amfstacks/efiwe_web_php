@@ -14,31 +14,38 @@ $end_date = '';
 $package = '';
 //var_dump($response);
 //exit;
-$errorWithFetch = true;
-if ($response['success']) {
-    $subdata = $response['data'];
-    $amount =  $subdata['amount'];
-    $duration =  $subdata['duration'];
-    $end_date =  $subdata['end_date']['date'];
+$hasData = false;
+if($response != NULL) {
+    $errorWithFetch = true;
+    if ($response['success']) {
+        $subdata = $response['data'];
+        $amount = $subdata['amount'];
+        $duration = $subdata['duration'];
+        $end_date = $subdata['end_date']['date'];
 
-    $end_date_string = isset($subdata['end_date']['date']) ? $subdata['end_date']['date'] : '';  // e.g., "2025-05-16 13:13:47.000000"
+        $end_date_string = isset($subdata['end_date']['date']) ? $subdata['end_date']['date'] : '';  // e.g., "2025-05-16 13:13:47.000000"
 
-if($end_date_string != '') {
-    $end_date = new DateTime($end_date_string);
+        if ($end_date_string != '') {
+            $end_date = new DateTime($end_date_string);
 
 // Format the date to a user-friendly format (e.g., May 16, 2025 at 1:13 PM)
-    $end_date = $end_date->format('F j, Y \a\t g:i A');
+            $end_date = $end_date->format('F j, Y \a\t g:i A');
 
 // Output the formatted date
 
-}
+        }
 
-    $package =  $subdata['package'];
+        $package = $subdata['package'];
 //    var_dump($subdata);
-    $errorWithFetch = false;
+        $errorWithFetch = false;
+        $hasData = true;
+    } else {
+
+    }
 }
 else{
-
+    $hasData = false;
+    echo "no record";
 }
 //var_dump($end_date);
 //exit;
@@ -65,6 +72,7 @@ else{
                                     <form class="needs-validation" novalidate="" id="profile-form" enctype="multipart/form-data">
                                         <div class="card-header">
                                             <?php
+                                            if($hasData){
                                             if(!$errorWithFetch){
                                             ?>
                                             <div class="col-lg-6">
@@ -91,6 +99,11 @@ else{
                                             else{
                                                 echo '   <div class="alert alert-danger">
                                                 Error fetching Subscription 
+                    </div>';
+                                            }}
+                                            else{
+                                                echo '   <div class="alert alert-danger">
+                                                No subscription found
                     </div>';
                                             }
                                             ?>
