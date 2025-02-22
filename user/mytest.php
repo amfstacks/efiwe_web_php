@@ -3,7 +3,8 @@ $page_title = '|| My Tests';
 
 require_once __DIR__ . '/../templates/loggedInc.php';
 
-
+//echo USEMOCKDEFAULT;
+//exit;
 ?>
 
 
@@ -136,7 +137,8 @@ include 'includes/footerjs.php';
 <script>
     $(document).ready(function() {
         // alert('aa');
-
+let USEMOCKDEFAULT = <?php echo json_encode(USEMOCKDEFAULT); ?>;
+// alert(USEMOCKDEFAULT);
         let selectedSubjects = [];
         // $("#jmock").on("click", function(event) {
             $(document).on('click', '#jmock', function() {
@@ -166,13 +168,19 @@ include 'includes/footerjs.php';
                                 // const encryptedWeek = btoa(mockExam.week);
                                 const encryptedWeek = mockExam.week;
                                 var buttonHTML = '';
+                                if(USEMOCKDEFAULT){
+                                    //mockExam.instruction = <?php //echo MOCKINSTRUCTION; ?>//;
+                                    mockExam.instruction = <?php echo json_encode(MOCKINSTRUCTION); ?>;
+                                    mockExam.duration = <?php echo MOCKDURATION; ?>;
+                                    mockExam.totalquestions = <?php echo MOCKTOTALQUESTION; ?>;
+                                }
                                 if (!mockExam.canContinue) {
                                     buttonHTML = `
-                        <button class="btn btn-secondary" disabled>Exam Completed</button>
+                        <button class="btn btn-secondary" disabled>JAMB Mock Completed</button>
                     `;
                                 } else {
                                     buttonHTML = `
-                        <button class="btn btn-primary start-exam text-white" data-exam-id="${mockExam.id}" data-week="${encryptedWeek}" data-instruction="${mockExam.instruction}" data-duration="${mockExam.duration}" data-totalquestions="${mockExam.totalquestions}" >Start Exam</button>
+                        <button class="btn btn-primary start-exam text-white" data-exam-id="${mockExam.id}" data-week="${encryptedWeek}" data-instruction="${mockExam.instruction}" data-duration="${mockExam.duration}" data-totalquestions="${mockExam.totalquestions}" >Start JAMB Mock</button>
                     `;
                                 }
 
