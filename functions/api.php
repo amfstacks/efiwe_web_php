@@ -705,7 +705,14 @@ function api_request_post___($endpoint, $data = null, $method = 'POST', $accessT
 
 function api_request_post($endpoint, $data = null, $method = 'POST', $accessToken = null, $refreshToken = null) {
     $url = API_BASE_URL . $endpoint;
-
+    global $checkSub;
+    if(!$checkSub){
+        return [
+            "success" => false,
+            "message" => "No active subscription.",
+        ];
+        exit;
+    }
     // Remove trailing spaces from keys
     $cleanData = [];
     foreach ($data as $key => $value) {

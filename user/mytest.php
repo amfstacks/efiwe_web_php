@@ -155,7 +155,16 @@ let USEMOCKDEFAULT = <?php echo json_encode(USEMOCKDEFAULT); ?>;
                     dataType: 'json',
                     success: function(response) {
                         // console.log(response);
-                        if (response.data && response.data.length > 0 && response.success) {
+                        // alert(response);
+                        if (response === null || response === 'null') {
+                           var feedback = 'No mock exams available. Please check back later';
+                           $("#modal-loader").hide();
+
+                           $("#mockExamsList").html('<div class="alert alert-danger col-lg-6 col-md-12" id="status" style="diasplay: none; ">'+ feedback +"</div>").show();
+                           tryc('error','',feedback, 'bottomCenter');
+                            return;
+                       }
+                        if (response.data && response.data.length > 0 && response.success ) {
                             // Hide the loader and show the mock exams list
                             $("#modal-loader").hide();
                             $("#mockExamsList").show();

@@ -455,6 +455,7 @@ function getMyTotalPoints(){
                 // Update the total points in the HTML
                 $('#mytotalpoints').text(dataResponse.data.totalPointsFetched);
             }
+            silentMockFetch();
         },
         error: function(xhr, status, error) {
             console.error("Error fetching total points:", error);
@@ -462,6 +463,22 @@ function getMyTotalPoints(){
             $('#mytotalpoints').text('Error');
         }
     });
+}
+function silentMockFetch(){
+        try {
+            $.ajax({
+                url: '../api_ajax/updateUserMockFromSource.php', // API endpoint
+                method: 'POST', // Using GET method, can be POST if needed
+                success: function (response) {
+                    // alert(response);
+                },
+                error: function (xhr, status, error) {
+                    tryc('Warning', 'Could not sync JAMB mock data');
+                }
+            });
+        }catch (e){
+
+        }
 }
 
     $(document).ready(function() {
