@@ -480,6 +480,22 @@ function silentMockFetch(){
 
         }
 }
+function fetchDailyTask(){
+        try {
+            $.ajax({
+                url: '../api_ajax/fetchDailyTasks.php', // API endpoint
+                method: 'POST', // Using GET method, can be POST if needed
+                success: function (response) {
+                    // alert(response);
+                },
+                error: function (xhr, status, error) {
+                    tryc('Warning', 'Could not sync JAMB mock data');
+                }
+            });
+        }catch (e){
+
+        }
+}
 
     $(document).ready(function() {
         // Call loadMySubjects after the page has finished loading
@@ -504,7 +520,7 @@ function silentMockFetch(){
             });
         });
         getMyTotalPoints();
-
+        fetchDailyTask();
     });
 </script>
 <style>

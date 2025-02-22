@@ -396,6 +396,16 @@ function fetch_JambMockList($uid, $refreshToken, $accessToken) {
     return api_request_get('getMocksList', $data, 'GET', $accessToken,$refreshToken);
 }
 
+
+function fetchDailyTasks($uid, $refreshToken, $accessToken) {
+    $data = [
+        'uid' => $uid,
+        'refreshToken' => $refreshToken
+    ];
+
+    return api_request_get('fetchDailyTask', $data, 'GET', $accessToken,$refreshToken);
+}
+
 function fetch_Mock_Questions($uid, $refreshToken, $accessToken,$mockWeek) {
     $data = [
         'uid' => $uid,
