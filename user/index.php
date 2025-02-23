@@ -74,7 +74,7 @@ require_once __DIR__ . '/../templates/loggedInc.php';
                             <div class="card-body card-type-3">
                                 <div class="row">
                                     <div class="col">
-                                        <h6 class="text-muted mb-0">Completed Daily Tasks</h6>
+                                        <h6 class="text-muted mb-0"> Daily Tasks</h6>
 <!--                                        <span class="font-weight-bold mb-0">450</span>-->
                                     </div>
                                     <div class="col-auto">
@@ -90,7 +90,7 @@ require_once __DIR__ . '/../templates/loggedInc.php';
                                             <div class="float-right">
 <!--                                                <div class="font-weight-600 text-muted text-small">112 Sales</div>-->
                                             </div>
-                                            <div class="media-title">0/0</div>
+                                            <div class="media-title" id="dailyTaskTrack">0/0</div>
                                             <div class="mt-1">
 <!--                                                <div class="budget-price bg-grey">-->
 <!--                                                    <div class="budget-price-square bg-primary" data-width="61%" style="width: 61%;"></div>-->
@@ -484,9 +484,30 @@ function fetchDailyTask(){
         try {
             $.ajax({
                 url: '../api_ajax/fetchDailyTasks.php', // API endpoint
-                method: 'POST', // Using GET method, can be POST if needed
+                method: 'POST',
                 success: function (response) {
-                    // alert(response);
+                    console.log(response);
+                    if (response.success && response.data && response.data.length > 0) {
+                        // Process the response data
+                        var tasksData = response.data;
+
+                        // Count the total tasks
+                        var totalTasks = tasksData.length;
+
+                        // Count the completed tasks
+                        var completedTasks = 0;
+                        tasksData.forEach(function(task) {
+                            if (task.completed === true) {
+                                completedTasks++;
+                            }
+                        });
+
+                        // Update the media-title div with the total and completed task counts
+                        $("#dailyTaskTrack").text(completedTasks + "/" + totalTasks);
+                    } else {
+                        // If no data or response isn't successful
+                        console.log("No tasks found or response wasn't successful.");
+                    }
                 },
                 error: function (xhr, status, error) {
                     tryc('Warning', 'Could not sync JAMB mock data');
