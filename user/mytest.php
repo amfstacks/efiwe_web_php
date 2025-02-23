@@ -212,8 +212,6 @@ let USEMOCKDEFAULT = <?php echo json_encode(USEMOCKDEFAULT); ?>;
                                 var instruction = $(this).data('instruction');
                                 var duration = $(this).data('duration');
                                 var totalQuestions = $(this).data('totalquestions');
-// alert(week);
-// return;
                                 $.ajax({
                                     url: '../api_ajax/save_week_session.php', // PHP file to save week in session
                                     type: 'POST',

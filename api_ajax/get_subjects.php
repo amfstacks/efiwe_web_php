@@ -36,6 +36,11 @@ $examId = "X2j9hFD6O7RGAER6bn3b";
 // Fetch all subjects from the API
 $result = fetch_all_subjects($examId, $refreshToken, $accessToken);
 
+//? complete
+//if ($result['success']) {
+//    $_SESSION['mySubjects'] = ($result);
+//}
+
 // Return the result as JSON
 header('Content-Type: application/json');
 echo json_encode($result);
