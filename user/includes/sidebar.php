@@ -18,7 +18,7 @@
 
             <li class="menu-header"></li>
             <li class="dropdown ">
-                <a href="#" class="nav-link"><i class="fas fa-tasks"></i><span>Tasks</span></a>
+                <a href="dailyTasks" class="nav-link"><i class="fas fa-tasks"></i><span>Tasks</span></a>
             </li>
 
 

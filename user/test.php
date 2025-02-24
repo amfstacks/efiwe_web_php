@@ -1003,3 +1003,133 @@ fas fa-clipboard-list"></i><span>Exam</span></a>
 
 </script>
 </html>
+
+
+back to out daily tasks
+
+its working perfectly well
+
+this is a sample of our data
+{
+"isNewToken": false,
+"token": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImRjNjI2MmYzZTk3NzIzOWMwMDUzY2ViODY0Yjc3NDBmZjMxZmNkY2MiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vZWZpd2VhcHAtODM0YjUiLCJhdWQiOiJlZml3ZWFwcC04MzRiNSIsImF1dGhfdGltZSI6MTc0MDMxMjI0OSwidXNlcl9pZCI6IjZ0YTZybUlSQk1UZ3JXTDFLZGxqRGxqOGRkMDIiLCJzdWIiOiI2dGE2cm1JUkJNVGdyV0wxS2RsakRsajhkZDAyIiwiaWF0IjoxNzQwMzc4NDUwLCJleHAiOjE3NDAzODIwNTAsImVtYWlsIjoiZWZpd2V0ZXN0MDAyQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJlbWFpbCI6WyJlZml3ZXRlc3QwMDJAZ21haWwuY29tIl19LCJzaWduX2luX3Byb3ZpZGVyIjoicGFzc3dvcmQifX0.EN9W1MeLDPYgQpEBATdCU4PSgECJI3xkJ3BZL9dSL3t3dS6QpJ_NWJMjeDcXs2N657ascp4Koo5wR1X7xXNYsUFzVIamTd-XQg6nLcljDzZi3hY3b6-Nw2nihe-gu8IvVEPiYhXlA3tDGyVTdU1RGKPRKGxCrjTLlge7s5osCl5_XIPsLWlRPkJ4rWIvVJ5Q7F7iytZzi-xP1tIVhzqmzhGuHZtBNxoxQjrFM1qUGjBlU25U8ib0-xNgbIep2doUAZRUywQOlrBOQDg9EeFE_s5lDIo0bu_Dv5gZ56NQlWAE8O-H6WNvPxCJTHaQcKqDUci4ZvoWlpDfvnOcK9_PKA",
+"success": true,
+"data": [
+{
+"mock_week": "11",
+"type": "mock",
+"video_watched": false,
+"active_recall_taken": false,
+"assigned_date": "2025-02-24",
+"completed": false,
+"instruction": "This mock exam simulates the actual JAMB experience. Manage your time wisely, stay focused, and treat it like the real exam!",
+"duration": 120,
+"totalquestions": 180
+},
+{
+"topic_id": "fRxmJou23M3M4Oc9yw3h",
+"subject_id": "69KYTqYqCffzAW2lfuGN",
+"subject": "Chemistry",
+"type": "topic",
+"video_watched": false,
+"active_recall_taken": false,
+"assigned_date": "2025-02-24",
+"topic_data": {
+"topic": "18.\tMetals & Their Compounds.",
+"id": "fRxmJou23M3M4Oc9yw3h",
+"doc": "https:\/\/drive.google.com\/uc?export=download&id=1Q-Q4g49WbYrIzfxfMog4l4TjBkSnIjU1",
+"video": "https:\/\/youtu.be\/YzeLQkTH1iM",
+"activerecall": true
+}
+},
+{
+"mock_week": "1",
+"type": "mock",
+"video_watched": false,
+"active_recall_taken": false,
+"assigned_date": "2025-02-24",
+"completed": false,
+"instruction": "This mock exam simulates the actual JAMB experience. Manage your time wisely, stay focused, and treat it like the real exam!",
+"duration": 120,
+"totalquestions": 180
+},
+{
+"mock_week": "13",
+"type": "mock",
+"video_watched": false,
+"active_recall_taken": false,
+"assigned_date": "2025-02-24",
+"completed": false,
+"instruction": "This mock exam simulates the actual JAMB experience. Manage your time wisely, stay focused, and treat it like the real exam!",
+"duration": 120,
+"totalquestions": 180
+},
+{
+"topic_id": "FiNmugB3p6pdrbU7Sp28",
+"subject_id": "69KYTqYqCffzAW2lfuGN",
+"subject": "Chemistry",
+"type": "topic",
+"video_watched": false,
+"active_recall_taken": false,
+"assigned_date": "2025-02-24",
+"topic_data": {
+"topic": "8.\tAcid. Bases. Salts: Hydrolysis Of Salts",
+"id": "FiNmugB3p6pdrbU7Sp28",
+"doc": "https:\/\/drive.google.com\/uc?export=download&id=1-nH-jEcrXPc8n0lQFkJCqFIkAIRSXWzZ",
+"video": "https:\/\/youtu.be\/ROMhqEm1ohk",
+"activerecall": true
+}
+},
+{
+"topic_id": "uc8JWf7N1oKo3qCYzBrs",
+"subject_id": "69KYTqYqCffzAW2lfuGN",
+"subject": "Chemistry",
+"type": "topic",
+"video_watched": false,
+"active_recall_taken": false,
+"assigned_date": "2025-02-24",
+"topic_data": {
+"topic": "1.\tNature of Matter. Separation Of Mixtures",
+"id": "uc8JWf7N1oKo3qCYzBrs",
+"doc": "https:\/\/drive.google.com\/uc?export=download&id=1STI0qLLRrF0WJHHAgS92GA4sQiN12KOC",
+"video": "https:\/\/youtu.be\/HlSGN6_JzBc",
+"activerecall": true
+}
+},
+{
+"topic_id": "jRm6p1yaP8liC3fgbxsW",
+"subject_id": "69KYTqYqCffzAW2lfuGN",
+"subject": "Chemistry",
+"type": "topic",
+"video_watched": false,
+"active_recall_taken": false,
+"assigned_date": "2025-02-24",
+"topic_data": {
+"topic": "16.\tNon-metal I; Hydrogen. Oxygen Carbon. Phosphorus.",
+"id": "jRm6p1yaP8liC3fgbxsW",
+"doc": "https:\/\/drive.google.com\/uc?export=download&id=17PCE3OUknL4Lin0Ybc1qTuBih7AlLwdU",
+"video": "",
+"activerecall": true
+}
+}
+],
+"code": 200,
+"message": "success"
+}
+
+
+now what i want to do now is this
+
+
+
+when an active recall is taken
+
+check if the topic_id is among the task for the day, if it is
+then:
+i want to grab topic_id and the current date and update in 2 places
+1. the local $_SESSION['dailyTaskRawData'] set active_recall_taken to true
+
+and then
+2. update it online as well!
+
+In firestore
