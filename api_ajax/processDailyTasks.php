@@ -50,39 +50,15 @@ $todayDate = date('Y-m-d'); // Current date
 $activeRecallTaken = true;
 
 updateTaskData($type, $topicId, $update);
-//var_dump($_SESSION['dailyTaskRawData']['data']);
-//if (isset($_SESSION['dailyTaskRawData']['data'])) {
-//    $tasks = $_SESSION['dailyTaskRawData']['data']; // Get daily tasks from session
-//
-//// Flag to check if the topic was found
-//    $topicFound = false;
-//
-//    foreach ($tasks as &$task) {
-//        // Check if it's the topic we are looking for (matching topic_id and today's date)
-//        if (isset($task['topic_id']) && $task['topic_id'] === $topicId && $task['assigned_date'] === $todayDate) {
-//            // If the topic_id matches and it's assigned for today, update the active_recall_taken to true
-//            $task['active_recall_taken'] = $activeRecallTaken;
-//            $topicFound = true;
-//            break; // Exit the loop as we have found the topic
-//        }
-//    }
-//    if ($topicFound) {
-//        $_SESSION['dailyTaskRawData']['data'] = $tasks;
-//    }
-//}
-//echo $topicFound;
-//exit;
-//var_dump($_SESSION['dailyTaskRawData']['data']);
+
 
 
 function updateTaskData($type, $id, $updateValue) {
-//    echo $type;
-//    echo $id;
-//    echo $updateValue;
-//    exit;
-    // Get today's date in the format YYYY-MM-DD
+    global  $accessToken;
+    global  $refreshToken;
+    global  $uid;
     $todayDate = date('Y-m-d');
-
+    $updatedTaskData = null;
     // Check if daily task data exists in the session
     if (isset($_SESSION['dailyTaskRawData']['data'])) {
         $tasks = $_SESSION['dailyTaskRawData']['data']; // Get daily tasks from session
@@ -107,6 +83,14 @@ function updateTaskData($type, $id, $updateValue) {
                         // Set completed to false if both are true
                         $task['completed'] = true;
                     }
+                    $updatedTaskData = [
+                        'uid' => $uid,  // Assuming you have the userId in the session
+                        'documentId' => $task['document_id'],  // Document ID from the task
+                        'activeRecallTaken' => $task['active_recall_taken'],
+                        'videoWatched' => $task['video_watched'],
+                        'completed' => $task['completed']
+                    ];
+                    break;
 
                 } elseif ($type === 'mock' && isset($task['mock_week']) && $task['mock_week'] == $id) {
                     // If type is 'mock', update the completed status where mock_week matches
@@ -114,12 +98,27 @@ function updateTaskData($type, $id, $updateValue) {
                         // Set completed to true for the matching mock week
                         $task['completed'] = true;
                     }
+                    $updatedTaskData = [
+                        'uid' => $uid,  // Assuming you have the userId in the session
+                        'documentId' => $task['document_id'],  // Document ID from the task
+                        'activeRecallTaken' => $task['active_recall_taken'],
+                        'videoWatched' => $task['video_watched'],
+                        'completed' => $task['completed']
+                    ];
+                    break;
                 }
             }
         }
 
         // After processing, update session data with modified tasks
         $_SESSION['dailyTaskRawData']['data'] = $tasks;
+    }
+
+    if ($updatedTaskData !== null) {
+// Send data to the API using the 'updateDailyTask' endpoint
+        $apiResponse = api_request_post('updateDailyTask', $updatedTaskData, 'POST', $accessToken, $refreshToken);
+        echo json_encode($apiResponse);
+
     }
 }
 
