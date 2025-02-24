@@ -56,6 +56,7 @@ $_SESSION['sub_duration'] = $duration;
     // Prepare the request to Paystack to initialize the transaction
     $url = 'https://api.paystack.co/transaction/initialize';
     $base = 'http://localhost/pro/efiweweb/user/';
+    $base = 'https://fayabase.com/efiweweb/user/';
     $fields = [
         'amount' => $amount * 100, // Paystack expects the amount in kobo (multiply by 100)
         'email' => $email, // Replace with the customer's email
