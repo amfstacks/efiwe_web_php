@@ -45,7 +45,7 @@ header('Content-Type: application/json');
 $topicId = isset($_POST['topicId']) ? $_POST['topicId'] : '';
 $type = isset($_POST['type']) ? $_POST['type'] : '';
 $update = isset($_POST['update']) ? $_POST['update'] : '';
-$topicId = 'fRxmJou23M3M4Oc9yw3h';
+//$topicId = 'fRxmJou23M3M4Oc9yw3h';
 $todayDate = date('Y-m-d'); // Current date
 $activeRecallTaken = true;
 
@@ -76,6 +76,10 @@ updateTaskData($type, $topicId, $update);
 
 
 function updateTaskData($type, $id, $updateValue) {
+//    echo $type;
+//    echo $id;
+//    echo $updateValue;
+//    exit;
     // Get today's date in the format YYYY-MM-DD
     $todayDate = date('Y-m-d');
 
@@ -104,7 +108,7 @@ function updateTaskData($type, $id, $updateValue) {
                         $task['completed'] = true;
                     }
 
-                } elseif ($type === 'mock' && isset($task['mock_week']) && $task['mock_week'] === $id) {
+                } elseif ($type === 'mock' && isset($task['mock_week']) && $task['mock_week'] == $id) {
                     // If type is 'mock', update the completed status where mock_week matches
                     if ($updateValue === '') {
                         // Set completed to true for the matching mock week

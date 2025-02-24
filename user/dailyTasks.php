@@ -83,113 +83,34 @@ require_once __DIR__ . '/../templates/loggedInc.php';
 include 'includes/footerjs.php';
 ?>
 </body>
+<script src="../scripts/general.js" ></script>
+
 <script>
-    function fetchDailyTask(){
-        try {
-            $.ajax({
-                url: '../api_ajax/fetchDailyTasks.php', // API endpoint
-                method: 'POST',
-                success: function (response) {
-                    console.log(response);
-                    if (response.success && response.data && response.data.length > 0) {
-                        // Process the response data
-                        var tasksData = response.data;
 
-                        // Count the total tasks
-                        var totalTasks = tasksData.length;
-
-                        // Count the completed tasks
-                        var completedTasks = 0;
-                        tasksData.forEach(function(task) {
-                            if (task.completed === true) {
-                                completedTasks++;
-                            }
-
-                            if (task.type === 'topic' && task.topic_data) {
-                                var topic = task.topic_data;
-                                var taskData = {
-                                    type: task.type,          // 'topic'
-                                    subject_id: task.subject_id,
-                                    subject: task.subject,
-                                };
-                                // Create a list item for the task
-                                var listItem = `
-                                <li class="media">
-                                    <img alt="image" class="mr-3 rounded-circle" width="50" src="assets/img/users/user-1.png">
-<!--<i class="fas fa-tasks mr-3 rounded-caircle font-20 mt-1" ></i>-->
-
-                                    <div class="media-body">
-                                        <div class="media-title" id="taskTitle">${topic.topic}</div>
-                                        <div class="text-job text-muted" id="taskType">topic</div>
-                                    </div>
-                                    <div class="media-progressbar">
-                                        <div class="progress-text">0%</div>
-                                        <div class="progress" data-height="6" style="height: 6px;">
-                                            <div class="progress-bar bg-primary" data-width="0%" style="width: 0%;"></div>
-                                        </div>
-                                    </div>
-                                    <div class="media-cta">
-                                        <button id="detailButton-${topic.id}" class="btn btn-outline-primary" onclick="saveTopicData('${encodeURIComponent(JSON.stringify(topic))}', '${encodeURIComponent(JSON.stringify(taskData))}')">Detail</button>
-                                    </div>
-                                </li>
-                            `;
-
-                                // Append the list item to the task list
-                                $("#taskList").append(listItem);
-                            }
-                            else if (task.type === 'mock' ) {
-
-                                var listItem = `
-                                <li class="media">
-
-<!--<i class="fas fa-tasks mr-3 rounded-caircle font-20 mt-1" ></i>-->
-                                    <img alt="image" class="mr-3 rounded-circle" width="50" src="assets/img/users/user-1.png">
-
-                                    <div class="media-body">
-                                        <div class="media-title" id="taskTitle">MOCK ${task.mock_week}</div>
-                                        <div class="text-job text-muted" id="taskType">MOCK</div>
-                                    </div>
-                                    <div class="media-progressbar">
-                                        <div class="progress-text">0%</div>
-                                        <div class="progress" data-height="6" style="height: 6px;">
-                                            <div class="progress-bar bg-primary" data-width="0%" style="width: 0%;"></div>
-                                        </div>
-                                    </div>
-                                    <div class="media-cta">
-                                        <button  id="detailButton-${task.mock_week}" data-exam-id="${task.mock_week}" data-week="${task.mock_week}" data-instruction="${task.instruction}" data-duration="${task.duration}" data-totalquestions="${task.totalquestions}" class="btn btn-outline-primary start-exam" >Detail</button>
-                                    </div>
-                                </li>
-                            `;
-
-                                $("#taskList").append(listItem);
-
-
-                            }
-
-
-
-                        });
-
-                        // Update the media-title div with the total and completed task counts
-                        $("#dailyTaskTrack").text(completedTasks + "/" + totalTasks);
-                    } else {
-                        // If no data or response isn't successful
-                        console.log("No tasks found or response wasn't successful.");
-                    }
-                },
-                error: function (xhr, status, error) {
-                    tryc('Warning', 'Could not sync JAMB mock data');
-                }
-            });
-        }catch (e){
-
-        }
-    }
     $(document).ready(function() {
 
 
         fetchDailyTask();
-
+        $(document).on('click', '.start-exam', function() {
+            // alert('a');
+            // return;
+            var week = $(this).data('week'); // Get the week value from the button
+            var instruction = $(this).data('instruction');
+            var duration = $(this).data('duration');
+            var totalQuestions = $(this).data('totalquestions');
+            $.ajax({
+                url: '../api_ajax/save_week_session.php', // PHP file to save week in session
+                type: 'POST',
+                data: { week: week, instruction:instruction, duration:duration,totalQuestions:totalQuestions },
+                success: function(response) {
+                    // After saving the session, redirect to mock.php
+                    window.location.href = 'mockb.php'; // Redirect to mock.php without GET parameters
+                },
+                error: function() {
+                    alert('Failed to save week to session.');
+                }
+            });
+        });
     });
 </script>
 <script>

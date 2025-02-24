@@ -279,6 +279,7 @@ if(empty($encodedData)){
     </div>
 </div>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<script src="../scripts/general.js" ></script>
 <script >
 
 week = <?php echo $encodedData ?>;
@@ -326,6 +327,8 @@ function fetchMockQuestions(week) {
                 $('.navigation-buttons').show();
 
                 saveMockData();
+                processDailyTask(week,'mock','');
+
             } else {
                 alert('Failed to fetch questions');
                 $('#loader').hide();
