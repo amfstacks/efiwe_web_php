@@ -97,7 +97,9 @@ require_once __DIR__ . '/../templates/loggedInc.php';
 <!--                                                </div>-->
                                                 <div class="progress mb-3">
 <!--                                                    <div class="progress-bar" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">50</div>-->
-                                                    <div class="progress-bar" role="progressbar" data-width="75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 50%;"></div>
+<!--                                                    <div class="progress-bar" role="progressbar" data-width="75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 50%;"></div>-->
+                                                    <div class="progress-bar" id="taskProgressBar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
+
                                                 </div>
 
                                             </div>
@@ -498,7 +500,24 @@ function fetchDailyTask(){
                                 completedTasks++;
                             }
 
+
                             if (task.type === 'topic' && task.topic_data) {
+
+                                var progress = 0;  // Default progress if neither video nor recall are taken
+
+                                if (task.active_recall_taken === true) {
+                                    progress = 50;   // Progress is 50% if only active recall is taken
+                                }
+                                if (task.video_watched === true) {
+                                    progress = 50;   // Progress is 50% if only active recall is taken
+                                }
+                                 if (task.video_watched === true && task.active_recall_taken === true) {
+                                    progress = 100;  // Full progress if both video and recall are done
+                                }
+
+
+
+
                                 var topic = task.topic_data;
                                 var taskData = {
                                     type: task.type,          // 'topic'
@@ -514,10 +533,10 @@ function fetchDailyTask(){
                                         <div class="text-job text-muted" id="taskType">topic</div>
                                     </div>
                                     <div class="media-progressbar">
-                                        <div class="progress-text">30%</div>
-                                        <div class="progress" data-height="6" style="height: 6px;">
-                                            <div class="progress-bar bg-primary" data-width="30%" style="width: 30%;"></div>
-                                        </div>
+                                        <div class="progress-text">${progress}%</div>
+            <div class="progress" data-height="6" style="height: 6px;">
+                <div class="progress-bar bg-primary" data-width="${progress}%" style="width: ${progress}%;"></div>
+            </div>
                                     </div>
                                     <div class="media-cta">
                                         <button id="detailButton-${topic.id}" class="btn btn-outline-primary" onclick="saveTopicData('${encodeURIComponent(JSON.stringify(topic))}', '${encodeURIComponent(JSON.stringify(taskData))}')">Detail</button>
@@ -529,6 +548,7 @@ function fetchDailyTask(){
                                 $("#taskList").append(listItem);
                             }
                            else if (task.type === 'mock' ) {
+                                var progress = 0;
 
                                 var listItem = `
                                 <li class="media">
@@ -538,9 +558,9 @@ function fetchDailyTask(){
                                         <div class="text-job text-muted" id="taskType">MOCK</div>
                                     </div>
                                     <div class="media-progressbar">
-                                        <div class="progress-text">30%</div>
+                                        <div class="progress-text">${progress}%</div>
                                         <div class="progress" data-height="6" style="height: 6px;">
-                                            <div class="progress-bar bg-primary" data-width="30%" style="width: 30%;"></div>
+                                            <div class="progress-bar bg-primary" data-width="${progress}%" style="width: ${progress}%;"></div>
                                         </div>
                                     </div>
                                     <div class="media-cta">
@@ -560,6 +580,10 @@ function fetchDailyTask(){
 
                         // Update the media-title div with the total and completed task counts
                         $("#dailyTaskTrack").text(completedTasks + "/" + totalTasks);
+                        const completionPercentage = (completedTasks / totalTasks) * 100;
+                        $("#taskProgressBar").css("width", completionPercentage + "%");
+                        $("#taskProgressBar").attr("aria-valuenow", completionPercentage); // Optional: Update the aria-valuenow for accessibility
+
                     } else {
                         // If no data or response isn't successful
                         console.log("No tasks found or response wasn't successful.");

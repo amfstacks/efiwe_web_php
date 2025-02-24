@@ -338,8 +338,11 @@ $currentSubjectName = strtoupper($currentSubjectName);
 
 <?php
 include 'includes/footerjs.php';
+//include '../scripts/general.js';
 ?>
 </body>
+<script src="../scripts/general.js" ></script>
+<script src="https://www.youtube.com/iframe_api"></script>
 <script>
 var subjectId = "<?php echo $currentSubjectId ?>";  //BRUici1R3kf9w4OhTkTT BRUici1R3kf9w4OhTkTT_K3wOskJhlIgeFeO7aC39
 var topicId = '';
@@ -352,13 +355,18 @@ let timeRemainingRefresh = 60;
 let isAnswered = false;
 let questions = [];
 let correctlyAnswer = 0;
+let hasPlayed = false;
+
 
     function initializePage() {
         const topicData = getTopicDataFromLocalStorage();
         if (topicData) {
             displayTopicDetails(topicData);
-            lazyLoadYouTubeVideo(topicData.video);
-            embedPDFViewer(topicData.doc);
+            setTimeout(() => {
+                // lazyLoadYouTubeVideo(topicData.video);
+                onYouTubeIframeAPIReady(topicData.video);
+                embedPDFViewer(topicData.doc);
+            },100)
         } else {
             tryc('Error', 'Error','No topic data found.');
             console.error("No topic data found.");
@@ -371,8 +379,8 @@ let correctlyAnswer = 0;
         // document.getElementById('docLink').innerText = topicData.doc;
         topicId = topicData.id;
     }
-
-    function lazyLoadYouTubeVideo(videoLink) {
+let player;
+    function lazyLoadYouTubeVideo_(videoLink) {
         const videoId = extractYouTubeVideoId(videoLink);
         if (videoId) {
             const placeholder = document.getElementById('youtube-placeholder');
@@ -380,7 +388,7 @@ let correctlyAnswer = 0;
                 const iframe = document.createElement('iframe');
                 iframe.width = "100%";
                 iframe.height = "400";
-                iframe.src = `https://www.youtube.com/embed/${videoId}`;
+                iframe.src = `https://www.youtube.com/embed/${videoId}?enablejsapi=1`;
                 iframe.frameborder = "0";
                 iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
                 iframe.allowfullscreen = true;
@@ -388,11 +396,53 @@ let correctlyAnswer = 0;
 
                 placeholder.innerHTML = '';
                 placeholder.appendChild(iframe);
+                // onYouTubeIframeAPIReady(videoId);
             }, 1000); // Delay loading by 1 second
         } else {
             console.error("Invalid YouTube video link.");
         }
     }
+function lazyLoadYouTubeVideo(videoLink) {
+    const videoId = extractYouTubeVideoId(videoLink);
+    if (videoId) {
+        const placeholder = document.getElementById('youtube-placeholder');
+        setTimeout(() => {
+            const playerDiv = document.createElement('div');
+            playerDiv.id = 'youtube-player';
+            placeholder.innerHTML = '';
+            placeholder.appendChild(playerDiv);
+
+            new YT.Player('youtube-player', {
+                height: '400',
+                width: '100%',
+                videoId: videoId,
+                events: {
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange
+                }
+            });
+        }, 1000); // Delay loading by 1 second
+    } else {
+        console.error("Invalid YouTube video link.");
+    }
+}
+
+function onYouTubeIframeAPIReady(videoId) {
+    lazyLoadYouTubeVideo(videoId);
+}
+function onPlayerReady(event) {
+}
+function onPlayerStateChange(event) {
+    // Check if the video is playing
+    if(!hasPlayed) {
+        if (event.data === YT.PlayerState.PLAYING) {
+
+            hasPlayed = true;
+            processDailyTask(topicId,'topic','video');
+
+        }
+    }
+}
 
     // Function to get topic data from localStorage
     function getTopicDataFromLocalStorage() {
@@ -465,10 +515,12 @@ function loadActiveQuestions() {
         tryc('error', 'Error with topic data, Please try again in few seconds');
         return;
     }
+    processDailyTask(topicId,'topic','ar');
+    return;
     $('#loader').show();
     let subtop = subjectId+'_'+topicId;
 
-
+// alert(topicId);
 
     $('#errorAjaxDisplay').hide();
     $('#loadQuestionButton').prop('disabled', true);
@@ -490,6 +542,7 @@ function loadActiveQuestions() {
                     $('#instruction').hide();
                     $('#spacedData').show();
                     enterFullScreen();
+                    alert(topicId);
                 }
                 else {
                     $('#loadQuestionButton').prop('disabled', false);
@@ -567,6 +620,9 @@ function showQuestion(index) {
     $(".question-container").hide(); // Hide all questions
     $(`#question${index}`).show(); // Show the current question
 }
+
+
+
 
 // Handle answer selection
 let modal; // Declare modal outside of any function to maintain its reference
