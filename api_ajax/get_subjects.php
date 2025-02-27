@@ -32,14 +32,23 @@ $accessToken = isset($user['idToken']) ? $user['idToken'] : '';
 
 // Define your examId
 $examId = "X2j9hFD6O7RGAER6bn3b";
+if (isset($_SESSION['mySubjects']) && !empty($_SESSION['mySubjects']['subjects'])) {
+    header('Content-Type: application/json');
+//    echo "from session";
+    echo (json_encode($_SESSION['mySubjects']));
+    exit;
+
+}
 
 // Fetch all subjects from the API
 $result = fetch_all_subjects($examId, $refreshToken, $accessToken);
 
 //? complete
-//if ($result['success']) {
-//    $_SESSION['mySubjects'] = ($result);
-//}
+if ($result['success']) {
+    $_SESSION['mySubjects'] = ($result);
+//    var_dump($_SESSION['mySubjects']);
+//    exit;
+}
 
 // Return the result as JSON
 header('Content-Type: application/json');

@@ -77,7 +77,6 @@ function updateTaskData($type, $id, $updateValue) {
                         // Update video_watched to true
                         $task['video_watched'] = true;
                     }
-
                     // After updating, check if both active_recall_taken and video_watched are true
                     if ($task['active_recall_taken'] === true && $task['video_watched'] === true) {
                         // Set completed to false if both are true
