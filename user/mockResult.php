@@ -34,6 +34,8 @@ $score = 0;
 $showScore =true;
 
 $apiResponse = api_request_post('processMockTaken', $profileData, 'POST', $accessToken,$refreshToken);
+//var_dump($apiResponse);
+//exit;
 if($apiResponse['success']) {
     $score = $apiResponse['data'];
     $showScore =true;
@@ -45,12 +47,13 @@ else{
 }
 $feedback ='';
 if($questionCount <1){
-    $questionCount = 200;
+    $questionCount = 180;
 }
 $formattedRatioPercentage = 0.0;
+$originalScore = 0;
 if($questionCount >0){
 $ratio = $score / $questionCount;
-
+    $originalScore = $score/10; //get no of questions gotten correctly since one score is 10 points
     $ratioPercentage = $ratio * 100;
     $formattedRatioPercentage = number_format($ratioPercentage, 2);
 
@@ -114,6 +117,8 @@ if($showScore == false){
         if($showScore){
         ?>
 <h2><?php echo $formattedRatioPercentage . "%"?></h2>
+            <hr>
+<h4><?php echo "got ". $originalScore ." out of " . $questionCount?></h4>
 
 
         <div class="alert alert-info alert-dismissible show fade">

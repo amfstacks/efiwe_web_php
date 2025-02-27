@@ -428,11 +428,33 @@ function saveMockData() {
         success: function (data) {
             console.log(data)
             if (data.success) {
+                if(data.data.canContinue === false){
+
+                    $('.start-exam').show();
+                    $('#loader').show();
+                    $('#exam-details').show();
+                    $('#status').show();
+                    $('#go-back-btn').show();
+                    $('.navigation-buttons').hide();
+                    $('.navigation-buttons').hide();
+                    $('.navigation-buttons').html('');
+                    $('#questions-container').html('Jamb Mock  Exam Already Taken');
+                    $('.navigation-numbers').html('');
+                    $('#exam_timer').hide();
+                    $('#exam_timer').html('');
+                    return;
+                }
                 const timeDifference = data.data.timeDifference;
 
                 // Ensure the timeDifference is a positive value
-                const timerValue = Math.abs(timeDifference); // Use absolute value
+                // const timerValue = Math.abs(timeDifference); // Use absolute value
+                const timerValue = Math.abs(20); // Use absolute value
 
+                if(timerValue < 10){
+                    endMockData();
+                    // window.history.back();
+                    return;
+                }
                 // Set the timer value to the #exam_timer element
                 $('#exam_timer').attr('data-timer', timerValue);
 
@@ -451,6 +473,7 @@ function saveMockData() {
                     }
                 });
                 $('.consubmit').show();
+                let hasEnded = false;
                 setInterval(function(){
                     var remaining_second = $("#exam_timer").TimeCircles().getTime();
 
@@ -458,9 +481,16 @@ function saveMockData() {
 
                     };
 
-                    if(remaining_second < 1)
+                    if(remaining_second <= 0 && !hasEnded)
                     {
                         endMockData();
+                        hasEnded = true;
+                        // window.history.back();
+                        return;
+                    }
+
+                    if(remaining_second < 10){
+                        // endMockData();
                         // window.history.back();
                         return;
                     }
@@ -534,6 +564,7 @@ function updateUserAnswers(serverAnswers) {
 function saveAnswer(questionId, userAnswer, correctAnswer) {
     userAnswers[questionId] = userAnswer; // Save answer locally
     const rightOrWrong = userAnswer === correctAnswer;
+    alert(rightOrWrong); //? remove
 
     // Update the UI for the current question
     $(`.options-list input[data-question-id="${questionId}"]`).each(function () {

@@ -515,8 +515,8 @@ function loadActiveQuestions() {
         tryc('error', 'Error with topic data, Please try again in few seconds');
         return;
     }
-    processDailyTask(topicId,'topic','ar');
-    return;
+
+
     $('#loader').show();
     let subtop = subjectId+'_'+topicId;
 
@@ -542,7 +542,7 @@ function loadActiveQuestions() {
                     $('#instruction').hide();
                     $('#spacedData').show();
                     enterFullScreen();
-                    alert(topicId);
+                    processDailyTask(topicId,'topic','ar');
                 }
                 else {
                     $('#loadQuestionButton').prop('disabled', false);

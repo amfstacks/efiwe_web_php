@@ -237,7 +237,7 @@ function fetchDailyTask(){
                                 <li class="media">
                                     <img alt="image" class="mr-3 rounded-circle" width="50" src="assets/img/jamb.png">
                                     <div class="media-body">
-                                        <div class="media-title" id="taskTitle">JAMB DAILY SPACED REPEITION</div>
+                                        <div class="media-title" id="taskTitle">JAMB DAILY SPACED REPETITION</div>
                                         <div class="text-job text-muted" id="taskType">Spaced Repetition</div>
                                     </div>
                                     <div class="media-progressbar">

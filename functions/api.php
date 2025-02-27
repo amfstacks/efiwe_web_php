@@ -70,12 +70,14 @@ return json_decode($response, true);
 }
 function api_request_get($endpoint, $data = null, $method = 'GET', $accessToken = null,$refreshToken = null) {
     global $checkSub;
+    if($endpoint != 'userDetails'){
     if(!$checkSub){
         return [
             "success" => false,
             "message" => "No active subscription.",
         ];
         exit;
+    }
     }
     // Construct the full URL with query parameters if provided
     if ($accessToken == '' || $accessToken == null) {
