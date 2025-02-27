@@ -91,7 +91,23 @@ function updateTaskData($type, $id, $updateValue) {
                     ];
                     break;
 
-                } elseif ($type === 'mock' && isset($task['mock_week']) && $task['mock_week'] == $id) {
+                }
+                elseif ($type === 'mock' && isset($task['mock_week']) && $task['mock_week'] == $id) {
+                    // If type is 'mock', update the completed status where mock_week matches
+                    if ($updateValue === '') {
+                        // Set completed to true for the matching mock week
+                        $task['completed'] = true;
+                    }
+                    $updatedTaskData = [
+                        'uid' => $uid,  // Assuming you have the userId in the session
+                        'documentId' => $task['document_id'],  // Document ID from the task
+                        'activeRecallTaken' => $task['active_recall_taken'],
+                        'videoWatched' => $task['video_watched'],
+                        'completed' => $task['completed']
+                    ];
+                    break;
+                }
+                elseif ($type === 'ar') {
                     // If type is 'mock', update the completed status where mock_week matches
                     if ($updateValue === '') {
                         // Set completed to true for the matching mock week

@@ -33,7 +33,16 @@ $accessToken = isset($user['idToken']) ? $user['idToken'] : '';
 
 // Define your examId
 $examId = "X2j9hFD6O7RGAER6bn3b";
-
+$selectedSubjects = isset($_SESSION['userData']['subjectSelect']) ? $_SESSION['userData']['subjectSelect'] : [];
+//var_dump($selectedSubjects);
+//exit;
+if(count($selectedSubjects) < 3){
+        echo json_encode([
+            "success" => false,
+            "message" => "Empty or Incomplete Subjects."
+        ]);
+        exit();
+}
 
 //unset($_SESSION['dailyTaskRawData']);
 header('Content-Type: application/json');
@@ -61,7 +70,7 @@ if (isset($_SESSION['dailyTaskRawData']) && !empty($_SESSION['dailyTaskRawData']
         echo (json_encode($_SESSION['dailyTaskRawData']));
     } else {
         // If no task for today, fetch fresh data from the server
-        $result = fetchDailyTasks($uid, $refreshToken, $accessToken);
+        $result = fetchDailyTasks($uid, $refreshToken, $accessToken,$selectedSubjects);
 
         // Check if the result is successful and store it in the session
         if ($result['success']) {
@@ -74,7 +83,7 @@ if (isset($_SESSION['dailyTaskRawData']) && !empty($_SESSION['dailyTaskRawData']
 } else {
 //    echo "here";
     // If session data doesn't exist, fetch fresh data from the server
-    $result = fetchDailyTasks($uid, $refreshToken, $accessToken);
+    $result = fetchDailyTasks($uid, $refreshToken, $accessToken,$selectedSubjects);
 
     // Check if the result is successful and store it in the session
     if ($result['success']) {

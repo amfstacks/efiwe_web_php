@@ -239,6 +239,7 @@ require_once __DIR__ . '/../templates/loggedInc.php';
 <!-- jQuery -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+    <script src="../scripts/general.js" ></script>
 
 
 <?php
@@ -2095,6 +2096,8 @@ include 'includes/footerjs.php';
                             $('#spacedData').show();
                             saveSpacedRepetition(response.spacedAttempts);
                             enterFullScreen();
+                            processDailyTask('','ar','');
+
                         }
                         else {
                             $('#spacedInstruction').show();

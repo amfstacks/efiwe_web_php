@@ -175,7 +175,7 @@ if(empty($encodedData)){
 
     <!-- Container to hold the exam details and questions -->
     <div id="exam-details" class="col-lg-6">
-        <button type="button" class="btn btn-primary btn-icon icon-left font-15 mb-4">
+        <button type="button" class="btn  btn-outline-primary btn-icon icon-left font-15 mb-4">
             <i class="fas fa-user-graduate font-10"></i> Instruction
         </button>
 
@@ -192,10 +192,10 @@ if(empty($encodedData)){
             <h5>Duration</h5>
             <span class="badge badge-dark badge-pill"><?php echo $activeDuration ?> minutes</span>
         </span>
-        <button class="btn btn-primary start-exam" onclick="fetchMockQuestions(<?php echo $encodedData ?>)" disabled style="display: none">Start Exam</button>
+        <button class="btn btn-primary start-exam btn-lg btn-lg mt-5" onclick="fetchMockQuestions(<?php echo $encodedData ?>)" disabled style="display: none">Start JAMB MOCK Exam</button>
     </div>
                                     <br>
-    <button id="preloadQuestions" class="btn btn-primary" >Click Here To PROCEED</button>
+    <button id="preloadQuestions" class="btn btn-primary btn-lg mt-5" >Click Here To PROCEED</button>
 <!--    <button id="startMock" onclick="startMock()" disabled>Start Mock</button>-->
                                  <br>   <i class="fas fa-spinner fa-spin font-30 mb-3 mt-4 " id="loader" style="display: none; maargin: auto !important;"></i>
 
@@ -224,7 +224,6 @@ if(empty($encodedData)){
                                         </div>
 
                                     </div>
-
 
 
 
@@ -324,7 +323,9 @@ function fetchMockQuestions(week) {
                 $('#loader').hide();
                 $('#exam-details').hide();
                 $('#status').hide();
+                $('#go-back-btn').hide();
                 $('.navigation-buttons').show();
+
 
                 saveMockData();
                 processDailyTask(week,'mock','');
@@ -475,6 +476,13 @@ function saveMockData() {
 }
 function endMockData() {
     $('#ok_submit').addClass('btn-progress');
+    $('.navigation-buttons').hide();
+    $('.navigation-buttons').html('');
+    $('#questions-container').html('submitting Exam');
+    $('.navigation-numbers').html('');
+    $('#exam_timer').hide();
+    $('#exam_timer').html('');
+// return;
     $.ajax({
         url: "../api_ajax/finishMock.php",
         method: "POST",
@@ -594,7 +602,8 @@ $('#preloadQuestions').on('click', function () {
     tryc('info','Loading Questions for all of your JAMB subjects','', 'bottomCenter');
     statusDiv.text('Preloading questions...').show();
     $('#loader').show();
-
+    $('#preloadQuestions').hide();
+tryc('warning', 'This may take up to a minute.\n Please exercise Patience','','bottomCenter');
     $.ajax({
         url: '../api_ajax/load_mock_Questions.php',
         method: 'GET',

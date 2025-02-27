@@ -397,9 +397,10 @@ function fetch_JambMockList($uid, $refreshToken, $accessToken) {
 }
 
 
-function fetchDailyTasks($uid, $refreshToken, $accessToken) {
+function fetchDailyTasks($uid, $refreshToken, $accessToken,$userSubjects) {
     $data = [
         'uid' => $uid,
+        'userSubjects' => $userSubjects,
         'refreshToken' => $refreshToken
     ];
 

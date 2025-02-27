@@ -75,6 +75,31 @@ function processDailyTask(topicId,type,update){
 
 
                         }
+                        else if (task.type === 'ar' ) {
+
+                            var listItem = `
+                                <li class="media">
+                                    <img alt="image" class="mr-3 rounded-circle" width="50" src="assets/img/users/user-1.png">
+                                    <div class="media-body">
+                                        <div class="media-title" id="taskTitle">Spaced Repetition</div>
+                                        <div class="text-job text-muted" id="taskType">Spaced Repetition</div>
+                                    </div>
+                                    <div class="media-progressbar">
+                                        <div class="progress-text">30%</div>
+                                        <div class="progress" data-height="6" style="height: 6px;">
+                                            <div class="progress-bar bg-primary" data-width="30%" style="width: 30%;"></div>
+                                        </div>
+                                    </div>
+                                    <div class="media-cta">
+                                        <button   class="btn btn-outline-primary start-exam" >Detail</button>
+                                    </div>
+                                </li>
+                            `;
+
+                            $("#taskList").append(listItem);
+
+
+                        }
 
 
 
@@ -144,7 +169,7 @@ function fetchDailyTask(){
                             // Create a list item for the task
                             var listItem = `
                                 <li class="media">
-                                    <img alt="image" class="mr-3 rounded-circle" width="50" src="assets/img/users/user-1.png">
+                                    <img alt="image" class="mr-3 rounded-circle" width="50" src="assets/img/todo.png">
                                     <div class="media-body">
                                         <div class="media-title" id="taskTitle">${topic.topic}</div>
                                         <div class="text-job text-muted" id="taskType">topic</div>
@@ -156,6 +181,7 @@ function fetchDailyTask(){
             </div>
                                     </div>
                                     <div class="media-cta">
+                                    
                                         <button id="detailButton-${topic.id}" class="btn btn-outline-primary" onclick="saveTopicData('${encodeURIComponent(JSON.stringify(topic))}', '${encodeURIComponent(JSON.stringify(taskData))}')">Detail</button>
                                     </div>
                                 </li>
@@ -171,9 +197,9 @@ function fetchDailyTask(){
                             }
                             var listItem = `
                                 <li class="media">
-                                    <img alt="image" class="mr-3 rounded-circle" width="50" src="assets/img/users/user-1.png">
+                                    <img alt="image" class="mr-3 rounded-circle" width="50" src="assets/img/jamb.png">
                                     <div class="media-body">
-                                        <div class="media-title" id="taskTitle">MOCK ${task.mock_week}</div>
+                                        <div class="media-title" id="taskTitle">JAMB MOCK ${task.mock_week}</div>
                                         <div class="text-job text-muted" id="taskType">MOCK</div>
                                     </div>
                                     <div class="media-progressbar">
@@ -183,7 +209,45 @@ function fetchDailyTask(){
                                         </div>
                                     </div>
                                     <div class="media-cta">
-                                        <button  id="detailButton-${task.mock_week}" data-exam-id="${task.mock_week}" data-week="${task.mock_week}" data-instruction="${task.instruction}" data-duration="${task.duration}" data-totalquestions="${task.totalquestions}" class="btn btn-outline-primary start-exam" >Detail</button>
+                                  ${progress === 100 ?
+                                `<button class="btn btn-outline-success" disabled>Done</button>` :
+                                `<button id="detailButton-${task.mock_week}" 
+                            data-exam-id="${task.mock_week}" 
+                            data-week="${task.mock_week}" 
+                            data-instruction="${task.instruction}" 
+                            data-duration="${task.duration}" 
+                            data-totalquestions="${task.totalquestions}" 
+                            class="btn btn-outline-primary start-exam">Detail</button>`
+                            }
+            </div>
+                                    </div>
+                                </li>
+                            `;
+
+                            $("#taskList").append(listItem);
+
+
+                        }
+                        else if (task.type === 'ar' ) {
+                            var progress = 0;
+                            if (task.completed === true) {
+                                progress = 100;
+                            }
+                            var listItem = `
+                                <li class="media">
+                                    <img alt="image" class="mr-3 rounded-circle" width="50" src="assets/img/jamb.png">
+                                    <div class="media-body">
+                                        <div class="media-title" id="taskTitle">JAMB DAILY SPACED REPEITION</div>
+                                        <div class="text-job text-muted" id="taskType">Spaced Repetition</div>
+                                    </div>
+                                    <div class="media-progressbar">
+                                        <div class="progress-text">${progress}%</div>
+                                        <div class="progress" data-height="6" style="height: 6px;">
+                                            <div class="progress-bar bg-primary" data-width="${progress}%" style="width: ${progress}%;"></div>
+                                        </div>
+                                    </div>
+                                    <div class="media-cta">
+                                        <a href="spacedRepetition"   class="btn btn-outline-primary " >Detail</a>
                                     </div>
                                 </li>
                             `;
