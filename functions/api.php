@@ -408,6 +408,14 @@ function fetchDailyTasks($uid, $refreshToken, $accessToken,$userSubjects) {
 
     return api_request_get('fetchDailyTask', $data, 'GET', $accessToken,$refreshToken);
 }
+function gradeDoneDailyTasks($uid, $refreshToken, $accessToken) {
+    $data = [
+        'uid' => $uid,
+        'refreshToken' => $refreshToken
+    ];
+
+    return api_request_get('gradeDoneDailyTasks', $data, 'GET', $accessToken,$refreshToken);
+}
 
 function fetch_Mock_Questions($uid, $refreshToken, $accessToken,$mockWeek) {
     $data = [

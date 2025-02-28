@@ -266,6 +266,8 @@ function fetchDailyTask(){
                     const completionPercentage = (completedTasks / totalTasks) * 100;
                     $("#taskProgressBar").css("width", completionPercentage + "%");
                     $("#taskProgressBar").attr("aria-valuenow", completionPercentage); // Optional: Update the aria-valuenow for accessibility
+// alert('here');
+//                     gradeDailyDoneLogin();
 
                 } else {
                     // If no data or response isn't successful
@@ -309,4 +311,27 @@ function saveTopicData(topic, taskData) {
     });
 
 
+}
+
+function gradeDailyDoneLogin(){
+    $.ajax({
+        url: '../api_ajax/gradeDailyTasks.php', // API endpoint
+        method: 'POST', // Using GET method, can be POST if needed
+        success: function(response) {
+            // Parse the response JSON if it's in JSON format
+            const dataResponse = response;
+            if (dataResponse.success) {
+                var points = dataResponse.data ?? '';
+                $("#dailyTasks").modal('show');
+                tryc("success", points+" DAILY TASKS AWARDED");
+                getMyTotalPoints();
+
+            }
+
+        },
+        error: function(xhr, status, error) {
+            console.error("Error fetching total points:", error);
+            // getMyTotalPoints();
+        }
+    });
 }

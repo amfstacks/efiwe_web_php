@@ -447,8 +447,8 @@ function saveMockData() {
                 const timeDifference = data.data.timeDifference;
 
                 // Ensure the timeDifference is a positive value
-                // const timerValue = Math.abs(timeDifference); // Use absolute value
-                const timerValue = Math.abs(20); // Use absolute value
+                const timerValue = Math.abs(timeDifference); // Use absolute value
+                // const timerValue = Math.abs(20); // Use absolute value
 
                 if(timerValue < 10){
                     endMockData();
@@ -512,6 +512,8 @@ function endMockData() {
     $('.navigation-numbers').html('');
     $('#exam_timer').hide();
     $('#exam_timer').html('');
+    $('.consubmit').hide();
+
 // return;
     $.ajax({
         url: "../api_ajax/finishMock.php",

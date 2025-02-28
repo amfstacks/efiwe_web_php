@@ -285,6 +285,68 @@ require_once __DIR__ . '/../templates/loggedInc.php';
         </div>
     </div>
 </div>
+<div class="modal fade" id="dailyLogin" tabindex="-1" role="dialog"
+     aria-labelledby="changepassTitle" aria-hidden="true" data-keyboard="true" data-backdarop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <!-- <div class="modal-header">
+                <h5 class="modal-title" id="formModal"></h5>
+
+              </div> -->
+            <div class="modal-body">
+                <h5 class="modal-title" id="formModal">Keep it up!  <b>Daily LOGIN rewards unlocked!</b></h5>
+                <hr class="mb-0">
+                <div class="card-body ">
+
+                    <p class="lead mta-1">
+
+                        <center>
+                        <i class="fa fa-award font-50 text-success align-center centered"></i>
+                    </center>
+                    <p id="dailyLoginMessage" class="lead mta-1 h4"> Stay consistent and watch your progress grow!</p>
+
+                    </p>
+                     <button  id="a" type="button" class="btn btn-primary w-100"  >  <i class="fa fa-window-close faa-cog"></i> close
+                        </button>
+                </div>
+
+
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="dailyTasks" tabindex="-1" role="dialog"
+     aria-labelledby="changepassTitle" aria-hidden="true" data-keyboard="true" data-backdarop="static">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <!-- <div class="modal-header">
+                <h5 class="modal-title" id="formModal"></h5>
+
+              </div> -->
+            <div class="modal-body">
+                <h5 class="modal-title" id="formModal">YOU ARE ON  A <b>🌟 BLAST! 🌟</b></h5>
+                <hr class="mb-0">
+                <div class="card-body ">
+
+                    <p class="lead mta-1">
+
+                        <center>
+                        <i class="fa fa-award font-50 text-success align-center centered"></i>
+                    </center>
+                    <p id="dailyLoginMessage" class="lead mta-1 h4"> You’ve just completed all your daily tasks, and that’s a huge step toward acing your JAMB exam. Every question you practiced, every topic you reviewed, and every hour you dedicated today brings you closer to your dream score.</p>
+
+                    </p>
+                     <button  id="a" type="button" class="btn btn-primary w-100"  >  <i class="fa fa-window-close faa-cog"></i> close
+                        </button>
+                </div>
+
+
+            </div>
+
+        </div>
+    </div>
+</div>
 
 
 
@@ -293,7 +355,12 @@ include 'includes/footerjs.php';
 ?>
 </body>
 <script src="../scripts/general.js" ></script>
+<script>
 
+    $(document).ready(function(){
+        // $("#dailyTasks").modal('show');
+    });
+</script>
 <?php
 if ($profileSet == 0){
 ?>
@@ -302,6 +369,7 @@ if ($profileSet == 0){
         $("#exampleModalCenter").modal('show');
         tryc("info", "Set up your Bio-Data");
     });
+
 </script>
 
     <?php
@@ -465,6 +533,28 @@ function getMyTotalPoints(){
         }
     });
 }
+function gradeDailyLogin(){
+    $.ajax({
+        url: '../api_ajax/gradeDailyScore.php', // API endpoint
+        method: 'POST', // Using GET method, can be POST if needed
+        success: function(response) {
+            // Parse the response JSON if it's in JSON format
+            const dataResponse = response;
+            if (dataResponse.success) {
+                var points = dataResponse.data ?? '';
+                $("#dailyLogin").modal('show');
+              tryc("success", points+" DAILY BONUS AWARDED");
+            }
+            getMyTotalPoints();
+
+        },
+        error: function(xhr, status, error) {
+            console.error("Error fetching total points:", error);
+            getMyTotalPoints();
+        }
+    });
+}
+
 function silentMockFetch(){
         try {
             $.ajax({
@@ -504,9 +594,9 @@ function silentMockFetch(){
                 }
             });
         });
-        getMyTotalPoints();
+        gradeDailyLogin();
         fetchDailyTask();
-
+        gradeDailyDoneLogin();
         // $(".start-exam").on('click', function() {
             $(document).on('click', '.start-exam', function() {
             // alert('a');

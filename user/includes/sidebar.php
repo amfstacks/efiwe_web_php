@@ -13,7 +13,7 @@
             <li class="dropdown <?= isActivePage('index') ?>">
                 <a href="index" class="nav-link"><i class="
 
-              fas fa-chart-area"></i><span>Dashboard</span></a>
+              fas fa-clipboard-list"></i><span>Dashboard</span></a>
             </li>
 
             <li class="menu-header"></li>
@@ -26,15 +26,14 @@
             <li class="dropdown ">
                 <a href="#" class="nav-link"><i class="
 
-              fas fa-chart-area"></i><span>Library</span></a>
+              fas fa-copy"></i><span>Library</span></a>
             </li>
 
 
             <li class="menu-header"></li>
             <li class="dropdown <?= isActivePage('mytest') ?>">
                 <a href="mytest" class="nav-link"><i class="
-
-              fas fa-chart-area"></i><span>Test</span></a>
+fas fa-book-reader"></i><span>Tests</span></a>
             </li>
 
 

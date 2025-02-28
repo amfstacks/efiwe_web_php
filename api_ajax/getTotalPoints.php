@@ -39,6 +39,9 @@ $examId = "X2j9hFD6O7RGAER6bn3b";
 
 // Fetch all subjects from the API
 $result = fetch_total_points($uid, $refreshToken, $accessToken);
+if ($result['success']) {
+    $_SESSION['total_points_data'] = ($result);
+}
 
 // Return the result as JSON
 header('Content-Type: application/json');
