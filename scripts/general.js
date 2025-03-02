@@ -168,7 +168,7 @@ function fetchDailyTask(){
                             };
                             // Create a list item for the task
                             var listItem = `
-                                <li class="media">
+                                <li class="media mb-5">
                                     <img alt="image" class="mr-3 rounded-circle" width="50" src="assets/img/todo.png">
                                     <div class="media-body">
                                         <div class="media-title" id="taskTitle">${topic.topic}</div>
@@ -196,7 +196,7 @@ function fetchDailyTask(){
                                 progress = 100;
                             }
                             var listItem = `
-                                <li class="media">
+                                <li class="media mb-5">
                                     <img alt="image" class="mr-3 rounded-circle" width="50" src="assets/img/jamb.png">
                                     <div class="media-body">
                                         <div class="media-title" id="taskTitle">JAMB MOCK ${task.mock_week}</div>
@@ -234,7 +234,7 @@ function fetchDailyTask(){
                                 progress = 100;
                             }
                             var listItem = `
-                                <li class="media">
+                                <li class="media mb-5">
                                     <img alt="image" class="mr-3 rounded-circle" width="50" src="assets/img/jamb.png">
                                     <div class="media-body">
                                         <div class="media-title" id="taskTitle">JAMB DAILY SPACED REPETITION</div>

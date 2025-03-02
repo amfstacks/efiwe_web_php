@@ -60,7 +60,9 @@ require_once __DIR__ . '/../templates/loggedInc.php';
                                         <div class="col-lg-5 col-md-6 col-sm-6 col-xs-6 pl-0">
                                             <div class="banner-img">
 
-                                                <img src="assets/img/user.png" alt="" class="rounded-circle author-box-picture">
+                                                <img src="assets/img/user.png" alt="" class="rounded-circle author-box-picture" style="
+    height: 100px;
+">
                                             </div>
                                         </div>
                                     </div>
@@ -182,13 +184,8 @@ require_once __DIR__ . '/../templates/loggedInc.php';
 
             </section>
         </div>
-        <footer class="main-footer">
-            <div class="footer-left">
-                kjgvhug
-            </div>
-            <div class="footer-right">
-            </div>
-        </footer>    </div>
+      <?php include_once("includes/footer.php"); ?>
+    </div>
 </div>
 
 <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
@@ -629,5 +626,7 @@ function silentMockFetch(){
         width: 50px;
         height: 50px;
     }
+
+
 </style>
 </html>
